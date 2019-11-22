@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-http" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-filter" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-modulemanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-file" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zenddiagnostics" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-console" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-eventmanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-escaper" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-loader" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-router" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-code" />
+      <path value="$PROJECT_DIR$/server/vendor/composer" />
+      <path value="$PROJECT_DIR$/server/vendor/container-interop/container-interop" />
+      <path value="$PROJECT_DIR$/server/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-hydrator" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-config" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-servicemanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-mvc" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-serializer" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-json" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-inputfilter" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-stdlib" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-view" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-version" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-validator" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-text" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-form" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-uri" />
+      <path value="$PROJECT_DIR$/untitled/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-eventmanager" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-http" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-view" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-servicemanager" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-escaper" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-uri" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-loader" />
+      <path value="$PROJECT_DIR$/untitled/vendor/container-interop/container-interop" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-stdlib" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-modulemanager" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-json" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-validator" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-component-installer" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-router" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-config" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zfcampus/zf-development-mode" />
+      <path value="$PROJECT_DIR$/untitled/vendor/zendframework/zend-mvc" />
+      <path value="$PROJECT_DIR$/untitled/vendor/composer" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-component-installer" />
+      <path value="$PROJECT_DIR$/server/vendor/zfcampus/zf-development-mode" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings load_method="CUSTOM_LOADER" custom_loader_path="$PROJECT_DIR$/server/vendor/autoload.php" />
+    </phpunit_settings>
+  </component>
+</project>
