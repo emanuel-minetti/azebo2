@@ -1,0 +1,40 @@
+{
+    "name": "azebo2",
+    "description": "Web Application to log Working Time",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "framework",
+        "mvc",
+        "zf"
+    ],
+    "homepage": "http://framework.zend.com/",
+    "require": {
+        "php": "^7.2",
+        "zendframework/zend-component-installer": "^1.0 || ^2.1",
+        "zendframework/zend-mvc": "^3.1.1",
+        "zfcampus/zf-development-mode": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Application\\": "module/Application/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ApplicationTest\\": "module/Application/test/"
+        }
+    },
+    "scripts": {
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "development-disable": "zf-development-mode disable",
+        "development-enable": "zf-development-mode enable",
+        "development-status": "zf-development-mode status",
+        "post-create-project-cmd": [
+            "@development-enable",
+            "php -r \"$file = file_get_contents('.gitignore'); $file = str_replace('composer.lock', '', $file); file_put_contents('.gitignore', $file);\""
+        ],
+        "test": "phpunit"
+    }
+}
