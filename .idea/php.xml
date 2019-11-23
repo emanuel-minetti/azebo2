@@ -5,7 +5,6 @@
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-http" />
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-filter" />
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-modulemanager" />
-      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-file" />
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zenddiagnostics" />
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-console" />
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-eventmanager" />
