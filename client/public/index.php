@@ -19,7 +19,7 @@ if (php_sapi_name() === 'cli-server') {
 }
 
 // Composer autoloading
-include __DIR__ . '/../vendor/autoload.php';
+include __DIR__ . '/../../server/vendor/autoload.php';
 
 if (! class_exists(Application::class)) {
     throw new RuntimeException(
@@ -31,9 +31,9 @@ if (! class_exists(Application::class)) {
 }
 
 // Retrieve configuration
-$appConfig = require __DIR__ . '/../config/application.config.php';
-if (file_exists(__DIR__ . '/../config/development.config.php')) {
-    $appConfig = ArrayUtils::merge($appConfig, require __DIR__ . '/../config/development.config.php');
+$appConfig = require __DIR__ . '/../../server/config/application.config.php';
+if (file_exists(__DIR__ . '/../../server/config/development.config.php')) {
+    $appConfig = ArrayUtils::merge($appConfig, require __DIR__ . '/../../server/config/development.config.php');
 }
 
 // Run the application!
