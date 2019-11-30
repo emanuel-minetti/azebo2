@@ -21,14 +21,4 @@
  * @copyright Copyright (c) 2019 Emanuel Minetti
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
-
-/**
- * List of enabled modules for this application.
- *
- * This should be an array of module namespaces used in the application.
- */
-return [
-    'Zend\Router',
-    'Zend\Validator',
-    'Application',
-];
+#parse("PHP File Header.php")
