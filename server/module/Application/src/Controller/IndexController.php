@@ -21,7 +21,6 @@
  * @copyright Copyright (c) 2019 Emanuel Minetti
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
-//TODO adjust head comment
 
 
 namespace Application\Controller;
