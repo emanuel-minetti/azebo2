@@ -1,5 +1,4 @@
 # Azebo2
-## Introduction
 
 Azebo2 is an application to print working time tables.
 
