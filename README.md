@@ -1,4 +1,3 @@
-[//]: #h (TODO Improve README)
 # Azebo2
 ## Introduction
 
