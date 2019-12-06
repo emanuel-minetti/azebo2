@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * @author Emanuel Minetti <e.minetti@posteo.de>
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @link      https://github.com/emanuel-minetti/azebo2
  * @copyright Copyright (c) 2019 Emanuel Minetti
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
@@ -25,15 +25,17 @@
 namespace ApplicationTest\Controller;
 
 use Application\Controller\IndexController;
+//TODO review: Create own Exception
+use Exception;
 use Zend\Stdlib\ArrayUtils;
-use Zend\Test\PHPUnit\hController\AbstractHttpControllerTestCase;
+use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 class IndexControllerTest extends AbstractHttpControllerTestCase
 {
     public function setUp()
     {
         // The module configuration should still be applicable for tests.
-        // You can override configuration here with test case specific values,
+        // You can override configuration here with test case specific values
         // such as sample view templates, path stacks, module_listener_options,
         // etc.
         $configOverrides = [];
@@ -48,7 +50,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testIndexActionCanBeAccessed()
     {
-        $this->dispatch('/', 'GET');
+        $this->_dispatch("/", "GET");
         $this->assertResponseStatusCode(200);
         $this->assertModuleName('application');
         $this->assertControllerName(IndexController::class); // as specified in router's controller name alias
@@ -58,13 +60,22 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testIndexActionViewModelTemplateRenderedWithinLayout()
     {
-        $this->dispatch('/', 'GET');
+        $this->_dispatch('/', 'GET');
         $this->assertQuery('.container .jumbotron');
     }
 
     public function testInvalidRouteDoesNotCrash()
     {
-        $this->dispatch('/invalid/route', 'GET');
+        $this->_dispatch('/invalid/route', 'GET');
         $this->assertResponseStatusCode(404);
+    }
+
+    private function _dispatch($url, $method) {
+        try {
+            $this->dispatch($url, $method);
+        } catch (Exception $e) {
+            //TODO review
+            return;
+        }
     }
 }

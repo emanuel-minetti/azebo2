@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * @author Emanuel Minetti <e.minetti@posteo.de>
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @link      https://github.com/emanuel-minetti/azebo2
  * @copyright Copyright (c) 2019 Emanuel Minetti
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  *
