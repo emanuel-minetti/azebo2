@@ -1,10 +1,20 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <header>
+      <div id="logo">
+        <router-link to="/">
+          <img src="./assets/UdK-Logo_lang.jpg"
+               alt="The UdK logo with a link to the homepage of this application"/>
+        </router-link>
+        <h1>Arbeitzeitbogen</h1>
+      </div>
+      <nav id="nav">
+        <router-link to="/">Home</router-link>
+        |
+        <router-link to="/about">About</router-link>
+      </nav>
+    </header>
+    <router-view/>
   </div>
 </template>
 
@@ -13,8 +23,12 @@
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  //text-align: center;
   color: #2c3e50;
+}
+
+#logo img {
+  height: 10em;
 }
 
 #nav {

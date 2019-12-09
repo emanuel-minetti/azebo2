@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import NotFound from "../views/NotFound.vue";
 
 Vue.use(VueRouter);
 
@@ -18,8 +19,13 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    // route all other request to a 404 page
+    path: "*",
+    name: "notFound",
+    component: NotFound
   }
-  // TODO add a default route to a 404 page
 ];
 
 const router = new VueRouter({
