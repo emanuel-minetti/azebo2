@@ -19,6 +19,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   }
+  // TODO add a default route to a 404 page
 ];
 
 const router = new VueRouter({

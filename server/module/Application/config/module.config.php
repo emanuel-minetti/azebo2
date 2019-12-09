@@ -24,20 +24,24 @@
 
 namespace Application;
 
-use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
     'router' => [
         'routes' => [
+            // route everything to vue
             'home' => [
-                'type'    => Literal::class,
+                'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/',
+                    'route'    => '/[:route]',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
                     ],
+                    'constraints' => [
+                        'route' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ]
                 ],
             ],
         ],
