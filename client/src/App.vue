@@ -21,12 +21,17 @@
                         </button>
                     </li>
                     <li>
+                      <button class="btn btn-primary">
                         <router-link to="/about">About</router-link>
+                      </button>
                     </li>
                 </ul>
             </nav>
         </header>
         <router-view/>
+      <footer>
+        &copy; {{ copyrightyear }} UdK Berlin, Emanuel Minetti
+      </footer>
     </div>
 </template>
 
@@ -37,6 +42,7 @@
     export default class App extends Vue {
         // TODO get the Name from session
         name = "Ihr Name";
+        copyrightyear = "2019"
     }
 </script>
 
@@ -70,6 +76,11 @@
 
         ul {
             list-style-type: none;
+
+            li {
+              padding: 0 20px;
+              display: inline;
+            }
         }
 
         a {
@@ -80,5 +91,9 @@
                 color: #42b983;
             }
         }
+    }
+
+    footer {
+      text-align: center;
     }
 </style>
