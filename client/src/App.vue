@@ -3,8 +3,10 @@
         <header>
             <div id="logo">
                 <router-link to="/">
-                    <img src="./assets/UdK-Logo_lang.jpg"
-                         alt="The UdK logo with a link to the homepage of this application"/>
+                    <img
+                            src="./assets/UdK-Logo_lang.jpg"
+                            alt="The UdK logo with a link to the homepage of this application"
+                    />
                 </router-link>
                 <hgroup>
                     <h1>Arbeitzeitbogen für</h1>
@@ -14,9 +16,9 @@
             <nav id="nav">
                 <ul>
                     <li>
-                      <button class="btn btn-primary">
-                        <router-link to="/">Home</router-link>
-                      </button>
+                        <button class="btn btn-primary">
+                            <router-link to="/">Home</router-link>
+                        </button>
                     </li>
                     <li>
                         <router-link to="/about">About</router-link>
@@ -29,9 +31,9 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from "vue-property-decorator";
+  import {Component, Vue} from "vue-property-decorator";
 
-    @Component
+  @Component
     export default class App extends Vue {
         // TODO get the Name from session
         name = "Ihr Name";
@@ -67,7 +69,7 @@
         display: inline-block;
 
         ul {
-          list-style-type: none;
+            list-style-type: none;
         }
 
         a {
