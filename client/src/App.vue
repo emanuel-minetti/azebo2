@@ -5,11 +5,11 @@
                 <router-link to="/">
                     <img
                             src="./assets/UdK-Logo_lang.jpg"
-                            alt="The UdK logo with a link to the homepage of this application"
+                            alt="Das Logo der UdK"
                     />
                 </router-link>
                 <hgroup>
-                    <h1>Arbeitzeitbogen für</h1>
+                    <h1>Arbeitszeitbogen für</h1>
                     <h1>{{ name }}</h1>
                 </hgroup>
             </div>
@@ -17,28 +17,33 @@
                 <ul>
                     <li>
                         <button class="btn btn-primary">
-                            <router-link to="/">Home</router-link>
+                            <router-link to="/">Einstellungen</router-link>
                         </button>
                     </li>
                     <li>
-                      <button class="btn btn-primary">
-                        <router-link to="/about">About</router-link>
-                      </button>
+                        <button class="btn btn-primary">
+                            <router-link to="/about">Monate</router-link>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary">
+                            <router-link to="/about">Logout</router-link>
+                        </button>
                     </li>
                 </ul>
             </nav>
         </header>
         <router-view/>
-      <footer>
-        &copy; {{ copyrightyear }} UdK Berlin, Emanuel Minetti
-      </footer>
+        <footer>
+            &copy; {{ copyrightyear }} UdK Berlin, Emanuel Minetti
+        </footer>
     </div>
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from "vue-property-decorator";
+    import {Component, Vue} from "vue-property-decorator";
 
-  @Component
+    @Component
     export default class App extends Vue {
         // TODO get the Name from session
         name = "Ihr Name";
@@ -56,7 +61,7 @@
     }
 
     #logo {
-        width: 80%;
+        width: 60%;
         display: inline-block;
 
         img {
@@ -71,15 +76,15 @@
     }
 
     #nav {
-        width: 20%;
+        width: 40%;
         display: inline-block;
 
         ul {
             list-style-type: none;
 
             li {
-              padding: 0 20px;
-              display: inline;
+                padding: 0 20px;
+                display: inline;
             }
         }
 
@@ -94,6 +99,6 @@
     }
 
     footer {
-      text-align: center;
+        text-align: center;
     }
 </style>
