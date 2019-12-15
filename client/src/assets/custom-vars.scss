@@ -1,1 +1,6 @@
-$primary: #e70036;
+$theme-colors: (
+        "primary": #e70036,
+        "text": #211e1e
+);
+
+$body-color: theme-color("text");

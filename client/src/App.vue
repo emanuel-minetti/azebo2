@@ -35,7 +35,7 @@
         </header>
         <router-view/>
         <footer>
-            &copy; {{ copyrightyear }} UdK Berlin, Emanuel Minetti
+            &copy; {{ copyrightyear }} Emanuel Minetti, UdK Berlin Version: {{ version }}
         </footer>
     </div>
 </template>
@@ -47,7 +47,9 @@
     export default class App extends Vue {
         // TODO get the Name from session
         name = "Ihr Name";
-        copyrightyear = "2019"
+        // TODO get copyright and version from `package.json`
+        copyrightyear = "2019";
+        version = "0.1.0";
     }
 </script>
 
@@ -97,11 +99,15 @@
 
         a {
             font-weight: bold;
-            color: #2c3e50;
+            color: white;
+        }
 
-            &.router-link-exact-active {
-                color: #42b983;
-            }
+        a:hover {
+            text-decoration-line: none;
+        }
+
+        button:hover {
+            background-color: theme-color("text");
         }
     }
 
