@@ -8,7 +8,7 @@
         "mvc",
         "zf"
     ],
-    "homepage": "http://framework.zend.com/",
+    "homepage": "https://github.com/emanuel-minetti/azebo2",
     "require": {
         "php": "^7.2",
         "zendframework/zend-component-installer": "^1.0 || ^2.1",
@@ -18,7 +18,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Application\\": "module/Application/src/"
+            "Application\\": "module/Application/src/",
+            "Login\\": "module/Login/src/"
         }
     },
     "autoload-dev": {

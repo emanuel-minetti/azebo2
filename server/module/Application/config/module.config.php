@@ -36,6 +36,7 @@ return [
                     'route' => '/api/login' ,
                     'defaults' => [
                         // TODO add server side login controller
+                        // TODO move route to Login Module
                         'controller' => Controller\LoginController::class,
                         'action'     => 'index',
                     ],
