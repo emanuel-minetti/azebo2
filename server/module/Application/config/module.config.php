@@ -30,22 +30,7 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 return [
     'router' => [
         'routes' => [
-            'api' => [
-                'type' => Segment::class,
-                'options' => [
-                    'route' => '/api/login' ,
-                    'defaults' => [
-                        // TODO add server side login controller
-                        // TODO move route to Login Module
-                        'controller' => Controller\LoginController::class,
-                        'action'     => 'index',
-                    ],
-                    'constraints' => [
-                        'route' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ]
-                ],
-            ],
-            // route everything else to vue
+            // route everything to vue
             'home' => [
                 'type'    => Segment::class,
                 'options' => [

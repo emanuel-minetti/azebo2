@@ -22,15 +22,37 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
-
 namespace Login;
 
+use Zend\Router\Http\Segment;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
-class Module
-{
-    public function getConfig()
-    {
-        return include __DIR__ . '/../config/module.config.php';
-    }
-
-}
+return array(
+    'router' => [
+        'routes' => [
+            'login' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/login',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\LoginController::class,
+                        'action' => 'login',
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
+            Controller\LoginController::class => InvokableFactory::class,
+        ],
+    ],
+    'view_manager' => [
+        'strategies' => [
+            'ViewJsonStrategy',
+        ],
+    ],
+);
