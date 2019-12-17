@@ -60,4 +60,8 @@ class User extends ArrayObject
         return password_verify($password, $this->password_hash);
     }
 
+    public function getFullName() {
+        return $this->given_name. ' ' . $this->name;
+    }
+
 }
