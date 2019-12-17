@@ -50,7 +50,9 @@ class User extends ArrayObject
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'password' => $this->password_hash,
+            'password_hash' => $this->password_hash,
+            'name' => $this->name,
+            'given_name' => $this->given_name,
         ];
     }
 
