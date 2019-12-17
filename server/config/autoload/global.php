@@ -33,5 +33,8 @@
  */
 
 return [
-    // ...
+    'db' => [
+        'driver' => 'Pdo_Mysql',
+        'database' => 'zf2_albums',
+    ],
 ];

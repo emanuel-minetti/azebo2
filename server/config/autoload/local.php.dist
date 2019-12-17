@@ -12,4 +12,8 @@
  */
 
 return [
+    'db' => [
+        'username' => '<yourUsername>',
+        'password' => '<yourPassword>',
+    ],
 ];
