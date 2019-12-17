@@ -27,11 +27,19 @@ azebo2 is an application to print working time tables
 namespace Login\Controller;
 
 
+use Login\Model\UserTable;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
 class LoginController extends AbstractActionController
 {
+    private $table;
+
+    public function __construct(UserTable $table)
+    {
+        $this->table = $table;
+    }
+
     public function loginAction() {
         return new JsonModel([
             'success' => false,

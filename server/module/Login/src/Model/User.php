@@ -26,7 +26,9 @@
 namespace Login\Model;
 
 
-class User
+use ArrayObject;
+
+class User extends ArrayObject
 {
     public $id;
     public $username;
