@@ -41,8 +41,10 @@ class LoginController extends AbstractActionController
     }
 
     public function loginAction() {
+        $user = $this->table->getUserByUsername('test');
         return new JsonModel([
             'success' => false,
+            'name' => $user->name
         ]);
     }
 

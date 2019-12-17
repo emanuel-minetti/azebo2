@@ -25,7 +25,6 @@
 namespace Login;
 
 use Zend\Router\Http\Segment;
-use Zend\ServiceManager\Factory\InvokableFactory;
 
 return array(
     'router' => [
@@ -43,11 +42,6 @@ return array(
                     ],
                 ],
             ],
-        ],
-    ],
-    'controllers' => [
-        'factories' => [
-            Controller\LoginController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [

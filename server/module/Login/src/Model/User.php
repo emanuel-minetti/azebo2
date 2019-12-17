@@ -32,13 +32,17 @@ class User extends ArrayObject
 {
     public $id;
     public $username;
-    public $password;
+    public $password_hash;
+    public $name;
+    public $given_name;
 
     public function exchangeArray($data)
     {
         $this->id = !empty($data['id']) ? $data['id'] : null;
         $this->username = !empty($data['username']) ? $data['username'] : null;
-        $this->password = !empty($data['password']) ? $data['password'] : null;
+        $this->password_hash = !empty($data['password_hash']) ? $data['password_hash'] : null;
+        $this->name = !empty($data['name']) ? $data['name'] : null;
+        $this->given_name = !empty($data['given_name']) ? $data['given_name'] : null;
     }
 
     public function getArrayCopy()
@@ -46,12 +50,12 @@ class User extends ArrayObject
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'password' => $this->password,
+            'password' => $this->password_hash,
         ];
     }
 
     public function verifyPassword($password) {
-        return password_verify($password, $this->password);
+        return password_verify($password, $this->password_hash);
     }
 
 }
