@@ -35,6 +35,6 @@
 return [
     'db' => [
         'driver' => 'Pdo_Mysql',
-        'database' => 'zf2_albums',
+        'database' => 'azebo2',
     ],
 ];
