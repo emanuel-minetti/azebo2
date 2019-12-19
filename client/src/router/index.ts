@@ -13,9 +13,9 @@ const routes = [
     component: Home
   },
   {
-      path: "/login",
-      name: "login",
-      component: Login
+    path: "/login",
+    name: "login",
+    component: Login
   },
   {
     path: "/about",
@@ -43,12 +43,14 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const publicPages = ["/login"];
   const isPublic = publicPages.includes(to.path);
-  const loggedIn = false;
+  const loggedIn = true;
 
   if (!isPublic && !loggedIn) {
     return next({
       path: "/login",
-      query: {redirect: to.path} // to redirect after login
+      query: {
+        redirect: to.path
+      } // to redirect after login
     });
   }
   next();
