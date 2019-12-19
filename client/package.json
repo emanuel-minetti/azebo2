@@ -59,6 +59,9 @@
       "@vue/prettier",
       "@vue/typescript"
     ],
+    "plugins": [
+      "vue"
+    ],
     "rules": {},
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
