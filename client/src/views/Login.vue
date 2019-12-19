@@ -1,7 +1,7 @@
 <template>
   <div>
     <Title prop-title="Login" />
-    <b-form @submit="onSubmit">
+    <b-form @submit="onSubmit" @reset="onReset">
       <b-form-group label="Benutzername:" label-for="username">
         <b-form-input
           id="username"
@@ -18,6 +18,10 @@
         >
         </b-form-input>
       </b-form-group>
+      <b-button type="submit" variant="primary">Absenden</b-button>
+      <b-button id="reset" type="reset" variant="secondary">
+        Zurücksetzen
+      </b-button>
     </b-form>
   </div>
 </template>
@@ -34,9 +38,22 @@ export default class Login extends Vue {
     username: "",
     password: ""
   };
+  show = true;
 
   onSubmit(evt: Event) {
     evt.preventDefault();
+  }
+
+  onReset(evt: Event) {
+    evt.preventDefault();
+    // Reset form values
+    this.form.username = "";
+    this.form.password = "";
+    // Trick to reset/clear native browser form validation state
+    this.show = false;
+    this.$nextTick(() => {
+      this.show = true;
+    });
   }
 }
 </script>
@@ -45,5 +62,9 @@ export default class Login extends Vue {
 form {
   padding-left: 10%;
   padding-right: 10%;
+}
+
+#reset {
+  margin-left: 1em;
 }
 </style>
