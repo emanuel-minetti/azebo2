@@ -7,11 +7,13 @@
           id="username"
           v-model="form.username"
           placeholder="Ihr Benutzername"
+          :state="isUsernameValid"
         >
         </b-form-input>
       </b-form-group>
       <b-form-group label="Passwort:" label-for="password">
         <b-form-input
+          type="password"
           id="password"
           v-model="form.password"
           placeholder="Ihr Passwort"
@@ -39,6 +41,13 @@ export default class Login extends Vue {
     password: ""
   };
   show = true;
+  submitted = false;
+
+  get isUsernameValid() {
+    let valid = this.form.username && this.form.username.length > 0 &&
+        this.form.username.length <= 30;
+    return (this.submitted ? valid : null);
+  }
 
   onSubmit(evt: Event) {
     evt.preventDefault();
