@@ -7,9 +7,12 @@
           id="username"
           v-model="form.username"
           placeholder="Ihr Benutzername"
+          autofocus
           :state="isUsernameValid"
-        >
-        </b-form-input>
+        />
+        <b-form-invalid-feedback id="username">
+          Bitte geben Sie einen Benutzernamen an!
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group label="Passwort:" label-for="password">
         <b-form-input
@@ -17,8 +20,11 @@
           id="password"
           v-model="form.password"
           placeholder="Ihr Passwort"
-        >
-        </b-form-input>
+          :state="isPasswordValid"
+        />
+        <b-form-invalid-feedback id="password">
+          Bitte geben Sie ein Passwort an!
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-button type="submit" variant="primary">Absenden</b-button>
       <b-button id="reset" type="reset" variant="secondary">
@@ -45,25 +51,25 @@ export default class Login extends Vue {
 
   get isUsernameValid() {
     let valid =
-        this.form.username && this.form.username.length > 0 &&
-        this.form.username.length <= 30;
-    return (this.submitted ? valid : null);
+      this.form.username.trim() !== "" && this.form.username.length <= 30;
+    return this.submitted ? valid : null;
+  }
+
+  get isPasswordValid() {
+    let valid =
+      this.form.password.trim().length >= 8 && this.form.password.length <= 12;
+    return this.submitted ? valid : null;
   }
 
   onSubmit(evt: Event) {
     evt.preventDefault();
+    this.submitted = true;
   }
 
   onReset(evt: Event) {
     evt.preventDefault();
-    // Reset form values
     this.form.username = "";
     this.form.password = "";
-    // Trick to reset/clear native browser form validation state
-    this.show = false;
-    this.$nextTick(() => {
-      this.show = true;
-    });
   }
 }
 </script>

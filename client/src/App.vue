@@ -111,7 +111,8 @@ export default class App extends Vue {
 
 .form-control:focus {
   border-color: theme-color("text");
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 255, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px theme-color-level("text", -0.4);
 }
 
 footer {
