@@ -117,6 +117,4 @@ export default class App extends Vue {
 footer {
   text-align: center;
 }
-
-
 </style>

@@ -44,7 +44,8 @@ export default class Login extends Vue {
   submitted = false;
 
   get isUsernameValid() {
-    let valid = this.form.username && this.form.username.length > 0 &&
+    let valid =
+        this.form.username && this.form.username.length > 0 &&
         this.form.username.length <= 30;
     return (this.submitted ? valid : null);
   }
