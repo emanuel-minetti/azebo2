@@ -37,6 +37,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Title from "@/components/Title.vue";
+import LoginService from "@/services/LoginService";
 
 @Component({
   components: { Title }
@@ -49,21 +50,24 @@ export default class Login extends Vue {
   show = true;
   submitted = false;
 
+  //TODO make configurable
   get isUsernameValid() {
-    let valid =
+    const valid =
       this.form.username.trim() !== "" && this.form.username.length <= 30;
     return this.submitted ? valid : null;
   }
 
+  //TODO make configurable
   get isPasswordValid() {
-    let valid =
-      this.form.password.trim().length >= 8 && this.form.password.length <= 12;
+    const valid =
+      this.form.password.trim().length >= 4 && this.form.password.length <= 12;
     return this.submitted ? valid : null;
   }
 
   onSubmit(evt: Event) {
     evt.preventDefault();
     this.submitted = true;
+    LoginService.login(this.form.username, this.form.password);
   }
 
   onReset(evt: Event) {
