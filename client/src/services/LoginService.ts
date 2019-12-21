@@ -1,11 +1,10 @@
 export default class LoginService {
   static login(username: String, password: String) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify({
-      username, password
-    }));
+    console.log(JSON.stringify({ username, password }));
     const requestData = JSON.stringify({
-      username, password
+      username,
+      password
     });
     const requestOptions = {
       method: "POST",
@@ -24,5 +23,5 @@ export default class LoginService {
       .catch(answer => {
         // eslint-disable-next-line no-console
         console.log(answer);
-      })
-}}
+      });
+};}
