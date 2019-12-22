@@ -25,16 +25,16 @@ export default class LoginService {
 
   private static handleResponse(response: Response) {
     return response.text().then(text => {
-      const data = text && JSON.parse(text);
+      const content = text && JSON.parse(text);
       if (!response.ok) {
         if (response.status == 401) {
           LoginService.logout();
           location.reload(true);
         }
-        const error = (data && data.message) || response.statusText;
+        const error = (content && content.message) || response.statusText;
         return Promise.reject(error);
       }
-      return data.data;
+      return content.data;
     });
   }
 
