@@ -29,7 +29,7 @@ export default class LoginService {
       if (!response.ok) {
         if (response.status == 401) {
           LoginService.logout();
-          location.reload(true);
+          location.reload();
         }
         const error = (content && content.message) || response.statusText;
         return Promise.reject(error);
