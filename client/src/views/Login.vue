@@ -50,14 +50,12 @@ export default class Login extends Vue {
   show = true;
   submitted = false;
 
-  //TODO make configurable
   get isUsernameValid() {
     const valid =
       this.form.username.trim() !== "" && this.form.username.length <= 30;
     return this.submitted ? valid : null;
   }
 
-  //TODO make configurable
   get isPasswordValid() {
     const valid =
       this.form.password.trim().length >= 4 && this.form.password.length <= 12;

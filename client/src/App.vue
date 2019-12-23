@@ -40,14 +40,23 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+const config = require("../package.json");
 
 @Component
 export default class App extends Vue {
-  // TODO get the Name from session
-  name = "Ihr Name";
-  // TODO get copyright and version from `package.json`
-  copyrightyear = "2019";
-  version = "0.1.0";
+  // name from `localStorage`
+  name = "";
+  // copyright and version from `package.json`
+  copyrightyear = "";
+  version = "";
+
+  mounted() {
+    let userString = <string> localStorage.getItem("user");
+    let user =  JSON.parse(userString);
+    this.name = user.full_name;
+    this.version = config.version;
+    this.copyrightyear = config.copyright;
+  }
 }
 </script>
 

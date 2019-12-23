@@ -7,7 +7,7 @@ export default class LoginService {
     const requestOptions = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",  // header name contains a hyphen, so quotes are required
+        "Content-Type": "application/json", // header name contains a hyphen, so quotes are required
         Accept: "application/json"
       },
       body: requestData
