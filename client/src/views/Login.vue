@@ -66,6 +66,12 @@ export default class Login extends Vue {
     evt.preventDefault();
     this.submitted = true;
     LoginService.login(this.form.username, this.form.password);
+    //TODO 'redirect' after login work!
+    console.log("URL: x" + this.$route.query.redirect.toString() + "x");
+    this.$router
+      .push({ name: "home" })
+      .then(() => {console.log("arrived")})
+      .catch((error) => {console.log("Unhandled Exception: " + error)});
   }
 
   onReset(evt: Event) {

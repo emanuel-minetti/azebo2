@@ -12,6 +12,7 @@ export default class LoginService {
       },
       body: requestData
     };
+
     //TODO make configurable
     return fetch("http://localhost:7000/api/login", requestOptions)
       .then(this.handleResponse)

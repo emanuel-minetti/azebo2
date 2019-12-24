@@ -6,8 +6,8 @@
           <img src="./assets/UdK-Logo_lang.jpg" alt="Das Logo der UdK" />
         </router-link>
         <hgroup>
-          <h1>Arbeitszeitbogen für</h1>
-          <h1>{{ name }}</h1>
+          <h1>Arbeitszeitbogen</h1>
+          <h1 v-if="loggedIn">für {{ name }}</h1>
         </hgroup>
       </div>
       <nav id="nav">
@@ -44,16 +44,19 @@ const config = require("../package.json");
 
 @Component
 export default class App extends Vue {
-  // name from `localStorage`
+  loggedIn = false;
   name = "";
-  // copyright and version from `package.json`
   copyrightyear = "";
   version = "";
 
   mounted() {
-    let userString = <string> localStorage.getItem("user");
-    let user =  JSON.parse(userString);
-    this.name = user.full_name;
+    // get name from `localStorage`
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      this.loggedIn = true;
+      this.name = JSON.parse(userString).full_name;
+    }
+    // copyright and version from `package.json`
     this.version = config.version;
     this.copyrightyear = config.copyright;
   }

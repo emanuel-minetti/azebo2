@@ -43,7 +43,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const publicPages = ["/login"];
   const isPublic = publicPages.includes(to.path);
-  const loggedIn = true;
+  const loggedIn = localStorage.getItem("user"); // evaluate `expires`
 
   if (!isPublic && !loggedIn) {
     return next({
