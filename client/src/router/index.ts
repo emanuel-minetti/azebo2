@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem("user"); // evaluate `expires`
 
   if (!isPublic && !loggedIn) {
-    return next({
+    next({
       path: "/login",
       query: {
         redirect: to.path

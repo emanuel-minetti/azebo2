@@ -26,6 +26,9 @@
           Bitte geben Sie ein Passwort an!
         </b-form-invalid-feedback>
       </b-form-group>
+      <b-alert v-model="loginError" variant="danger" dismissible>
+        Benutzername oder Passwort ist ungülig!
+      </b-alert>
       <b-button type="submit" variant="primary">Absenden</b-button>
       <b-button id="reset" type="reset" variant="secondary">
         Zurücksetzen
@@ -47,8 +50,8 @@ export default class Login extends Vue {
     username: "",
     password: ""
   };
-  show = true;
   submitted = false;
+  loginError = false;
 
   get isUsernameValid() {
     // TODO centralize validation rules
@@ -67,13 +70,14 @@ export default class Login extends Vue {
   onSubmit(evt: Event) {
     evt.preventDefault();
     this.submitted = true;
-    LoginService.login(this.form.username, this.form.password);
-    //TODO 'redirect' after login work!
-    console.log("URL: x" + this.$route.query.redirect.toString() + "x");
-    this.$router
-      .push({ name: "home" })
-      .then(() => {console.log("arrived")})
-      .catch((error) => {console.log("Unhandled Exception: " + error)});
+    LoginService.login(this.form.username, this.form.password)
+      //"redirect" after successful login
+      .then(() => this.$router.push(this.$route.query.redirect.toString()))
+      //show error message on failure
+      .catch(() => {
+        this.loginError = true;
+        this.submitted = false;
+      });
   }
 
   onReset(evt: Event) {
