@@ -70,7 +70,13 @@ export default class Login extends Vue {
     this.submitted = true;
     LoginService.login(this.form.username, this.form.password)
       //"redirect" after successful login
-      .then(() => this.$router.push(this.$route.query.redirect.toString()))
+      .then(() => {
+        if (this.$route.query.redirect) {
+          this.$router.push(this.$route.query.redirect.toString());
+        } else {
+          this.$router.push({ name: "home" });
+        }
+      })
       //show error message on failure
       .catch(() => {
         this.loginError = true;

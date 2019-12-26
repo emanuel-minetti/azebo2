@@ -43,7 +43,7 @@ export default class LoginService {
     });
   }
 
-  private static logout() {
+  static logout() {
     localStorage.removeItem("user");
   }
 }

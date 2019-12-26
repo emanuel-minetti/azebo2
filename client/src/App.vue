@@ -23,9 +23,9 @@
             </button>
           </li>
           <li>
-            <button class="btn btn-primary">
-              <router-link to="/about">Logout</router-link>
-            </button>
+            <b-button variant="primary" v-on:click="onLogout">
+              Logout
+            </b-button>
           </li>
         </ul>
       </nav>
@@ -40,6 +40,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import LoginService from "@/services/LoginService";
 const config = require("../package.json");
 
 @Component
@@ -59,6 +60,11 @@ export default class App extends Vue {
     // copyright and version from `package.json`
     this.version = config.version;
     this.copyrightyear = config.copyright;
+  }
+
+  onLogout() {
+    LoginService.logout();
+    this.$router.push({ name: "login" });
   }
 }
 </script>
@@ -107,6 +113,7 @@ export default class App extends Vue {
     }
   }
 
+  button,
   a {
     font-weight: bold;
     color: white;
