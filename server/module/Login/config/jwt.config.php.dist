@@ -22,9 +22,11 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
+// Copy this file to `jwt.config.php` and fill in your settings
+
 namespace Login;
 
 return [
-    'serverName' => 'newprix',
-    'jwtKey' => 'tlWx4ia6TOMSi9kfsErdnRVGYqHMKVSTrRTDMB9sFsSRz39/dBWZJfRSgDOkqAAKnBvrJx2y/sFS81AS86EzrA==',
+    'serverName' => '<yourServerName>',
+    'jwtKey' => '<yourPrivateJwtKey>',
 ];

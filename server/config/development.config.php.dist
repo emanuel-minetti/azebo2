@@ -22,6 +22,8 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
+ // Copy this file to `development.config.php` and fill in your settings
+
 return [
     // Additional modules to include when in development mode
     'modules' => [
