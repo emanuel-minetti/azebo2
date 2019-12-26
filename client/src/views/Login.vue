@@ -54,14 +54,12 @@ export default class Login extends Vue {
   loginError = false;
 
   get isUsernameValid() {
-    // TODO centralize validation rules
     const valid =
       this.form.username.trim() !== "" && this.form.username.length <= 30;
     return this.submitted ? valid : null;
   }
 
   get isPasswordValid() {
-    // TODO centralize validation rules
     const valid =
       this.form.password.trim().length >= 4 && this.form.password.length <= 12;
     return this.submitted ? valid : null;
