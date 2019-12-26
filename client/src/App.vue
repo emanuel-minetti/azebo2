@@ -5,6 +5,8 @@
         <router-link to="/">
           <img src="./assets/UdK-Logo_lang.jpg" alt="Das Logo der UdK" />
         </router-link>
+      </div>
+      <div id="site-title">
         <hgroup>
           <h1>Arbeitszeitbogen</h1>
           <h1 v-if="loggedIn">für {{ name }}</h1>
@@ -86,22 +88,27 @@ export default class App extends Vue {
 }
 
 #logo {
-  width: 60%;
+  width: 33%;
   display: inline-block;
 
   img {
     height: 10em;
   }
+}
 
+#site-title {
+  width: 33%;
+  display: inline-block;
   hgroup {
+    padding-left: 10%;
+    padding-right: 10%;
     display: inline-block;
-    padding-left: 100px;
     text-align: center;
   }
 }
 
 #nav {
-  width: 40%;
+  width: 34%;
   display: inline-block;
 
   ul {
