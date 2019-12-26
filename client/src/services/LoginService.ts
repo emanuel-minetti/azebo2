@@ -13,8 +13,7 @@ export default class LoginService {
       body: requestData
     };
 
-    //TODO make configurable
-    return fetch("http://localhost:7000/api/login", requestOptions)
+    return fetch(this.getBaseUrl() + "/api/login", requestOptions)
       .then(this.handleResponse)
       .then(user => {
         if (user.jwt) {
@@ -22,6 +21,11 @@ export default class LoginService {
         }
         return user;
       });
+  }
+
+  private static getBaseUrl() {
+    const loc = window.location;
+    return loc.protocol + "//" + loc.host;
   }
 
   private static handleResponse(response: Response) {
