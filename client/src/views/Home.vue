@@ -1,15 +1,16 @@
 <template>
   <div class="home">
+    <Title prop-title="Startseite" />
     Das ist die Homepage
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import {Component, Vue} from "vue-property-decorator";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import Title from "@/components/Title.vue";
 
-@Component
-export default class Home extends Vue{
-
-}
+@Component({
+  components: { Title }
+})
+export default class Home extends Vue {}
 </script>

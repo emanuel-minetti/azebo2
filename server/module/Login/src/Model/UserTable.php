@@ -10,31 +10,48 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * @author Emanuel Minetti <e.minetti@posteo.de>
- * @link      https://github.com/emanuel-minetti/azebo2
+ * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
  * @copyright Copyright (c) 2019 Emanuel Minetti
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
- *
- * Global Configuration Override
- *
- * You can use this file for overriding configuration values from modules, etc.
- * You would place values in here that are agnostic to the environment and not
- * sensitive to security.
- *
- * @NOTE: In practice, this file will typically be INCLUDED in your source
- * control, so do not include passwords or other sensitive information in this
- * file.
  */
 
-return [
-    'db' => [
-        'driver' => 'Pdo_Mysql',
-        'database' => 'azebo2',
-    ],
-];
+
+namespace Login\Model;
+
+
+use RuntimeException;
+use Zend\Db\TableGateway\TableGateway;
+
+class UserTable
+{
+    private $tableGateway;
+
+    public function __construct(TableGateway $tableGateway)
+    {
+        $this->tableGateway = $tableGateway;
+    }
+
+    /**
+     * @param String $username
+     * @return User
+     */
+    public function getUserByUsername($username)
+    {
+        $rowset = $this->tableGateway->select(['username' => $username]);
+        $row = $rowset->current();
+        if (!$row) {
+            throw new RuntimeException(sprintf(
+                'Could not find row for username %s',
+                $username
+            ));
+        }
+        return $row;
+    }
+}

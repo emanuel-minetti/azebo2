@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import NotFound from "../views/NotFound.vue";
+import Login from "@/views/Login.vue";
 
 Vue.use(VueRouter);
 
@@ -10,6 +11,11 @@ const routes = [
     path: "/",
     name: "home",
     component: Home
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: Login
   },
   {
     path: "/about",
@@ -32,6 +38,31 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ["/login"];
+  const isPublic = publicPages.includes(to.path);
+  let loggedIn;
+  if (localStorage.getItem("user")) {
+    const expires = Number(
+      JSON.parse(<string>localStorage.getItem("user")).expire
+    );
+    const now = Date.now() / 1000;
+    loggedIn = expires >= now;
+  } else {
+    loggedIn = false;
+  }
+
+  if (!isPublic && !loggedIn) {
+    next({
+      path: "/login",
+      query: {
+        redirect: to.path
+      } // to redirect after login
+    });
+  }
+  next();
 });
 
 export default router;

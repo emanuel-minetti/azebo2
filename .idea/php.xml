@@ -53,6 +53,8 @@
       <path value="$PROJECT_DIR$/server/vendor/sebastian/version" />
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-dom" />
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-test" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-db" />
+      <path value="$PROJECT_DIR$/server/vendor/firebase/php-jwt" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

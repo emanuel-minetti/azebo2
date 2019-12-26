@@ -11,5 +11,11 @@
  * credentials from accidentally being committed into version control.
  */
 
+ // Copy this file to `local.php` and fill in your settings
+
 return [
+    'db' => [
+        'username' => '<yourUsername>',
+        'password' => '<yourPassword>',
+    ],
 ];
