@@ -27,17 +27,14 @@
 namespace Login\Controller;
 
 
-use Firebase\JWT\JWT;
 use Login\Model\UserTable;
 use RuntimeException;
-use Zend\Config\Factory;
+use Service\AuthorizationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
 class LoginController extends AbstractActionController
 {
-    private const EXPIRE_TIME = 1800; // is half an hour
-
     private $table;
 
     public function __construct(UserTable $table)
@@ -75,24 +72,8 @@ class LoginController extends AbstractActionController
 
         // authenticate
         if ($user->verifyPassword($password)) {
-            $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
-
-            $issuedAt = time();
-            $expire = $issuedAt + self::EXPIRE_TIME;
-            $serverName = $config->get('serverName');
-
-            $resData = [
-                'iat' => $issuedAt,
-                'iss' => $serverName,
-                'exp' => $expire,
-                'data' => [
-                    'user_id' => $user->id,
-                ],
-            ];
-
-            $secretKey = base64_decode($config->get('jwtKey'));
-            $jwt = JWT::encode($resData, $secretKey, 'HS512');
-
+            $expire = time() + AuthorizationService::EXPIRE_TIME;
+            $jwt = AuthorizationService::getJwt($expire, $user->id);
             return new JsonModel([
                 'success' => true,
                 'data' => [

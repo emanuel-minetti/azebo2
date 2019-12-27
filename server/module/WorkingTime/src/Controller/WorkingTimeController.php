@@ -38,8 +38,16 @@ class WorkingTimeController extends AbstractActionController
             Request::fromString($this->request),
             Response::fromString($this->response),
             ['GET',])) {
+
+
+            // refresh jwt
+            $userId = $this->request->getQuery()->user_id;
+            $expire = time() + AuthorizationService::EXPIRE_TIME;
+            $jwt = AuthorizationService::getJwt($expire, $userId);
             return new JsonModel([
                 'success' => true,
+                'jwt' => $jwt,
+                'expire' => $expire,
             ]);
         } else {
             return new JsonModel([

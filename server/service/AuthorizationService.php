@@ -32,6 +32,9 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 class AuthorizationService {
+
+    public const EXPIRE_TIME = 1800; // is half an hour
+
     public static function authorize(
         Request $request,
         Response $response,
@@ -72,5 +75,25 @@ class AuthorizationService {
             $response->setStatusCode(405);  // Method Not Allowed
         }
         return false;
+    }
+
+    public static function getJwt($expire, $userId) {
+        $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
+
+        $issuedAt = time();
+        $serverName = $config->get('serverName');
+
+        $resData = [
+            'iat' => $issuedAt,
+            'iss' => $serverName,
+            'exp' => $expire,
+            'data' => [
+                'user_id' => $userId,
+            ],
+        ];
+
+        $secretKey = base64_decode($config->get('jwtKey'));
+        return JWT::encode($resData, $secretKey, 'HS512');
+
     }
 }
