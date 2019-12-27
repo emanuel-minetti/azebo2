@@ -4,4 +4,4 @@ config/development.config.php
 data/cache/*
 !data/cache/.gitkeep
 phpunit.xml
-/module/Login/config/jwt.config.php
+/config/autoload/jwt.config.php

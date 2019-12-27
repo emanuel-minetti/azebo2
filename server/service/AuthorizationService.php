@@ -24,9 +24,53 @@
 
 namespace Service;
 
+use Exception;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\JWT;
+use Zend\Config\Factory;
+use Zend\Http\Request;
+use Zend\Http\Response;
+
 class AuthorizationService {
-    public static function authorize($jwt, $role = "user") {
+    public static function authorize(
+        Request $request,
+        Response $response,
+        $acceptedMethods = ["GET"]) {
+        if (array_search($request->getMethod(), $acceptedMethods) !== false) {
+            $authHeader = $request->getHeader('Authorization');
+            if ($authHeader) {
+                list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
+                if ($jwt) {
+                    $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
+                    $secretKey = base64_decode($config->get('jwtKey'));
+                    try {
+                        $token = JWT::decode($jwt, $secretKey, ['HS512']);
+                        // inject user_id into request
+                        $request->getQuery()->user_id = $token->data->user_id;
+                        return true;
+                    }
+                    catch (ExpiredException $e) {
+                        // the token is expired
+                        $response->setStatusCode(401);   // Unauthorized
+                        $response->setContent("Token expired");
+                    }
+                    catch (Exception $e) {
+                        // the token is invalid
+                        $response->setStatusCode(401);  // Unauthorized
+
+                    }
+                } else {
+                    // no token could be extracted
+                    $response->setStatusCode(400);  // Bad Request
+                }
+            } else {
+                // no auth-header was sent
+                $response->setStatusCode(400);  // Bad Request
+            }
+        } else {
+            // method not allowed
+            $response->setStatusCode(405);  // Method Not Allowed
+        }
         return false;
     }
 }
-

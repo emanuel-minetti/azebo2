@@ -75,7 +75,7 @@ class LoginController extends AbstractActionController
 
         // authenticate
         if ($user->verifyPassword($password)) {
-            $config = Factory::fromFile('./../server/module/Login/config/jwt.config.php', true);
+            $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
 
             $issuedAt = time();
             $expire = $issuedAt + self::EXPIRE_TIME;
