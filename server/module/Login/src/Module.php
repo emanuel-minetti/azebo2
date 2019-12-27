@@ -22,9 +22,7 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
-
 namespace Login;
-
 
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\ResultSet\ResultSet;
@@ -65,5 +63,4 @@ class Module
             ],
         ];
     }
-
 }

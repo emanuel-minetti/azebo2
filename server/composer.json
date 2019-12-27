@@ -23,7 +23,8 @@
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
-            "Login\\": "module/Login/src/"
+            "Login\\": "module/Login/src/",
+            "WorkingTime\\": "module/WorkingTime/src/"
         }
     },
     "autoload-dev": {
