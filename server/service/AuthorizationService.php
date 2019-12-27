@@ -21,5 +21,12 @@
  * @copyright Copyright (c) 2019 Emanuel Minetti
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
-#parse("PHP File Header.php")
+
+namespace Service;
+
+class AuthorizationService {
+    public static function authorize($jwt, $role = "user") {
+        return false;
+    }
+}
 

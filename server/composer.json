@@ -24,7 +24,8 @@
         "psr-4": {
             "Application\\": "module/Application/src/",
             "Login\\": "module/Login/src/",
-            "WorkingTime\\": "module/WorkingTime/src/"
+            "WorkingTime\\": "module/WorkingTime/src/",
+            "Service\\": "service/"
         }
     },
     "autoload-dev": {

@@ -24,15 +24,23 @@
 
 namespace WorkingTime\Controller;
 
+use Service\AuthorizationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
 class WorkingTimeController extends AbstractActionController {
+    //TODO Gard with authentication
     public function monthAction()
     {
-        return new JsonModel([
-            'success' => true,
-        ]);
+        if (AuthorizationService::authorize($this->request->getMetadata("Authorization"))) {
+            return new JsonModel([
+                'success' => true,
+            ]);
+        } else {
+            return new JsonModel([
+                'success' => false,
+            ]);
+        }
     }
 }
 
