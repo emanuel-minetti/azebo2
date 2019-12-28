@@ -25,7 +25,6 @@
 namespace WorkingTime;
 
 use Zend\Router\Http\Segment;
-use Zend\ServiceManager\Factory\InvokableFactory;
 
 return array(
     'router' => [
@@ -45,11 +44,6 @@ return array(
                     ],
                 ],
             ],
-        ],
-    ],
-    'controllers' => [
-        'factories' => [
-            Controller\WorkingTimeController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [

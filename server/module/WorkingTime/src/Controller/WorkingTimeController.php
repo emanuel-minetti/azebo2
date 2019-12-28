@@ -25,6 +25,7 @@
 namespace WorkingTime\Controller;
 
 use Service\AuthorizationService;
+use WorkingTime\Model\WorkingDayTable;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -32,6 +33,13 @@ use Zend\View\Model\JsonModel;
 
 class WorkingTimeController extends AbstractActionController
 {
+    private $table;
+
+    public function __construct(WorkingDayTable $table)
+    {
+        $this->table = $table;
+    }
+
     public function monthAction()
     {
         if (AuthorizationService::authorize(
