@@ -42,9 +42,11 @@ class WorkingTimeController extends AbstractActionController
 
     public function monthAction()
     {
+        $request = Request::fromString($this->request);
+        $response = Response::fromString($this->response);
         if (AuthorizationService::authorize(
-            Request::fromString($this->request),
-            Response::fromString($this->response),
+            $request,
+            $response,
             ['GET',])) {
 
 
@@ -58,9 +60,7 @@ class WorkingTimeController extends AbstractActionController
                 'expire' => $expire,
             ]);
         } else {
-            return new JsonModel([
-                'success' => false,
-            ]);
+            return $response;
         }
     }
 }
