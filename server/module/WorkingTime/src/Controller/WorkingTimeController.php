@@ -44,11 +44,8 @@ class WorkingTimeController extends AbstractActionController
     {
         $request = Request::fromString($this->request);
         $response = Response::fromString($this->response);
-        if (AuthorizationService::authorize(
-            $request,
-            $response,
-            ['GET',])) {
-
+        if (AuthorizationService::authorize($request, $response, ['GET',])) {
+            $test = $this->table->find(1);
 
             // refresh jwt
             $userId = $this->request->getQuery()->user_id;
@@ -58,6 +55,7 @@ class WorkingTimeController extends AbstractActionController
                 'success' => true,
                 'jwt' => $jwt,
                 'expire' => $expire,
+                'test' => $test->getArrayCopy(),
             ]);
         } else {
             return $response;

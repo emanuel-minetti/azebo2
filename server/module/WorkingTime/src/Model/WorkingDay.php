@@ -27,9 +27,13 @@ namespace WorkingTime\Model;
 
 
 use ArrayObject;
+use DateTime;
 
 class WorkingDay extends ArrayObject
 {
+    private const TIME_FORMAT = 'H:i:s';
+    private const DATE_FORMAT = 'Y-m-d';
+
     public $id;
     public $userId;
     public $date;
@@ -44,22 +48,22 @@ class WorkingDay extends ArrayObject
 
     public function exchangeArray($data)
     {
-        // TODO change to `DateTime` objects
-        $this->id = !empty($data['id']) ? (int)$data['id'] : null;
-        $this->userId = !empty($data['user_id']) ? (int)$data['user_id'] : null;
-        $this->date = !empty($data['date']) ? $data['date'] : null;
-        $this->begin = !empty($data['begin']) ? $data['begin'] : null;
-        $this->end = !empty($data['end']) ? $data['end'] : null;
-        $this->timeOff = !empty($data['time_off']) ? $data['time_off'] : null;
-        $this->comment = !empty($data['comment']) ? $data['comment'] : null;
-        $this->break = !empty($data['break']) ? (bool)$data['break'] : null;
-        $this->afternoon = !empty($data['afternoon']) ? (bool)$data['afternoon'] : null;
+        $this->id = (int)$data['id'] ?? 0;
+        $this->userId = (int)$data['user_id'] ?? 0;
+        $this->date = !empty($data['date']) ? DateTime::createFromFormat(self::DATE_FORMAT, $data['date']) : null;
+        $this->begin = !empty($data['begin']) ? DateTime::createFromFormat(self::TIME_FORMAT, $data['begin']) : null;
+        $this->end = !empty($data['end']) ? DateTime::createFromFormat(self::TIME_FORMAT, $data['end']) : null;
+        $this->timeOff = $data['time_off'] ?? null;
+        $this->comment = $data['comment'] ?? null;
+        $this->break = (bool)$data['break'] ?? false;
+        $this->afternoon = (bool)$data['afternoon'] ?? false;
         $this->afternoonBegin = !empty($data['afternoon_begin']) ? $data['afternoon_begin'] : null;
         $this->afternoonEnd = !empty($data['afternoon_end']) ? $data['afternoon_end'] : null;
     }
 
     public function getArrayCopy()
     {
+        // TODO change from `DateTime` objects
         return [
             'id' => $this->id,
             'user_id' => $this->userId,

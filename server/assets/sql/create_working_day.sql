@@ -9,7 +9,7 @@ create table working_day
     time_off varchar(20) null,
     comment text null,
     break boolean default false not null,
-    afternoon boolean default false null,
+    afternoon boolean default false not null,
     afternoon_begin time null,
     afternoon_end time null,
     constraint working_day_pk

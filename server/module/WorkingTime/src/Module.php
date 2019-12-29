@@ -43,7 +43,7 @@ class Module {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Model\WorkingDay([]));
-                    $tableGateway = new TableGateway('working_time', $dbAdapter, null, $resultSetPrototype);
+                    $tableGateway = new TableGateway('working_day', $dbAdapter, null, $resultSetPrototype);
                     return new Model\WorkingDayTable($tableGateway);
                 },
             ],
