@@ -34,16 +34,49 @@ class WorkingDay extends ArrayObject
     private const TIME_FORMAT = 'H:i:s';
     private const DATE_FORMAT = 'Y-m-d';
 
+    /**
+     * @var int the primary kes of `WorkingDay`
+     */
     public $id;
+    /**
+     * @var int foreign key to `User.php`
+     */
     public $userId;
+    /**
+     * @var DateTime the date of the working day
+     */
     public $date;
+    /**
+     * @var DateTime start of working time
+     */
     public $begin;
+    /**
+     * @var DateTime end of working time
+     */
     public $end;
+    /**
+     * @var string an enumerated value
+     */
     public $timeOff;
+    /**
+     * @var string a free text field
+     */
     public $comment;
+    /**
+     * @var bool whether a break was counted
+     */
     public $break;
+    /**
+     * @var bool whether the working day was split
+     */
     public $afternoon;
+    /**
+     * @var DateTime start of second part of working day
+     */
     public $afternoonBegin;
+    /**
+     * @var DateTime end of second part of working day
+     */
     public $afternoonEnd;
 
     public function exchangeArray($data)
@@ -63,19 +96,18 @@ class WorkingDay extends ArrayObject
 
     public function getArrayCopy()
     {
-        // TODO change from `DateTime` objects
         return [
             'id' => $this->id,
             'user_id' => $this->userId,
-            'date' => $this->date,
-            'begin' => $this->begin,
-            'end' => $this->end,
+            'date' => $this->date->format(self::DATE_FORMAT),
+            'begin' => $this->begin->format(self::TIME_FORMAT),
+            'end' => $this->end->format(self::TIME_FORMAT),
             'time_off' => $this->timeOff,
             'comment' => $this->comment,
-            'break' => $this->break,
-            'afternoon' => $this->afternoon,
-            'afternoon_begin' => $this->afternoonBegin,
-            'afternoon_end' => $this->afternoonEnd,
+            'break' => (int)$this->break,
+            'afternoon' => (int)$this->afternoon,
+            'afternoon_begin' => $this->afternoonBegin ? $this->afternoonBegin->format(self::TIME_FORMAT) : null,
+            'afternoon_end' => $this->afternoonEnd ? $this->afternoonEnd->format(self::TIME_FORMAT) : null,
         ];
     }
 }
