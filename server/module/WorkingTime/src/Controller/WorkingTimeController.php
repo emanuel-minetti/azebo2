@@ -24,7 +24,9 @@
 
 namespace WorkingTime\Controller;
 
+use DateTime;
 use Service\AuthorizationService;
+use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -42,20 +44,27 @@ class WorkingTimeController extends AbstractActionController
 
     public function monthAction()
     {
+        $yearId = $this->params('year');
+        $monthId = $this->params('month');
+        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearId-$monthId-01");
         $request = Request::fromString($this->request);
         $response = Response::fromString($this->response);
         if (AuthorizationService::authorize($request, $response, ['GET',])) {
-            $test = $this->table->find(1);
+            $userId = $request->getQuery()->user_id;
+            $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
+            $arrayOfWorkingDayArrays = [];
+            foreach ($arrayOfWorkingDays as $workingDay) {
+                $arrayOfWorkingDayArrays[] = $workingDay->getArrayCopy();
+            }
 
             // refresh jwt
-            $userId = $this->request->getQuery()->user_id;
             $expire = time() + AuthorizationService::EXPIRE_TIME;
             $jwt = AuthorizationService::getJwt($expire, $userId);
             return new JsonModel([
                 'success' => true,
                 'jwt' => $jwt,
                 'expire' => $expire,
-                'test' => $test->getArrayCopy(),
+                'test' => $arrayOfWorkingDayArrays,
             ]);
         } else {
             return $response;

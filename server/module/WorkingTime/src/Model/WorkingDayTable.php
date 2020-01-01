@@ -27,6 +27,9 @@
 namespace WorkingTime\Model;
 
 
+use DateTime;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 
 class WorkingDayTable
@@ -41,5 +44,24 @@ class WorkingDayTable
     public function find($id): WorkingDay {
         $rowSet = $this->tableGateway->select(['id' => $id]);
         return $rowSet->current();
+    }
+
+    public function getByUserIdAndMonth($userId, DateTime $month) {
+        $cloneOfMonth = clone $month;
+        $first = $cloneOfMonth->modify('first day of this month');
+        $cloneOfMonth = clone $month;
+        $last = $cloneOfMonth->modify('last day of this month');
+        $select = new Select('working_day');
+        $where = new Where();
+        $where->equalTo('user_id', $userId);
+        $where->greaterThanOrEqualTo('date', $first->format(WorkingDay::DATE_FORMAT));
+        $where->lessThanOrEqualTo('date', $last->format(WorkingDay::DATE_FORMAT));
+        $select->where($where);
+        $resultSet = $this->tableGateway->selectWith($select);
+        $result = [];
+        foreach ($resultSet as $row) {
+            $result[] = $row;
+        }
+        return $result;
     }
 }

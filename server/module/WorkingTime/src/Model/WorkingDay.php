@@ -31,8 +31,8 @@ use DateTime;
 
 class WorkingDay extends ArrayObject
 {
-    private const TIME_FORMAT = 'H:i:s';
-    private const DATE_FORMAT = 'Y-m-d';
+    public const TIME_FORMAT = 'H:i:s';
+    public const DATE_FORMAT = 'Y-m-d';
 
     /**
      * @var int the primary kes of `WorkingDay`
@@ -83,15 +83,20 @@ class WorkingDay extends ArrayObject
     {
         $this->id = (int)$data['id'] ?? 0;
         $this->userId = (int)$data['user_id'] ?? 0;
-        $this->date = !empty($data['date']) ? DateTime::createFromFormat(self::DATE_FORMAT, $data['date']) : null;
-        $this->begin = !empty($data['begin']) ? DateTime::createFromFormat(self::TIME_FORMAT, $data['begin']) : null;
-        $this->end = !empty($data['end']) ? DateTime::createFromFormat(self::TIME_FORMAT, $data['end']) : null;
+        $this->date = !empty($data['date']) ?
+            DateTime::createFromFormat(self::DATE_FORMAT, $data['date']) : null;
+        $this->begin = !empty($data['begin']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $data['begin']) : null;
+        $this->end = !empty($data['end']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $data['end']) : null;
         $this->timeOff = $data['time_off'] ?? null;
         $this->comment = $data['comment'] ?? null;
         $this->break = (bool)$data['break'] ?? false;
         $this->afternoon = (bool)$data['afternoon'] ?? false;
-        $this->afternoonBegin = !empty($data['afternoon_begin']) ? $data['afternoon_begin'] : null;
-        $this->afternoonEnd = !empty($data['afternoon_end']) ? $data['afternoon_end'] : null;
+        $this->afternoonBegin = !empty($data['afternoon_begin']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $data['afternoon_begin']) : null;
+        $this->afternoonEnd = !empty($data['afternoon_end']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $data['afternoon_end']) : null;
     }
 
     public function getArrayCopy()
@@ -109,5 +114,10 @@ class WorkingDay extends ArrayObject
             'afternoon_begin' => $this->afternoonBegin ? $this->afternoonBegin->format(self::TIME_FORMAT) : null,
             'afternoon_end' => $this->afternoonEnd ? $this->afternoonEnd->format(self::TIME_FORMAT) : null,
         ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->getArrayCopy());
     }
 }
