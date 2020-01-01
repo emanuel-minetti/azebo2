@@ -64,7 +64,7 @@ class WorkingTimeController extends AbstractActionController
                 'success' => true,
                 'jwt' => $jwt,
                 'expire' => $expire,
-                'test' => $arrayOfWorkingDayArrays,
+                'working_days' => $arrayOfWorkingDayArrays,
             ]);
         } else {
             return $response;
