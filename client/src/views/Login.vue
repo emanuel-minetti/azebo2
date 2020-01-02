@@ -40,7 +40,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Title from "@/components/Title.vue";
-import LoginService from "@/services/LoginService";
 
 @Component({
   components: { Title }
@@ -68,9 +67,14 @@ export default class Login extends Vue {
   onSubmit(evt: Event) {
     evt.preventDefault();
     this.submitted = true;
-    LoginService.login(this.form.username, this.form.password)
-      //"redirect" after successful login
+    const credentials = {
+      username: this.form.username,
+      password: this.form.password
+    };
+    this.$store
+      .dispatch("login", credentials)
       .then(() => {
+        //"redirect" after successful login
         if (this.$route.query.redirect) {
           this.$router.push(this.$route.query.redirect.toString());
         } else {
