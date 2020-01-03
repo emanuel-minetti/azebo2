@@ -12,10 +12,10 @@ const UserModule: Module<any, any> = {
     }
   },
   actions: {
-    login(context, credentials) {
+    login({ commit }, credentials) {
       LoginService.login(credentials.username, credentials.password)
-        .then(data => context.commit("setFullName", data.user))
-        .catch(() => context.commit("setFullNamee", new User()));
+        .then(data => commit("setFullName", data.user))
+        .catch(() => commit("setFullName", new User()));
     }
   }
 };
