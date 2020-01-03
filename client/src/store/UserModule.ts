@@ -7,15 +7,15 @@ const UserModule: Module<any, any> = {
     user: new User()
   },
   mutations: {
-    setFullName(state, user) {
-      state.user.fullName = user.given_name + " " + user.name;
+    setUser(state, user: User) {
+      state.user = user;
     }
   },
   actions: {
     login({ commit }, credentials) {
       LoginService.login(credentials.username, credentials.password)
-        .then(data => commit("setFullName", data.user))
-        .catch(() => commit("setFullName", new User()));
+        .then(data => commit("setUser", new User(data.user)))
+        .catch(() => commit("setUser", new User()));
     }
   }
 };

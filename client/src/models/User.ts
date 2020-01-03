@@ -1,8 +1,11 @@
 export default class User {
   fullName: string;
 
-  //TODO add parameter 'data' and do all converting from the API response here
-  constructor() {
-    this.fullName = "";
+  constructor(data?: any) {
+    if (data && data.given_name && data.name) {
+      this.fullName = data.given_name + " " + data.name;
+    } else {
+      this.fullName = "";
+    }
   }
 }
