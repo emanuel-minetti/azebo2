@@ -55,7 +55,7 @@ export default class App extends Vue {
   }
 
   get loggedIn() {
-    return !!this.$store.state.user.user.fullName;
+    return this.$store.state.user.user.fullName !== "";
   }
 
   mounted() {

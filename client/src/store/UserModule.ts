@@ -4,18 +4,18 @@ import User from "@/models/User";
 
 const UserModule: Module<any, any> = {
   state: {
-    user: User
+    user: new User()
   },
   mutations: {
-    setFullName(state, fullName) {
-      state.user.fullName = fullName;
+    setFullName(state, user) {
+      state.user.fullName = user.given_name + ' ' + user.name;
     }
   },
   actions: {
     login(context, credentials) {
       LoginService.login(credentials.username, credentials.password)
-        .then(data => context.commit("setFullName", data.full_name))
-        .catch(() => context.commit("setFullNamee", ""));
+        .then(data => context.commit("setFullName", data.user))
+        .catch(() => context.commit("setFullNamee", new User()));
     }
   }
 };

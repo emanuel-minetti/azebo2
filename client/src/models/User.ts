@@ -1,3 +1,7 @@
 export default class User {
-  fullName: string = "";
+  fullName: string;
+
+  constructor() {
+    this.fullName = "";
+  }
 }

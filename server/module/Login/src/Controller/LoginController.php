@@ -72,13 +72,14 @@ class LoginController extends AbstractActionController
 
         // authenticate
         if ($user->verifyPassword($password)) {
+            unset($user->password_hash);
             $expire = time() + AuthorizationService::EXPIRE_TIME;
             $jwt = AuthorizationService::getJwt($expire, $user->id);
             return new JsonModel([
                 'success' => true,
                 'data' => [
                     'jwt' => $jwt,
-                    'full_name' => $user->getFullName(),
+                    'user' => $user->getArrayCopy(),
                     'expire' => $expire,
                 ],
             ]);
