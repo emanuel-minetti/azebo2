@@ -48,6 +48,7 @@ router.beforeEach((to, from, next) => {
     const expires = Number(JSON.parse(<string>localStorage.getItem("expire")));
     const now = Date.now() / 1000;
     loggedIn = expires >= now;
+    //TODO If loggedIn, but no user in the store refresh it from localStorage
   } else {
     loggedIn = false;
   }

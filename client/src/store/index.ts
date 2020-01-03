@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import WorkingTime from "@/store/WorkingTime.module";
-import User from "@/store/User.module";
+import WorkingTimeModule from "@/store/WorkingTimeModule";
+import UserModule from "@/store/UserModule";
 
 Vue.use(Vuex);
 
@@ -10,7 +10,7 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    workingTime: WorkingTime,
-    user: User
+    workingTime: WorkingTimeModule,
+    user: UserModule
   }
 });

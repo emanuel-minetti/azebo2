@@ -51,11 +51,11 @@ export default class App extends Vue {
   version = "";
 
   get name() {
-    return this.$store.state.user.fullName;
+    return this.$store.state.user.user.fullName;
   }
 
   get loggedIn() {
-    return !!this.$store.state.user.fullName;
+    return !!this.$store.state.user.user.fullName;
   }
 
   mounted() {

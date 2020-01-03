@@ -1,22 +1,23 @@
 import { Module } from "vuex";
 import LoginService from "@/services/LoginService";
+import User from "@/models/User";
 
-const User: Module<any, any> = {
+const UserModule: Module<any, any> = {
   state: {
-    fullName: ""
+    user: User
   },
   mutations: {
     setFullName(state, fullName) {
-      state.fullName = fullName;
+      state.user.fullName = fullName;
     }
   },
   actions: {
     login(context, credentials) {
       LoginService.login(credentials.username, credentials.password)
-        .then(user => context.commit("setFullName", user.full_name))
+        .then(data => context.commit("setFullName", data.full_name))
         .catch(() => context.commit("setFullNamee", ""));
     }
   }
 };
 
-export default User;
+export default UserModule;
