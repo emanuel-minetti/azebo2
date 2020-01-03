@@ -8,7 +8,7 @@ const UserModule: Module<any, any> = {
   },
   mutations: {
     setFullName(state, user) {
-      state.user.fullName = user.given_name + ' ' + user.name;
+      state.user.fullName = user.given_name + " " + user.name;
     }
   },
   actions: {
