@@ -62,11 +62,12 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!isPublic && !loggedIn) {
+    // to redirect after login
     next({
       path: "/login",
       query: {
         redirect: to.path
-      } // to redirect after login
+      }
     });
   }
   next();
