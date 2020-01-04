@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import NotFound from "../views/NotFound.vue";
 import Login from "@/views/Login.vue";
+import store from "@/store";
+import User from "@/models/User";
 
 Vue.use(VueRouter);
 
@@ -48,7 +50,13 @@ router.beforeEach((to, from, next) => {
     const expires = Number(JSON.parse(<string>localStorage.getItem("expire")));
     const now = Date.now() / 1000;
     loggedIn = expires >= now;
-    //TODO If loggedIn, but no user in the store refresh it from localStorage
+    // If loggedIn, but no user is in the store refresh it from localStorage
+    if (loggedIn && !store.state.user.fullName) {
+      store.commit(
+        "setUser",
+        new User(JSON.parse(<string>localStorage.getItem("user")))
+      );
+    }
   } else {
     loggedIn = false;
   }

@@ -15,12 +15,13 @@ export default class LoginService {
 
     return fetch(this.getBaseUrl() + "/api/login", requestOptions)
       .then(this.handleResponse)
-      .then(user => {
-        if (user.jwt && user.expire) {
-          localStorage.setItem("jwt", JSON.stringify(user.jwt));
-          localStorage.setItem("expire", JSON.stringify(user.expire));
+      .then(data => {
+        if (data.jwt && data.expire) {
+          localStorage.setItem("jwt", JSON.stringify(data.jwt));
+          localStorage.setItem("expire", JSON.stringify(data.expire));
+          localStorage.setItem("user", JSON.stringify(data.user));
         }
-        return user;
+        return data;
       });
   }
 
@@ -47,5 +48,6 @@ export default class LoginService {
   static logout() {
     localStorage.removeItem("jwt");
     localStorage.removeItem("expire");
+    localStorage.removeItem("user");
   }
 }
