@@ -17,7 +17,7 @@ const WorkingTimeModule: Module<any, any> = {
       const year = monthDate.getFullYear().toString();
       let month = monthDate.getMonth() + 1;
       const monthString = month < 10 ? "0" + month : month.toString();
-      WorkingTimeService.getMonth(year, monthString).then(data => {
+      return WorkingTimeService.getMonth(year, monthString).then(data => {
         commit("setMonth", data.working_days);
       });
     }

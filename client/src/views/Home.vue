@@ -1,7 +1,18 @@
 <template>
   <div class="home">
     <Title prop-title="Startseite" />
-    Das ist die Homepage
+    <table>
+      <tr>
+        <th>Tag</th>
+        <th>Beginn</th>
+        <th>Ende</th>
+      </tr>
+      <tr v-for="day in this.month" v-bind:key="day.id">
+        <td>{{ day.date }}</td>
+        <td>{{ day.begin }}</td>
+        <td>{{ day.end }}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -13,6 +24,10 @@ import Title from "@/components/Title.vue";
   components: { Title }
 })
 export default class Home extends Vue {
+  get month() {
+    return this.$store.state.workingTime.month;
+  }
+
   mounted() {
     this.$store.dispatch("getMonth", new Date()).then(() => {});
   }
