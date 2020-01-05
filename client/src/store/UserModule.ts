@@ -13,8 +13,11 @@ const UserModule: Module<any, any> = {
   },
   actions: {
     login({ commit }, credentials) {
-      LoginService.login(credentials.username, credentials.password)
-        .then(data => commit("setUser", new User(data.user)))
+      return LoginService.login(credentials.username, credentials.password)
+        .then(data => {
+          commit("setUser", new User(data.user));
+          return data;
+        })
         .catch(() => commit("setUser", new User()));
     }
   }

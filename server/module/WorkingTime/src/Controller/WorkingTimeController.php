@@ -62,9 +62,11 @@ class WorkingTimeController extends AbstractActionController
             $jwt = AuthorizationService::getJwt($expire, $userId);
             return new JsonModel([
                 'success' => true,
-                'jwt' => $jwt,
-                'expire' => $expire,
-                'working_days' => $arrayOfWorkingDayArrays,
+                'data' => [
+                    'jwt' => $jwt,
+                    'expire' => $expire,
+                    'working_days' => $arrayOfWorkingDayArrays,
+                ],
             ]);
         } else {
             return $response;

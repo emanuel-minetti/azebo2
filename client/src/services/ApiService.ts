@@ -1,3 +1,5 @@
+import LoginService from "@/services/LoginService";
+
 export default class ApiService {
   protected static getBaseUrl() {
     const loc = window.location;
@@ -28,11 +30,10 @@ export default class ApiService {
     return response.text().then(text => {
       const content = text && JSON.parse(text);
       if (!response.ok) {
-        // TODO comment in!
-        // if (response.status == 401) {
-        //   LoginService.logout();
-        //   location.reload();
-        // }
+        if (response.status == 401) {
+          LoginService.logout();
+          location.reload();
+        }
         const error = (content && content.message) || response.statusText;
         return Promise.reject(error);
       }

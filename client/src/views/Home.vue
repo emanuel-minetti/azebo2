@@ -14,7 +14,6 @@ import Title from "@/components/Title.vue";
 })
 export default class Home extends Vue {
   mounted() {
-    //TODO wait till JWT is present!
     this.$store.dispatch("getMonth", new Date()).then(() => {});
   }
 }
