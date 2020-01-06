@@ -1,5 +1,5 @@
 export default class WorkingDay {
-  private _date: Date;
+  private readonly _date: Date;
   private _begin?: Date;
   private _end?: Date;
   private _timeOff?: string;
