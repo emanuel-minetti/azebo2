@@ -58,6 +58,7 @@ export default class App extends Vue {
     return this.$store.state.user.user.fullName !== "";
   }
 
+  //noinspection JSUnusedGlobalSymbols
   mounted() {
     // copyright and version from `package.json`
     this.version = config.version;
