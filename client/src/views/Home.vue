@@ -1,33 +1,23 @@
 <template>
   <div class="home">
+    <!--TODO Adjust Title -->
     <Title prop-title="Startseite" />
-    <table>
-      <tr>
-        <th>Tag</th>
-        <th>Beginn</th>
-        <th>Ende</th>
-      </tr>
-      <tr v-for="day in this.month" v-bind:key="day.id">
-        <td>{{ day.date }}</td>
-        <td>{{ day.begin }}</td>
-        <td>{{ day.end }}</td>
-      </tr>
-    </table>
+    <MonthTable />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Title from "@/components/Title.vue";
+import { Title, MonthTable } from "@/components";
 
 @Component({
-  components: { Title }
+  components: {
+    Title,
+    MonthTable
+  }
 })
 export default class Home extends Vue {
-  get month() {
-    return this.$store.state.workingTime.month;
-  }
-
+  //noinspection JSUnusedGlobalSymbols
   mounted() {
     this.$store.dispatch("getMonth", new Date()).then(() => {});
   }
