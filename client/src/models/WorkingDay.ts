@@ -12,8 +12,21 @@ export default class WorkingDay {
   private _edited: boolean;
 
   constructor(data?: any) {
-    if (data && data.date && data.break && data.afternoon) {
-      this._date = new Date(data.date);
+    if (
+      data &&
+      data.date &&
+      data.break != undefined &&
+      data.afternoon != undefined
+    ) {
+      // noinspection SuspiciousTypeOfGuard
+      if (!(data.date instanceof Date)) {
+        const year = data.date.substring(0, 4);
+        const month = data.date.substring(5, 7);
+        const day = data.date.substring(8, 10);
+        this._date = new Date(Number(year), Number(month) - 1, Number(day));
+      } else {
+        this._date = data.date;
+      }
       this._break = data.break;
       this._afternoon = data.afternoon;
       this._begin = data.begin;

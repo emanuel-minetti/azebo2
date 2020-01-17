@@ -1,15 +1,15 @@
 import { Module } from "vuex";
-import WorkingDay from "@/models/WorkingDay";
+
 import WorkingTimeService from "@/services/WorkingTimeService";
 import WorkingMonth from "@/models/WorkingMonth";
+import WorkingDay from "@/models/WorkingDay";
 
 const WorkingTimeModule: Module<any, any> = {
   state: {
-    //TODO introduce class 'WorkingMonth'
-    month: Array<WorkingDay>()
+    month: WorkingMonth
   },
   mutations: {
-    setMonth(state, month: Array<WorkingDay>) {
+    setMonth(state, month: WorkingMonth) {
       state.month = month;
     }
   },
@@ -19,9 +19,11 @@ const WorkingTimeModule: Module<any, any> = {
       let month = monthDate.getMonth() + 1;
       const monthString = month < 10 ? "0" + month : month.toString();
       return WorkingTimeService.getMonth(year, monthString).then(data => {
-        //TODO replace `Array<WorkingDay>` with `WorkingMonth`
-        let test = new WorkingMonth(monthDate, data.working_days);
-        commit("setMonth", data.working_days);
+        let workingDays = data.working_days.map(
+          (day: any) => new WorkingDay(day)
+        );
+        let workingMonth = new WorkingMonth(monthDate, workingDays);
+        commit("setMonth", workingMonth);
       });
     }
   }
