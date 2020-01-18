@@ -8,6 +8,7 @@ import store from "./store";
 
 Vue.config.productionTip = false;
 
+// noinspection JSUnusedGlobalSymbols
 new Vue({
   router,
   store,

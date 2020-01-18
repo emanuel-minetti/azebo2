@@ -6,13 +6,12 @@ export default class WorkingDay {
   private _comment?: string;
   private _break: boolean;
   private _afternoon: boolean;
-  private _afternoonBeginn?: Date;
+  private _afternoonBegin?: Date;
   private _afternoonEnd?: Date;
 
   private _edited: boolean;
 
   constructor(data?: any) {
-    //TODO `afternoon_begin``isn't shown correctly!
     if (
       data &&
       data.date &&
@@ -34,7 +33,7 @@ export default class WorkingDay {
       this._end = data.end;
       this._timeOff = data.time_off;
       this._comment = data.comment;
-      this._afternoonBeginn = data.afternoon_beginn;
+      this._afternoonBegin = data.afternoon_begin;
       this._afternoonEnd = data.afternoon_end;
     } else {
       this._date = new Date();
@@ -112,13 +111,13 @@ export default class WorkingDay {
     this._edited = true;
   }
 
-  get afternoonBeginn(): Date | undefined {
-    return this._afternoonBeginn;
+  get afternoonBegin(): Date | undefined {
+    return this._afternoonBegin;
   }
 
-  set afternoonBeginn(value: Date | undefined) {
+  set afternoonBegin(value: Date | undefined) {
     if (value) {
-      this._afternoonBeginn = value;
+      this._afternoonBegin = value;
       this._edited = true;
     }
   }

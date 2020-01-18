@@ -3,4 +3,5 @@ $theme-colors: (
         "text": #211e1e
 );
 
+//noinspection SassScssResolvedByNameOnly
 $body-color: theme-color("text");
