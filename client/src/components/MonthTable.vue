@@ -19,4 +19,8 @@ export default class MonthTable extends Vue {
 </script>
 
 <style scoped>
+  div {
+    text-align: center;
+    width: 90%;
+  }
 </style>

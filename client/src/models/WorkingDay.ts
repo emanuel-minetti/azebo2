@@ -12,6 +12,7 @@ export default class WorkingDay {
   private _edited: boolean;
 
   constructor(data?: any) {
+    //TODO `afternoon_begin``isn't shown correctly!
     if (
       data &&
       data.date &&
