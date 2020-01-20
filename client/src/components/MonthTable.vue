@@ -15,10 +15,11 @@
 import { Component, Vue } from "vue-property-decorator";
 import { GermanDateFormatter } from "@/services";
 import WorkingDay from "@/models/WorkingDay";
+import WorkingMonth from "@/models/WorkingMonth";
 
 @Component
 export default class MonthTable extends Vue {
-  get monthData() {
+  get monthData(): WorkingMonth {
     return this.$store.state.workingTime.month;
   }
 
@@ -27,16 +28,19 @@ export default class MonthTable extends Vue {
       {
         key: "date",
         label: "Datum",
+        class: "small-column",
         formatter: GermanDateFormatter.toLongGermanDate
       },
       {
         key: "begin",
         label: "Beginn",
+        class: "small-column",
         formatter: GermanDateFormatter.toGermanTime
       },
       {
         key: "end",
         label: "Ende",
+        class: "small-column",
         formatter: GermanDateFormatter.toGermanTime
       },
       {
@@ -49,7 +53,9 @@ export default class MonthTable extends Vue {
       },
       {
         key: "break",
-        label: "Pause"
+        label: "Pause",
+        class: "small-column",
+        formatter: (bool: boolean) => (bool ? "Ja" : "Nein")
       }
     ];
   }
@@ -69,7 +75,13 @@ div {
 }
 
 /*noinspection CssUnusedSymbol*/
->>> .not-a-working-day {
+/deep/ .small-column {
+  width: 90px;
+  vertical-align: middle;
+}
+
+/*noinspection CssUnusedSymbol*/
+/deep/ .not-a-working-day {
   color: #e70036;
 }
 </style>

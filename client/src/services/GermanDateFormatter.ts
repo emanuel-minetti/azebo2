@@ -11,7 +11,7 @@ export default class GermanDateFormatter {
   public static toLongGermanDate(date: Date) {
     const options = { weekday: "long" };
     const weekday = date.toLocaleString("de-DE", options);
-    return weekday + ", der " + GermanDateFormatter.toGermanDate(date);
+    return weekday + ", " + GermanDateFormatter.toGermanDate(date);
   }
 
   public static toGermanTime(date?: Date) {
