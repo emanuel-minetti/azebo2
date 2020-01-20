@@ -27,15 +27,17 @@ export default class MonthTable extends Vue {
       {
         key: "date",
         label: "Datum",
-        formatter: GermanDateFormatter.toGermanDate
+        formatter: GermanDateFormatter.toLongGermanDate
       },
       {
         key: "begin",
-        label: "Beginn"
+        label: "Beginn",
+        formatter: GermanDateFormatter.toGermanTime
       },
       {
         key: "end",
-        label: "Ende"
+        label: "Ende",
+        formatter: GermanDateFormatter.toGermanTime
       },
       {
         key: "timeOff",

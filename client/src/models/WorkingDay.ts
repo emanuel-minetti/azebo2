@@ -20,17 +20,27 @@ export default class WorkingDay {
     ) {
       // noinspection SuspiciousTypeOfGuard
       if (!(data.date instanceof Date)) {
-        const year = data.date.substring(0, 4);
-        const month = data.date.substring(5, 7);
-        const day = data.date.substring(8, 10);
-        this._date = new Date(Number(year), Number(month) - 1, Number(day));
+        this._date = WorkingDay.dateStringToDate(data.date);
       } else {
         this._date = data.date;
       }
+
       this._break = data.break;
       this._afternoon = data.afternoon;
-      this._begin = data.begin;
-      this._end = data.end;
+
+      // noinspection SuspiciousTypeOfGuard
+      if (data.begin && !(data.begin instanceof Date)) {
+        this._begin = this.timeStringToDate(data.begin);
+      } else {
+        this._begin = data.begin;
+      }
+
+      if (data.end && !(data.end instanceof Date)) {
+        this._end = this.timeStringToDate(data.end);
+      } else {
+        this._end = data.end;
+      }
+
       this._timeOff = data.time_off;
       this._comment = data.comment;
       this._afternoonBegin = data.afternoon_begin;
@@ -135,6 +145,22 @@ export default class WorkingDay {
 
   get edited(): boolean {
     return this._edited;
+  }
+
+  private static dateStringToDate(dateString: string): Date {
+    const year = Number(dateString.substring(0, 4));
+    const month = Number(dateString.substring(5, 7));
+    const day = Number(dateString.substring(8, 10));
+    return new Date(year, month - 1, day);
+  }
+
+  private timeStringToDate(timeString: string): Date {
+    const year = this.date.getFullYear();
+    const month = this.date.getMonth();
+    const day = this.date.getDay();
+    const hour = Number(timeString.substring(0, 2));
+    const minute = Number(timeString.substring(3, 5));
+    return new Date(year, month, day, hour, minute);
   }
 
   get isWorkingDay() {
