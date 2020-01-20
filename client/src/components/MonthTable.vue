@@ -1,12 +1,20 @@
 <template>
   <div>
-    <b-table :items="monthData.days" :fields="fields"> </b-table>
+    <b-table
+      bordered
+      striped
+      hover
+      :items="monthData.days"
+      :fields="fields"
+      :tbody-tr-class="rowClass"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { GermanDateFormatter } from "@/services";
+import WorkingDay from "@/models/WorkingDay";
 
 @Component
 export default class MonthTable extends Vue {
@@ -43,6 +51,11 @@ export default class MonthTable extends Vue {
       }
     ];
   }
+
+  rowClass(day: WorkingDay, type: string) {
+    if (!day || type !== "row") return;
+    if (day.isWorkingDay) return "not-a-working-day";
+  }
 }
 </script>
 
@@ -50,5 +63,11 @@ export default class MonthTable extends Vue {
 div {
   text-align: center;
   width: 90%;
+  margin-left: 5%;
+}
+
+/*noinspection CssUnusedSymbol*/
+>>> .not-a-working-day {
+  color: #e70036;
 }
 </style>

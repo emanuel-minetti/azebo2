@@ -137,5 +137,7 @@ export default class WorkingDay {
     return this._edited;
   }
 
-  // no setter for `date`
+  get isWorkingDay() {
+    return this._date.getDay() == 0 || this._date.getDay() == 6;
+  }
 }
