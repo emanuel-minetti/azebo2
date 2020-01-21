@@ -57,6 +57,12 @@ export default class MonthTable extends Vue {
         label: "Pause",
         class: "small-column",
         formatter: this.formatBreak
+      },
+      {
+        key: "totalTime",
+        label: "Anwesend",
+        class: "small-column",
+        formatter: GermanDateFormatter.toGermanTime
       }
     ];
   }
@@ -66,7 +72,7 @@ export default class MonthTable extends Vue {
     if (day.isWorkingDay) return "not-a-working-day";
   }
 
-  formatBreak(hasBreak: boolean, key: number, day: WorkingDay): string {
+  formatBreak(hasBreak: boolean, key: string, day: WorkingDay): string {
     if (day && !day.hasWorkingTime) return "";
     return hasBreak ? "Ja" : "Nein";
   }

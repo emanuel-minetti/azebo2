@@ -132,6 +132,27 @@ export default class WorkingDay {
     return this._edited;
   }
 
+  get isWorkingDay() {
+    return this._date.getDay() == 0 || this._date.getDay() == 6;
+  }
+
+  get hasWorkingTime(): boolean {
+    return this.begin !== undefined && this.end !== undefined;
+  }
+
+  get totalTime(): Date | undefined {
+    if (!this.hasWorkingTime) return undefined;
+    // @ts-ignore
+    const difference = this.end.valueOf() - this.begin.valueOf();
+    const totalMins = Math.floor(difference / 60000);
+    const hours = Math.floor(totalMins / 60);
+    const mins = totalMins - 60 * hours;
+    const totalTime = new Date(this.date);
+    totalTime.setHours(hours);
+    totalTime.setMinutes(mins);
+    return totalTime;
+  }
+
   private static convertDate(dateString: string | Date): Date {
     if (typeof dateString === "string") {
       const year = Number(dateString.substring(0, 4));
@@ -154,13 +175,5 @@ export default class WorkingDay {
       return new Date(year, month, day, hour, minute);
     }
     return timeString;
-  }
-
-  get isWorkingDay() {
-    return this._date.getDay() == 0 || this._date.getDay() == 6;
-  }
-
-  get hasWorkingTime(): boolean {
-    return this.begin !== undefined && this.end !== undefined;
   }
 }
