@@ -159,4 +159,8 @@ export default class WorkingDay {
   get isWorkingDay() {
     return this._date.getDay() == 0 || this._date.getDay() == 6;
   }
+
+  get hasWorkingTime(): boolean {
+    return this.begin !== undefined && this.end !== undefined;
+  }
 }

@@ -5,6 +5,7 @@
       striped
       hover
       :items="monthData.days"
+      primary-key="date"
       :fields="fields"
       :tbody-tr-class="rowClass"
     />
@@ -55,7 +56,7 @@ export default class MonthTable extends Vue {
         key: "break",
         label: "Pause",
         class: "small-column",
-        formatter: (bool: boolean) => (bool ? "Ja" : "Nein")
+        formatter: this.formatBreak
       }
     ];
   }
@@ -63,6 +64,11 @@ export default class MonthTable extends Vue {
   rowClass(day: WorkingDay, type: string) {
     if (!day || type !== "row") return;
     if (day.isWorkingDay) return "not-a-working-day";
+  }
+
+  formatBreak(hasBreak: boolean, key: number, day: WorkingDay): string {
+    if (day && !day.hasWorkingTime) return "";
+    return hasBreak ? "Ja" : "Nein";
   }
 }
 </script>
