@@ -1,8 +1,11 @@
 import { Saldo } from "@/models";
+import { timesConfig } from "@/configs";
 
 export default class WorkingDay {
-  //TODO make configurable
-  private static readonly BREAK_DURATION = Saldo.create(30 * 60 * 1000, false); // half an hour
+  private static readonly BREAK_DURATION = Saldo.create(
+    timesConfig.breakDuration,
+    false
+  ); // half an hour
 
   private readonly _date: Date;
   private _begin?: Date;
