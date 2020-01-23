@@ -2,7 +2,7 @@ import { Saldo } from "@/models/index";
 
 export default class WorkingDay {
   //TODO make configurable
-  private static readonly BREAK_DURATION = new Saldo(Date.UTC(0, 0,0,0, 30)); // half an hour
+  private static readonly BREAK_DURATION = Saldo.create(30 * 60 * 1000, false); // half an hour
 
   private readonly _date: Date;
   private _begin?: Date;
@@ -148,20 +148,13 @@ export default class WorkingDay {
   get totalTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
     // @ts-ignore
-    const endSaldo = new Saldo(this.end.getHours(), this.end.getMinutes(), true);
-    // @ts-ignore
-    const beginSaldo = new Saldo(this.begin.getHours(), this.begin.getMinutes(), false);
-    console.log("Beginn: " + beginSaldo);
-    console.log("Ende: " + endSaldo);
-    console.log("Saldo: " + Saldo.getSum(endSaldo, beginSaldo));
-    return Saldo.getSum(endSaldo, beginSaldo);
+    return Saldo.create(this.begin, this.end);
   }
 
-  //TODO review
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
     // @ts-ignore
-    return Saldo.getSum(this.totalTime, WorkingDay.BREAK_DURATION);
+    return this.break ? Saldo.getSum(this.totalTime, WorkingDay.BREAK_DURATION) : this.totalTime;
   }
 
   private static convertDate(dateString: string | Date): Date {

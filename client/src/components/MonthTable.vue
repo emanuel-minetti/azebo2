@@ -62,13 +62,11 @@ export default class MonthTable extends Vue {
         key: "totalTime",
         label: "Anwesend",
         class: "small-column",
-        //formatter: GermanDateFormatter.toGermanTime
       },
       {
         key: "actualTime",
         label: "Ist",
-        class: "small-column",
-        //formatter: GermanDateFormatter.toGermanTime
+        class: "small-column"
       }
     ];
   }
