@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <div class="alert-danger" v-if="error" v-html="error" />
     <Title v-bind:prop-title="monthName" />
     <MonthTable />
   </div>
@@ -16,12 +17,20 @@ import { Title, MonthTable } from "@/components";
   }
 })
 export default class Home extends Vue {
+  error = "";
   get monthName() {
     return this.$store.state.workingTime.month.monthName;
   }
   //noinspection JSUnusedGlobalSymbols
   mounted() {
-    this.$store.dispatch("getMonth", new Date()).then(() => {});
+    this.$store
+      .dispatch("getMonth", new Date())
+      .then(() => {})
+      .catch(reason => {
+        this.error =
+          "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
+          reason;
+      });
   }
 }
 </script>

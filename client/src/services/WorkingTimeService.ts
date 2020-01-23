@@ -10,6 +10,5 @@ export default class WorkingTimeService extends ApiService {
       headers: headers
     };
     return fetch(url, requestOptions).then(this.handleResponse);
-    //TODO handle 'reject'
   }
 }
