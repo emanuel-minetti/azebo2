@@ -29,7 +29,6 @@ export default class Saldo {
         this._hours > other._hours ||
         (this._hours === other._hours && this._minutes >= other._minutes)
       ) {
-        console.log("Angekommen");
         // `this` is absolut bigger or equal `other`
         this._minutes -= other._minutes;
         this.fix();

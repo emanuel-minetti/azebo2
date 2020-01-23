@@ -1,4 +1,4 @@
-import ApiService from "@/services/ApiService";
+import { ApiService } from "@/services/index";
 
 export default class LoginService extends ApiService {
   static login(username: String, password: String) {

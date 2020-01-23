@@ -1,8 +1,6 @@
 import { Module } from "vuex";
-
-import WorkingTimeService from "@/services/WorkingTimeService";
-import WorkingMonth from "@/models/WorkingMonth";
-import WorkingDay from "@/models/WorkingDay";
+import { WorkingDay, WorkingMonth } from "@/models";
+import { WorkingTimeService } from "@/services";
 
 const WorkingTimeModule: Module<any, any> = {
   state: {

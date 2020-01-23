@@ -1,6 +1,6 @@
 import { Module } from "vuex";
-import LoginService from "@/services/LoginService";
-import User from "@/models/User";
+import { User } from "@/models";
+import { LoginService } from "@/services";
 
 const UserModule: Module<any, any> = {
   state: {

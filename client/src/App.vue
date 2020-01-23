@@ -42,7 +42,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LoginService from "@/services/LoginService";
+import { LoginService } from "@/services";
+
 const config = require("../package.json");
 
 @Component

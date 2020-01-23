@@ -1,4 +1,4 @@
-import { Saldo } from "@/models/index";
+import { Saldo } from "@/models";
 
 export default class WorkingDay {
   //TODO make configurable
@@ -153,8 +153,9 @@ export default class WorkingDay {
 
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    // @ts-ignore
-    return this.break ? Saldo.getSum(this.totalTime, WorkingDay.BREAK_DURATION) : this.totalTime;
+    return this.break
+      ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
+      : this.totalTime;
   }
 
   private static convertDate(dateString: string | Date): Date {

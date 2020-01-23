@@ -1,4 +1,4 @@
-import LoginService from "@/services/LoginService";
+import { LoginService } from "@/services/index";
 
 export default class ApiService {
   protected static getBaseUrl() {

@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    <!--TODO Adjust Title -->
-    <Title prop-title="Startseite" />
+    <Title v-bind:prop-title="monthName" />
     <MonthTable />
   </div>
 </template>
@@ -17,6 +16,9 @@ import { Title, MonthTable } from "@/components";
   }
 })
 export default class Home extends Vue {
+  get monthName() {
+    return this.$store.state.workingTime.month.monthName;
+  }
   //noinspection JSUnusedGlobalSymbols
   mounted() {
     this.$store.dispatch("getMonth", new Date()).then(() => {});

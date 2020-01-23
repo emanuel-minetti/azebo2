@@ -1,4 +1,4 @@
-import ApiService from "@/services/ApiService";
+import { ApiService } from "@/services/index";
 
 export default class WorkingTimeService extends ApiService {
   static getMonth(year: String, month: String) {

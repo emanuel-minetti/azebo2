@@ -1,4 +1,4 @@
-import WorkingDay from "@/models/WorkingDay";
+import { WorkingDay } from "@/models/index";
 
 export default class WorkingMonth {
   monthDate: Date;
@@ -34,6 +34,13 @@ export default class WorkingMonth {
       }
       currentDay.setDate(currentDay.getDate() + 1);
     }
-    console.log(this.days);
+  }
+
+  get monthName() {
+    const options = {
+      year: "numeric",
+      month: "long"
+    };
+    return this.monthDate.toLocaleString("de-DE", options);
   }
 }

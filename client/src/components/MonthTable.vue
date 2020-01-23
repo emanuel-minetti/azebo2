@@ -15,8 +15,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GermanDateFormatter } from "@/services";
-import WorkingDay from "@/models/WorkingDay";
-import WorkingMonth from "@/models/WorkingMonth";
+import { WorkingDay, WorkingMonth } from "@/models";
 
 @Component
 export default class MonthTable extends Vue {
@@ -61,7 +60,7 @@ export default class MonthTable extends Vue {
       {
         key: "totalTime",
         label: "Anwesend",
-        class: "small-column",
+        class: "small-column"
       },
       {
         key: "actualTime",
