@@ -7,6 +7,7 @@ const UserModule: Module<any, any> = {
     user: new User()
   },
   mutations: {
+    // is called by login action and by the router if the user is logged in but reloaded the client
     setUser(state, user: User) {
       state.user = user;
     }
