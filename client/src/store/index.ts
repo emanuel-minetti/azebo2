@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import WorkingTimeModule from "@/store/WorkingTimeModule";
-import UserModule from "@/store/UserModule";
+import WorkingTimeModule from "./WorkingTimeModule";
+import UserModule from "./UserModule";
 
 Vue.use(Vuex);
 
