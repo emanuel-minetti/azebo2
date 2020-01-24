@@ -1,10 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import NotFound from "../views/NotFound.vue";
-import Login from "@/views/Login.vue";
 import store from "@/store";
 import User from "@/models/User";
+import { Home, Login, NotFound } from "@/views";
 
 Vue.use(VueRouter);
 
