@@ -2,7 +2,9 @@ import { ApiService } from "@/services";
 
 export default class LoginService extends ApiService {
   /**
-   * Sends a login request to the API and handles the response
+   * Sends a login request to the API and handles the response.
+   *
+   *  Returns a `Promise<String>`.
    * @param username the username
    * @param password the password
    */
