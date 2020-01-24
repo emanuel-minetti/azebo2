@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GermanDateFormatter } from "@/services";
+import { FormatterService } from "@/services";
 import { WorkingDay, WorkingMonth } from "@/models";
 
 @Component
@@ -29,19 +29,19 @@ export default class MonthTable extends Vue {
         key: "date",
         label: "Datum",
         class: "small-column",
-        formatter: GermanDateFormatter.toLongGermanDate
+        formatter: FormatterService.toLongGermanDate
       },
       {
         key: "begin",
         label: "Beginn",
         class: "small-column",
-        formatter: GermanDateFormatter.toGermanTime
+        formatter: FormatterService.toGermanTime
       },
       {
         key: "end",
         label: "Ende",
         class: "small-column",
-        formatter: GermanDateFormatter.toGermanTime
+        formatter: FormatterService.toGermanTime
       },
       {
         key: "timeOff",

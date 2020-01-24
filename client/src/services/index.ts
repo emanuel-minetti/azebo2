@@ -1,5 +1,5 @@
 import ApiService from "./ApiService";
-import GermanDateFormatter from "./GermanDateFormatter";
+import FormatterService from "./FormatterService";
 import LoginService from "./LoginService";
 import WorkingTimeService from "./WorkingTimeService";
-export { ApiService, GermanDateFormatter, LoginService, WorkingTimeService };
+export { ApiService, FormatterService, LoginService, WorkingTimeService };
