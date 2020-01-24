@@ -60,23 +60,14 @@ export default class Saldo {
     return clone;
   }
 
-  static create(
-    millisOrFromDate: number | Date,
-    positiveOrToDate: boolean | Date | undefined
-  ): Saldo {
-    if (
-      typeof millisOrFromDate === "number" &&
-      typeof positiveOrToDate === "boolean"
-    ) {
-      return new Saldo(millisOrFromDate, positiveOrToDate);
-    } else if (
-      millisOrFromDate instanceof Date &&
-      positiveOrToDate instanceof Date
-    ) {
-      const millis = positiveOrToDate.valueOf() - millisOrFromDate.valueOf();
-      const positive = millis >= 0;
-      return new Saldo(millis, positive);
-    } else throw "Wrong Parameter Types";
+  static createFromMillis(millis: number, positive?: boolean): Saldo {
+    return new Saldo(millis, positive);
+  }
+
+  static createFromDates(from: Date, to: Date): Saldo {
+    const millis = to.valueOf() - from.valueOf();
+    const positive = millis >= 0;
+    return new Saldo(millis, positive);
   }
 
   static getSum(first: Saldo, second: Saldo): Saldo {

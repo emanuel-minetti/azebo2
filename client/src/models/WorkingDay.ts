@@ -2,7 +2,7 @@ import { Saldo } from "@/models";
 import { timesConfig } from "@/configs";
 
 export default class WorkingDay {
-  private static readonly BREAK_DURATION = Saldo.create(
+  private static readonly BREAK_DURATION = Saldo.createFromMillis(
     timesConfig.breakDuration,
     false
   ); // half an hour
@@ -150,8 +150,7 @@ export default class WorkingDay {
 
   get totalTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    // @ts-ignore
-    return Saldo.create(this.begin, this.end);
+    return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
   }
 
   get actualTime(): Saldo | undefined {
