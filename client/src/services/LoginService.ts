@@ -1,6 +1,11 @@
-import { ApiService } from "@/services/index";
+import { ApiService } from "@/services";
 
 export default class LoginService extends ApiService {
+  /**
+   * Sends a login request to the API and handles the response
+   * @param username the username
+   * @param password the password
+   */
   static login(username: String, password: String) {
     const requestData = JSON.stringify({
       username,
@@ -25,6 +30,9 @@ export default class LoginService extends ApiService {
       });
   }
 
+  /**
+   * Removes all login data from local storage.
+   */
   static logout() {
     localStorage.removeItem("jwt");
     localStorage.removeItem("expire");
