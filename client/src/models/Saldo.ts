@@ -30,10 +30,12 @@ export default class Saldo {
       (this._positive && other._positive) ||
       (!this._positive && !other._positive)
     ) {
+      // both summands have the same sign
       this._hours += other._hours;
       this._minutes += other._minutes;
       this.fix();
     } else {
+      // both summands have different signs
       if (
         this._hours > other._hours ||
         (this._hours === other._hours && this._minutes >= other._minutes)
