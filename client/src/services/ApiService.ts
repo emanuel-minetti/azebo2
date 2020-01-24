@@ -1,11 +1,17 @@
-import { LoginService } from "@/services/index";
+import { LoginService } from "@/services";
 
 export default class ApiService {
+  /**
+   * Returns the base URL of the webapp.
+   */
   protected static getBaseUrl() {
     const loc = window.location;
     return loc.protocol + "//" + loc.host + "/api/";
   }
 
+  /**
+   * Returns the headers needed for API requests.
+   */
   protected static getHeaders() {
     return {
       "Content-Type": "application/json", // header name contains a hyphen, so quotes are required
@@ -14,6 +20,9 @@ export default class ApiService {
     };
   }
 
+  /**
+   * Returns the authentication header.
+   */
   protected static getAuthHeader() {
     let jwt = localStorage.getItem("jwt");
     if (jwt) {
@@ -26,6 +35,12 @@ export default class ApiService {
     }
   }
 
+  /**
+   * Extracts the actual data from a given response and returns it.
+   *
+   * Also refreshes the JWT if such was returned from the server.
+   * @param response the response to handle
+   */
   protected static handleResponse(response: Response) {
     return response.text().then(text => {
       const content = text && JSON.parse(text);
@@ -38,8 +53,10 @@ export default class ApiService {
         return Promise.reject(error);
       }
       // reset jwt
-      localStorage.setItem("jwt", JSON.stringify(content.data.jwt));
-      localStorage.setItem("expire", JSON.stringify(content.data.expire));
+      if (content.data.jwt && content.data.expire) {
+        localStorage.setItem("jwt", JSON.stringify(content.data.jwt));
+        localStorage.setItem("expire", JSON.stringify(content.data.expire));
+      }
       return content.data;
     });
   }
