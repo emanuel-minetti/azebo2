@@ -3,6 +3,11 @@ export default class Saldo {
   private _minutes: number;
   private _positive: boolean;
 
+  /**
+   * The private constructor.
+   * @param millis a time intervall in milliseconds
+   * @param positive whether the intervall should be added or subtracted
+   */
   private constructor(millis?: number, positive = true) {
     if (millis === undefined) {
       this._hours = 0;
@@ -16,6 +21,10 @@ export default class Saldo {
     }
   }
 
+  /**
+   * Private method that actually computes the addition.
+   * @param other the saldo to be added
+   */
   private add(other: Saldo): Saldo {
     if (
       (this._positive && other._positive) ||
@@ -42,6 +51,10 @@ export default class Saldo {
     return this;
   }
 
+  /**
+   * Private helper method that fixes possible over- or underflow
+   * in minutes.
+   */
   private fix() {
     if (this._minutes < 0) {
       this._minutes += 60;
@@ -52,6 +65,9 @@ export default class Saldo {
     }
   }
 
+  /**
+   * Clones a Saldo.
+   */
   private clone(): Saldo {
     const clone = new Saldo();
     clone._hours = this._hours;
@@ -60,21 +76,40 @@ export default class Saldo {
     return clone;
   }
 
+  /**
+   * Returns a new saldo by giving the time intervall by an amount of
+   * milliseconds.
+   * @param millis a time intervall in milliseconds
+   * @param positive whether the intervall should be added or subtracted
+   */
   static createFromMillis(millis: number, positive?: boolean): Saldo {
     return new Saldo(millis, positive);
   }
 
+  /**
+   *  Returns a new saldo by giving a start and end date.
+   * @param from the start date
+   * @param to the end date
+   */
   static createFromDates(from: Date, to: Date): Saldo {
     const millis = to.valueOf() - from.valueOf();
     const positive = millis >= 0;
     return new Saldo(millis, positive);
   }
 
+  /**
+   * Returns a new saldo which is teh sum of two saldos.
+   * @param first first summand
+   * @param second second summand
+   */
   static getSum(first: Saldo, second: Saldo): Saldo {
     const result = first.clone();
     return result.add(second);
   }
 
+  /**
+   * Returns a nicely formatted string representation of a saldo.
+   */
   toString(): string {
     if (this._hours === 0 && this._minutes === 0) return "";
     let result = this._positive ? "+" : "-";
@@ -83,16 +118,4 @@ export default class Saldo {
     result += this._minutes;
     return result;
   }
-
-  // get hours(): number {
-  //   return this._hours;
-  // }
-  //
-  // get minutes(): number {
-  //   return this._minutes;
-  // }
-  //
-  // get positive(): boolean {
-  //   return this._positive;
-  // }
 }
