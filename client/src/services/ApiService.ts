@@ -37,6 +37,9 @@ export default class ApiService {
         const error = (content && content.message) || response.statusText;
         return Promise.reject(error);
       }
+      // reset jwt
+      localStorage.setItem("jwt", JSON.stringify(content.data.jwt));
+      localStorage.setItem("expire", JSON.stringify(content.data.expire));
       return content.data;
     });
   }
