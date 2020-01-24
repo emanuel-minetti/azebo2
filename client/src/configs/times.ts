@@ -6,7 +6,7 @@
  *
  */
 const timesConfig = {
-  breakDuration: 30 * 60 * 1000
+  breakDuration: 30 * 60 * 1000 // half an hour in milliseconds
 };
 
 export default timesConfig;

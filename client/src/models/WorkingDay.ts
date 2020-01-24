@@ -2,10 +2,13 @@ import { Saldo } from "@/models";
 import { timesConfig } from "@/configs";
 
 export default class WorkingDay {
+  /**
+   * The time intervall to subtract for total working time if a break was taken
+   */
   private static readonly BREAK_DURATION = Saldo.createFromMillis(
     timesConfig.breakDuration,
     false
-  ); // half an hour
+  );
 
   private readonly _date: Date;
   private _begin?: Date;
@@ -50,7 +53,7 @@ export default class WorkingDay {
     return this._date;
   }
 
-  // no setter for `date`
+  // no setter for `date` because it's the primary key and should not be edited
 
   get begin(): Date | undefined {
     return this._begin;
@@ -140,19 +143,31 @@ export default class WorkingDay {
     return this._edited;
   }
 
+  /**
+   * Returns whether a date is a actual working day.
+   */
   get isWorkingDay() {
     return this._date.getDay() == 0 || this._date.getDay() == 6;
   }
 
+  /**
+   * Returns whether begin and end are set for this working day.
+   */
   get hasWorkingTime(): boolean {
     return this.begin !== undefined && this.end !== undefined;
   }
 
+  /**
+   * Returns the time intervall from begin to end if these are set, `undefined` otherwise.
+   */
   get totalTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
     return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
   }
 
+  /**
+   * Returns the total working time minus possible break times.
+   */
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
     return this.break
@@ -160,6 +175,11 @@ export default class WorkingDay {
       : this.totalTime;
   }
 
+  /**
+   * Converts a string representing a date returned by the service into a `Date`.
+   * If a `Date` is given as an argument it is immediately returned.
+   * @param dateString the string to convert
+   */
   private static convertDate(dateString: string | Date): Date {
     if (typeof dateString === "string") {
       const year = Number(dateString.substring(0, 4));
@@ -167,9 +187,15 @@ export default class WorkingDay {
       const day = Number(dateString.substring(8, 10));
       return new Date(year, month - 1, day);
     }
+    // an instance of `Date` was given so return it
     return dateString;
   }
 
+  /**
+   * Converts a string representing a time returned by the service into a `Date`.
+   * If a `Date` is given as an argument it is immediately returned.
+   * @param timeString the string to convert
+   */
   private convertTime(timeString?: string | Date): Date | undefined {
     if (typeof timeString === "undefined" || timeString === null)
       return undefined;
@@ -181,6 +207,7 @@ export default class WorkingDay {
       const minute = Number(timeString.substring(3, 5));
       return new Date(year, month, day, hour, minute);
     }
+    // an instance of `Date` was given so return it
     return timeString;
   }
 }
