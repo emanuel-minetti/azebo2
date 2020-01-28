@@ -49,7 +49,7 @@ class AuthorizationService
                 // test for JWT
                 list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
                 if ($jwt) {
-                    $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
+                    $config = Factory::fromFile('./../server/config/jwt.config.php', true);
                     $secretKey = base64_decode($config->get('jwtKey'));
                     try {
                         $token = JWT::decode($jwt, $secretKey, ['HS512']);
@@ -83,7 +83,7 @@ class AuthorizationService
 
     public static function getJwt($expire, $userId)
     {
-        $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
+        $config = Factory::fromFile('./../server/config/jwt.config.php', true);
 
         $issuedAt = time();
         $serverName = $config->get('serverName');
