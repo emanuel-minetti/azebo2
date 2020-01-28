@@ -26,12 +26,12 @@
 
 namespace Login\Controller;
 
-
-use Login\Model\UserTable;
 use RuntimeException;
-use Service\AuthorizationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
+
+use Login\Model\UserTable;
+use Service\AuthorizationService;
 
 class LoginController extends AbstractActionController
 {
@@ -42,6 +42,7 @@ class LoginController extends AbstractActionController
         $this->table = $table;
     }
 
+    /** @noinspection PhpUnused */
     public function loginAction()
     {
         $request = $this->getRequest();
@@ -64,6 +65,7 @@ class LoginController extends AbstractActionController
             return $declineRequest;
         }
 
+        // get user from DB
         try {
             $user = $this->table->getUserByUsername($username);
         } catch (RuntimeException $e) {
