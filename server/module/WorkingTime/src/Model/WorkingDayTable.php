@@ -23,9 +23,7 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
-
 namespace WorkingTime\Model;
-
 
 use DateTime;
 use Zend\Db\Sql\Select;

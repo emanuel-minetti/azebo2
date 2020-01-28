@@ -25,7 +25,6 @@
 
 namespace WorkingTime\Model;
 
-
 use ArrayObject;
 use DateTime;
 

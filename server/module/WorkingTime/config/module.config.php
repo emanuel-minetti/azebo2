@@ -32,11 +32,10 @@ return array(
             'working-time' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route' => '/api/working-time/:year/:month[/:day]',
+                    'route' => '/api/working-time/:year/:month',
                     'constraints' => [
                         'year' => '[0-9]+',
                         'month' => '[0-9]+',
-                        'day' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => Controller\WorkingTimeController::class,

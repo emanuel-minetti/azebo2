@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
 /**
  * azebo2 is an application to print working time tables
  * Copyright (C) 2019  Emanuel Minetti

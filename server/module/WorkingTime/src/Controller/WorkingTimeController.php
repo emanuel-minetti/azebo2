@@ -25,13 +25,14 @@
 namespace WorkingTime\Controller;
 
 use DateTime;
-use Service\AuthorizationService;
-use WorkingTime\Model\WorkingDay;
-use WorkingTime\Model\WorkingDayTable;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
+
+use Service\AuthorizationService;
+use WorkingTime\Model\WorkingDay;
+use WorkingTime\Model\WorkingDayTable;
 
 class WorkingTimeController extends AbstractActionController
 {
@@ -42,6 +43,7 @@ class WorkingTimeController extends AbstractActionController
         $this->table = $table;
     }
 
+    /** @noinspection PhpUnused */
     public function monthAction()
     {
         $yearId = $this->params('year');
