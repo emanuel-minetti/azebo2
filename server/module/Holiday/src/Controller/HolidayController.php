@@ -22,43 +22,25 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
-namespace WorkingTime\Controller;
+namespace Holiday\Controller;
 
-use DateTime;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
 use Service\AuthorizationService;
-use WorkingTime\Model\WorkingDay;
-use WorkingTime\Model\WorkingDayTable;
 
-class WorkingTimeController extends AbstractActionController
+class HolidayController extends AbstractActionController
 {
-    private $table;
-
-    public function __construct(WorkingDayTable $table)
-    {
-        $this->table = $table;
-    }
-
     /** @noinspection PhpUnused */
-    public function monthAction()
+    public function getAction()
     {
-        $yearId = $this->params('year');
-        $monthId = $this->params('month');
-        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearId-$monthId-01");
+        $year = $this->params('year');
         $request = Request::fromString($this->request);
         $response = Response::fromString($this->response);
         if (AuthorizationService::authorize($request, $response, ['GET',])) {
             $userId = $request->getQuery()->user_id;
-            $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
-            $arrayOfWorkingDayArrays = [];
-            foreach ($arrayOfWorkingDays as $workingDay) {
-                $arrayOfWorkingDayArrays[] = $workingDay->getArrayCopy();
-            }
-
             // refresh jwt ...
             $expire = time() + AuthorizationService::EXPIRE_TIME;
             $jwt = AuthorizationService::getJwt($expire, $userId);
@@ -68,7 +50,7 @@ class WorkingTimeController extends AbstractActionController
                 'data' => [
                     'jwt' => $jwt,
                     'expire' => $expire,
-                    'working_days' => $arrayOfWorkingDayArrays,
+                    'holidays' => "Hallo Du da!",
                 ],
             ]);
         } else {
