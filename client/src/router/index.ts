@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import NotFound from "../views/NotFound.vue";
-import Login from "@/views/Login.vue";
+import store from "@/store";
+import User from "@/models/User";
+import { Home, Login, NotFound } from "@/views";
 
 Vue.use(VueRouter);
 
@@ -44,22 +44,28 @@ router.beforeEach((to, from, next) => {
   const publicPages = ["/login"];
   const isPublic = publicPages.includes(to.path);
   let loggedIn;
-  if (localStorage.getItem("user")) {
-    const expires = Number(
-      JSON.parse(<string>localStorage.getItem("user")).expire
-    );
+  if (localStorage.getItem("jwt")) {
+    const expires = Number(JSON.parse(<string>localStorage.getItem("expire")));
     const now = Date.now() / 1000;
     loggedIn = expires >= now;
+    // If loggedIn, but no user is in the store refresh it from localStorage
+    if (loggedIn && !store.state.user.fullName) {
+      store.commit(
+        "setUser",
+        new User(JSON.parse(<string>localStorage.getItem("user")))
+      );
+    }
   } else {
     loggedIn = false;
   }
 
   if (!isPublic && !loggedIn) {
+    // to redirect after login
     next({
       path: "/login",
       query: {
         redirect: to.path
-      } // to redirect after login
+      }
     });
   }
   next();

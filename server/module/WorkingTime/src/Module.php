@@ -23,15 +23,14 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
-namespace Login;
+namespace WorkingTime;
 
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\ServiceManager\ServiceManager;
 
-class Module
-{
+class Module {
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
@@ -41,12 +40,12 @@ class Module
     {
         return [
             'factories' => [
-                Model\UserTable::class => function (ServiceManager $container) {
+                Model\WorkingDayTable::class => function (ServiceManager $container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Model\User());
-                    $tableGateway = new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
-                    return new Model\UserTable($tableGateway);
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\WorkingDay([]));
+                    $tableGateway = new TableGateway('working_day', $dbAdapter, null, $resultSetPrototype);
+                    return new Model\WorkingDayTable($tableGateway);
                 },
             ],
         ];
@@ -56,12 +55,13 @@ class Module
     {
         return [
             'factories' => [
-                Controller\LoginController::class => function (ServiceManager $container) {
-                    return new Controller\LoginController(
-                        $container->get(Model\UserTable::class)
+                Controller\WorkingTimeController::class => function (ServiceManager $container) {
+                    return new Controller\WorkingTimeController(
+                        $container->get(Model\WorkingDayTable::class)
                     );
                 }
             ],
         ];
     }
 }
+

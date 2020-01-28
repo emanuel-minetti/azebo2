@@ -33,4 +33,5 @@ return [
     'Zend\Validator',
     'Application',
     'Login',
+    'WorkingTime',
 ];

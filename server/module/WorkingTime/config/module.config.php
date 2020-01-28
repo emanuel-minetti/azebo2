@@ -21,5 +21,33 @@
  * @copyright Copyright (c) 2019 Emanuel Minetti
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
-#parse("PHP File Header.php")
 
+namespace WorkingTime;
+
+use Zend\Router\Http\Segment;
+
+return array(
+    'router' => [
+        'routes' => [
+            'working-time' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/working-time/:year/:month',
+                    'constraints' => [
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\WorkingTimeController::class,
+                        'action' => 'month',
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'view_manager' => [
+        'strategies' => [
+            'ViewJsonStrategy',
+        ],
+    ],
+);

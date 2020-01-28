@@ -7,5 +7,11 @@
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mariadb://localhost:3306/azebo2</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="azebo@localhost" uuid="292169fa-221d-4c6f-b2fd-12ab13aec4b1">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://localhost:3306/azebo</jdbc-url>
+    </data-source>
   </component>
 </project>

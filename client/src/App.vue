@@ -42,23 +42,25 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LoginService from "@/services/LoginService";
+import { LoginService } from "@/services";
+
 const config = require("../package.json");
 
 @Component
 export default class App extends Vue {
-  loggedIn = false;
-  name = "";
   copyrightyear = "";
   version = "";
 
+  get name() {
+    return this.$store.state.user.user.fullName;
+  }
+
+  get loggedIn() {
+    return this.$store.state.user.user.fullName !== "";
+  }
+
+  //noinspection JSUnusedGlobalSymbols
   mounted() {
-    // get name from `localStorage`
-    const userString = localStorage.getItem("user");
-    if (userString) {
-      this.loggedIn = true;
-      this.name = JSON.parse(userString).full_name;
-    }
     // copyright and version from `package.json`
     this.version = config.version;
     this.copyrightyear = config.copyright;
