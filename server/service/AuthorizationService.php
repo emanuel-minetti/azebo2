@@ -31,33 +31,37 @@ use Zend\Config\Factory;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
-class AuthorizationService {
+class AuthorizationService
+{
 
     public const EXPIRE_TIME = 1800; // is half an hour
 
     public static function authorize(
         Request $request,
         Response $response,
-        $acceptedMethods = ["GET"]) {
+        $acceptedMethods = ["GET"])
+    {
+        // test http method
         if (array_search($request->getMethod(), $acceptedMethods) !== false) {
+            // test for authentication header
             $authHeader = $request->getHeader('Authorization');
             if ($authHeader) {
+                // test for JWT
                 list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
                 if ($jwt) {
                     $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
                     $secretKey = base64_decode($config->get('jwtKey'));
                     try {
                         $token = JWT::decode($jwt, $secretKey, ['HS512']);
+                        // authentication success
                         // inject user_id into request
                         $request->getQuery()->user_id = $token->data->user_id;
                         return true;
-                    }
-                    catch (ExpiredException $e) {
+                    } catch (ExpiredException $e) {
                         // the token is expired
                         $response->setStatusCode(401);   // Unauthorized
                         $response->setContent("Token expired");
-                    }
-                    catch (Exception $e) {
+                    } catch (Exception $e) {
                         // the token is invalid
                         $response->setStatusCode(401);  // Unauthorized
 
@@ -77,7 +81,8 @@ class AuthorizationService {
         return false;
     }
 
-    public static function getJwt($expire, $userId) {
+    public static function getJwt($expire, $userId)
+    {
         $config = Factory::fromFile('./../server/config/autoload/jwt.config.php', true);
 
         $issuedAt = time();
@@ -94,6 +99,5 @@ class AuthorizationService {
 
         $secretKey = base64_decode($config->get('jwtKey'));
         return JWT::encode($resData, $secretKey, 'HS512');
-
     }
 }
