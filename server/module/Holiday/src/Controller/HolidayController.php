@@ -24,6 +24,7 @@
 
 namespace Holiday\Controller;
 
+use DateTime;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -37,11 +38,12 @@ class HolidayController extends AbstractActionController
     public function getAction()
     {
         $year = $this->params('year');
+        $holidays = $this->getHolidays($year);
         $request = Request::fromString($this->request);
         $response = Response::fromString($this->response);
         if (AuthorizationService::authorize($request, $response, ['GET',])) {
-            $userId = $request->getQuery()->user_id;
             // refresh jwt ...
+            $userId = $request->getQuery()->user_id;
             $expire = time() + AuthorizationService::EXPIRE_TIME;
             $jwt = AuthorizationService::getJwt($expire, $userId);
             // ... and return response
@@ -50,12 +52,49 @@ class HolidayController extends AbstractActionController
                 'data' => [
                     'jwt' => $jwt,
                     'expire' => $expire,
-                    'holidays' => "Hallo Du da!",
+                    'holidays' => $holidays,
                 ],
             ]);
         } else {
             // TODO review
             return $response;
         }
+    }
+
+    /**
+     * Returns an array containing all legal holidays in Berlin/Germany.
+     * Each holiday is an associative array with keys 'date' which is a
+     * `DateTime` and 'name' which is a string
+     *
+     * @param $year number the year to get the legal holidays for
+     */
+    private function getHolidays($year)
+    {
+        /*
+        * Die festen gesetzlichen Feiertage in Berlin sind:
+        *
+        * -Neujahr (1.1.)
+        * -Internationaler Frauentag (8.3. ab dem Jahr 2019)
+        * -Tag der Arbeit (1.5.)
+        * -Einmalig der Tag der Befreiung 2020 (8.5.2020)
+        * -Tag der dt. Einheit (3.10.)
+        * -Einmalig der Reformationstag 2017 (31.10.2017)
+        * -1. Weihnachtsfeiertag (25.12.)
+        * -2. Weihnachtsfeiertag (26.12.)
+        *
+        * Die beweglichen gesetzlichen Feiertage in Berlin sind:
+        *
+        * -Karfreitag (Ostersonntag - 2)
+        * -Ostermontag (Ostersonntag + 1)
+        * -Christi Himmelfahrt (Ostersonntag + 39)
+        * -Pfingstmontag (Ostersonntag + 50)
+        */
+        $holidays = [];
+        // New Years day
+        $holidays[] = [
+            'date' => new DateTime("$year/1/1"),
+            'name' => "Neujahr",
+        ];
+        return $holidays;
     }
 }
