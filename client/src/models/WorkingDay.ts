@@ -1,5 +1,6 @@
 import { Saldo } from "@/models";
 import { timesConfig } from "@/configs";
+import { FormatterService } from "@/services";
 
 export default class WorkingDay {
   /**
@@ -29,18 +30,43 @@ export default class WorkingDay {
       data.break != undefined &&
       data.afternoon != undefined
     ) {
-      this._date = WorkingDay.convertDate(data.date);
+      this._date = FormatterService.convertToDate(data.date);
 
       this._break = Boolean(data.break);
       this._afternoon = Boolean(data.afternoon);
 
-      this._begin = this.convertTime(data.begin);
-      this._end = this.convertTime(data.end);
+      const year = this.date.getFullYear();
+      const monthIndex = this.date.getMonth();
+      const day = this.date.getDay();
+      this._begin = FormatterService.convertToTime(
+        year,
+        monthIndex,
+        day,
+        data.begin
+      );
+      this._end = FormatterService.convertToTime(
+        year,
+        monthIndex,
+        day,
+        data.end
+      );
 
       this._timeOff = data.time_off;
       this._comment = data.comment;
-      this._afternoonBegin = this.convertTime(data.afternoon_begin);
-      this._afternoonEnd = this.convertTime(data.afternoon_end);
+      // this._afternoonBegin = this.convertTime(data.afternoon_begin);
+      // this._afternoonEnd = this.convertTime(data.afternoon_end);
+      this._afternoonBegin = FormatterService.convertToTime(
+        year,
+        monthIndex,
+        day,
+        data.afternoon_begin
+      );
+      this._afternoonEnd = FormatterService.convertToTime(
+        year,
+        monthIndex,
+        day,
+        data.afternoon_end
+      );
     } else {
       this._date = new Date();
       this._break = false;
@@ -173,41 +199,5 @@ export default class WorkingDay {
     return this.break
       ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
       : this.totalTime;
-  }
-
-  /**
-   * Converts a string representing a date returned by the service into a `Date`.
-   * If a `Date` is given as an argument it is immediately returned.
-   * @param dateString the string to convert
-   */
-  private static convertDate(dateString: string | Date): Date {
-    if (typeof dateString === "string") {
-      const year = Number(dateString.substring(0, 4));
-      const month = Number(dateString.substring(5, 7));
-      const day = Number(dateString.substring(8, 10));
-      return new Date(year, month - 1, day);
-    }
-    // an instance of `Date` was given so return it
-    return dateString;
-  }
-
-  /**
-   * Converts a string representing a time returned by the service into a `Date`.
-   * If a `Date` is given as an argument it is immediately returned.
-   * @param timeString the string to convert
-   */
-  private convertTime(timeString?: string | Date): Date | undefined {
-    if (typeof timeString === "undefined" || timeString === null)
-      return undefined;
-    if (typeof timeString === "string") {
-      const year = this.date.getFullYear();
-      const month = this.date.getMonth();
-      const day = this.date.getDay();
-      const hour = Number(timeString.substring(0, 2));
-      const minute = Number(timeString.substring(3, 5));
-      return new Date(year, month, day, hour, minute);
-    }
-    // an instance of `Date` was given so return it
-    return timeString;
   }
 }
