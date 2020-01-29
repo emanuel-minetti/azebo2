@@ -2,6 +2,7 @@
 vendor/
 config/development.config.php
 config/jwt.config.php
+config/holiday.config.php
 data/cache/*
 !data/cache/.gitkeep
 phpunit.xml

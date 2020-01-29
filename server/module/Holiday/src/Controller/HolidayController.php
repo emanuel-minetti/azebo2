@@ -28,6 +28,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 
+use Zend\Config\Factory;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -82,9 +83,7 @@ class HolidayController extends AbstractActionController
         * -Neujahr (1.1.)
         * -Internationaler Frauentag (8.3. ab dem Jahr 2019)
         * -Tag der Arbeit (1.5.)
-        * -Einmalig der Tag der Befreiung 2020 (8.5.2020)
         * -Tag der dt. Einheit (3.10.)
-        * -Einmalig der Reformationstag 2017 (31.10.2017)
         * -1. Weihnachtsfeiertag (25.12.)
         * -2. Weihnachtsfeiertag (26.12.)
         *
@@ -153,7 +152,17 @@ class HolidayController extends AbstractActionController
             ],
         ]);
 
-        // TODO add configurable holidays
+        $config = Factory::fromFile('./../server/config/holiday.config.php', true);
+        foreach ($config as $holiday) {
+            if (!isset($holiday->year) || $holiday->year == $year) {
+                $holidayDate = new DateTime("$year/$holiday->month/$holiday->day");
+                $holidays[] = [
+                    'date' => $holidayDate,
+                    'name' => $holiday->name
+                ];
+            }
+        }
+
         return $holidays;
     }
 }
