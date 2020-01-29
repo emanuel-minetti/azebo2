@@ -24,13 +24,14 @@
 
 namespace Holiday\Controller;
 
+use DateInterval;
 use DateTime;
+use Exception;
+use Service\AuthorizationService;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
-
-use Service\AuthorizationService;
 
 class HolidayController extends AbstractActionController
 {
@@ -38,6 +39,7 @@ class HolidayController extends AbstractActionController
     public function getAction()
     {
         $year = $this->params('year');
+        // TODO handle exception
         $holidays = $this->getHolidays($year);
         $request = Request::fromString($this->request);
         $response = Response::fromString($this->response);
@@ -67,6 +69,8 @@ class HolidayController extends AbstractActionController
      * `DateTime` and 'name' which is a string
      *
      * @param $year number the year to get the legal holidays for
+     * @return array an array of legal holidays
+     * @throws Exception if a `DateTime` can't be created
      */
     private function getHolidays($year)
     {
@@ -90,11 +94,64 @@ class HolidayController extends AbstractActionController
         * -Pfingstmontag (Ostersonntag + 50)
         */
         $holidays = [];
-        // New Years day
-        $holidays[] = [
-            'date' => new DateTime("$year/1/1"),
-            'name' => "Neujahr",
-        ];
+        array_push($holidays, [
+            [
+                'date' => new DateTime("$year/1/1"),
+                'name' => "Neujahr",
+            ],
+            [
+                'date' => new DateTime("$year/3/8"),
+                'name' => "Internationaler Frauentag",
+            ],
+            [
+                'date' => new DateTime("$year/10/3"),
+                'name' => "Tag der deutschen Einheit"
+            ],
+            [
+                'date' => new DateTime("$year/12/25"),
+                'name' => "1. Weihnachtsfeiertag"
+            ],
+            [
+                'date' => new DateTime("$year/12/26"),
+                'name' => "2. Weihnachtsfeiertag"
+            ],
+        ]);
+
+        // compute movable holidays
+        $easterDays = easter_days($year);
+        $equinox = new DateTime("$year/03/21");
+        $easter = clone $equinox;
+        $easter->add(new DateInterval("P{$easterDays}D"));
+        $goodFriday = clone $easter;
+        $goodFriday->sub(new DateInterval("P2D"));
+        $easterMonday = clone $easter;
+        $easterMonday->add(new DateInterval("P1D"));
+        $ascension = clone $easter;
+        $ascension->add(new DateInterval("P39D"));
+        $whitMonday = clone $easter;
+        $whitMonday->add(new DateInterval("P50D"));
+
+        // add movable holidays
+        array_push($holidays,[
+            [
+                'date' => $goodFriday,
+                'name' => "Karfreitag"
+            ],
+            [
+                'date' => $easterMonday,
+                'name' => "Ostermontag"
+            ],
+            [
+                'date' => $ascension,
+                'name' => "Christi Himmelfahrt"
+            ],
+            [
+                'date' => $whitMonday,
+                'name' => "Pfingstmontag"
+            ],
+        ]);
+
+        // TODO add configurable holidays
         return $holidays;
     }
 }
