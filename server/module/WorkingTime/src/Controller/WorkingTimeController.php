@@ -72,7 +72,7 @@ class WorkingTimeController extends AbstractActionController
                 ],
             ]);
         } else {
-            // TODO review
+            // `response` was set in the call to `AuthorizationService::authorize`
             return $response;
         }
     }
