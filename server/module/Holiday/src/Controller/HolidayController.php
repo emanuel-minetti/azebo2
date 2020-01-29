@@ -27,11 +27,13 @@ namespace Holiday\Controller;
 use DateInterval;
 use DateTime;
 use Exception;
-use Service\AuthorizationService;
+
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
+
+use Service\AuthorizationService;
 
 class HolidayController extends AbstractActionController
 {
