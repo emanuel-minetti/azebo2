@@ -34,4 +34,41 @@ export default class FormatterService {
       return "";
     }
   }
+
+  /**
+   * Converts a string representing a date returned by the service into a `Date`.
+   * If a `Date` is given as an argument it is immediately returned.
+   * @param dateString the string to convert
+   */
+  public static convertToDate(dateString: string | Date): Date {
+    if (typeof dateString === "string") {
+      const year = Number(dateString.substring(0, 4));
+      const month = Number(dateString.substring(5, 7));
+      const day = Number(dateString.substring(8, 10));
+      return new Date(year, month - 1, day);
+    }
+    // an instance of `Date` was given so return it
+    return dateString;
+  }
+
+  /**
+   * Converts a string representing a time returned by a service into a `Date`.
+   * If a `Date` is given as an argument it is immediately returned.
+   *
+   * @param year the year of the returned time
+   * @param monthIndex the month index (0 -11) of the returned time
+   * @param day the day of the returned time
+   * @param timeString the string to convert
+   */
+  public static convertToTime(year: number, monthIndex:number, day:number, timeString?: string | Date): Date | undefined {
+    if (typeof timeString === "undefined" || timeString === null)
+      return undefined;
+    if (typeof timeString === "string") {
+      const hour = Number(timeString.substring(0, 2));
+      const minute = Number(timeString.substring(3, 5));
+      return new Date(year, monthIndex, day, hour, minute);
+    }
+    // an instance of `Date` was given so return it
+    return timeString;
+  }
 }
