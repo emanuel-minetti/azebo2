@@ -1,6 +1,7 @@
-import { Saldo } from "@/models";
+import { Holiday, Saldo } from "@/models";
 import { timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
+import { store } from "@/store";
 
 export default class WorkingDay {
   /**
@@ -31,6 +32,14 @@ export default class WorkingDay {
       data.afternoon != undefined
     ) {
       this._date = FormatterService.convertToDate(data.date);
+      // TODO set holiday
+      const holidays = store.state.workingTime.holidays;
+      console.log(holidays[0]);
+      // holidays.forEach((holiday: Holiday) => {
+      //     if (holiday.date.getFullYear() === this._date.getFullYear() && holiday.date.getMonth() === this._date.getMonth() && holiday.date.getDate() === this._date.getDate()) {
+      //       console.log("Treffer");
+      //     }
+      // });
 
       this._break = Boolean(data.break);
       this._afternoon = Boolean(data.afternoon);

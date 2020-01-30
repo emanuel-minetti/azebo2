@@ -17,19 +17,21 @@ const WorkingTimeModule: Module<any, any> = {
   },
   actions: {
     getMonth({ commit, dispatch, state }, monthDate: Date) {
-      const year = monthDate.getFullYear().toString();
-      let month = monthDate.getMonth() + 1;
-      const monthString = month < 10 ? "0" + month : "" + month;
-      return WorkingTimeService.getMonth(year, monthString).then(data => {
-        let workingDays = data.working_days.map(
-          (day: any) => new WorkingDay(day)
-        );
-        let workingMonth = new WorkingMonth(monthDate, workingDays);
-        commit("setMonth", workingMonth);
-        if (state.holidays.length === 0) {
-          dispatch("getHolidays", monthDate).then(() => {});
-        }
-      });
+      // make sure holidays are loaded before creating the working days
+      if (state.holidays.length === 0) {
+        dispatch("getHolidays", monthDate).then(() => {
+          const year = monthDate.getFullYear().toString();
+          let month = monthDate.getMonth() + 1;
+          const monthString = month < 10 ? "0" + month : "" + month;
+          return WorkingTimeService.getMonth(year, monthString).then(data => {
+            let workingDays = data.working_days.map(
+              (day: any) => new WorkingDay(day)
+            );
+            let workingMonth = new WorkingMonth(monthDate, workingDays);
+            commit("setMonth", workingMonth);
+          });
+        });
+      }
     },
     getHolidays({ commit }, yearDate: Date) {
       const year = yearDate.getFullYear().toString();

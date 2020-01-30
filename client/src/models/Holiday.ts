@@ -6,6 +6,7 @@ export default class Holiday {
 
   constructor(data?: any) {
     if (data && data.date && data.name) {
+      //TODO Make sure that `this.date` is a `Date` (maybe on server side)
       this.date = FormatterService.convertToDate(data.date);
       this.name = data.name;
     } else {
