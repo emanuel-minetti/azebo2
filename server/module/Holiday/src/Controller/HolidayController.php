@@ -102,6 +102,7 @@ class HolidayController extends AbstractActionController
 
         // watch for possible exceptions in `DateTime` constructor
         try {
+            //add fixed holidays
             $holidays = [
                 [
                     'date' => new DateTime("$year/1/1"),
@@ -163,6 +164,7 @@ class HolidayController extends AbstractActionController
         }
 
         try {
+            // add configurable holidays
             $config = Factory::fromFile('./../server/config/holiday.config.php', true);
             foreach ($config as $holiday) {
                 if (!isset($holiday->year) || $holiday->year == $year) {
@@ -176,7 +178,9 @@ class HolidayController extends AbstractActionController
         } catch (Exception $e) {
             throw new Exception("Holiday configuration could not be read or interpreted", 0, $e);
         }
-
+        usort($holidays, function ($a, $b) {
+            return $a['date'] > $b['date'] ? 1 : -1;
+        });
         return $holidays;
     }
 }
