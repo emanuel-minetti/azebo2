@@ -33,8 +33,12 @@ const WorkingTimeModule: Module<any, any> = {
     },
     getHolidays({ commit }, yearDate: Date) {
       const year = yearDate.getFullYear().toString();
+      const holidays = new Array<Holiday>();
       return HolidayService.getHolidays(year).then(data => {
-        console.log(data);
+        data.holidays.forEach((element: any) => {
+          holidays.push(new Holiday(element));
+        });
+        commit("setHolidays", holidays);
       });
     }
   }
