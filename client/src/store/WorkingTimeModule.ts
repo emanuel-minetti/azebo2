@@ -1,18 +1,22 @@
 import { Module } from "vuex";
-import { WorkingDay, WorkingMonth } from "@/models";
-import { WorkingTimeService } from "@/services";
+import { Holiday, WorkingDay, WorkingMonth } from "@/models";
+import { HolidayService, WorkingTimeService } from "@/services";
 
 const WorkingTimeModule: Module<any, any> = {
   state: {
-    month: WorkingMonth
+    month: WorkingMonth,
+    holidays: Array<Holiday>()
   },
   mutations: {
     setMonth(state, month: WorkingMonth) {
       state.month = month;
+    },
+    setHolidays(state, holidays) {
+      state.holidays = holidays;
     }
   },
   actions: {
-    getMonth({ commit }, monthDate: Date) {
+    getMonth({ commit, dispatch, state }, monthDate: Date) {
       const year = monthDate.getFullYear().toString();
       let month = monthDate.getMonth() + 1;
       const monthString = month < 10 ? "0" + month : "" + month;
@@ -22,6 +26,15 @@ const WorkingTimeModule: Module<any, any> = {
         );
         let workingMonth = new WorkingMonth(monthDate, workingDays);
         commit("setMonth", workingMonth);
+        if (state.holidays.length === 0) {
+          dispatch("getHolidays", monthDate).then(() => {});
+        }
+      });
+    },
+    getHolidays({ commit }, yearDate: Date) {
+      const year = yearDate.getFullYear().toString();
+      return HolidayService.getHolidays(year).then(data => {
+        console.log(data);
       });
     }
   }
