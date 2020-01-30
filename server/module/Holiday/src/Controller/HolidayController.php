@@ -99,11 +99,10 @@ class HolidayController extends AbstractActionController
         * -Christi Himmelfahrt (Ostersonntag + 39)
         * -Pfingstmontag (Ostersonntag + 50)
         */
-        $holidays = [];
 
         // watch for possible exceptions in `DateTime` constructor
         try {
-            array_push($holidays, [
+            $holidays = [
                 [
                     'date' => new DateTime("$year/1/1"),
                     'name' => "Neujahr",
@@ -124,7 +123,7 @@ class HolidayController extends AbstractActionController
                     'date' => new DateTime("$year/12/26"),
                     'name' => "2. Weihnachtsfeiertag"
                 ],
-            ]);
+            ];
 
             // compute movable holidays
             $easterDays = easter_days($year);
@@ -141,7 +140,7 @@ class HolidayController extends AbstractActionController
             $whitMonday->add(new DateInterval("P50D"));
 
             // add movable holidays
-            array_push($holidays, [
+            $holidays = array_merge($holidays, [
                 [
                     'date' => $goodFriday,
                     'name' => "Karfreitag"
