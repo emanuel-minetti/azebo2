@@ -22,11 +22,12 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
- // Copy this file to `jwt.config.php` and fill in your settings
+ // Copy this file to `holiday.config.php` and fill in your settings
  // If a holiday happens regularly every year just omit the `year` entry.
 
 return [
     [
+        // Extraordinary holiday 75 years after WWII german kapitulation
         'day' => 8,
         'month' => 5,
         'year' => 2020,
