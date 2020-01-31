@@ -19,7 +19,6 @@ import { WorkingDay, WorkingMonth } from "@/models";
 
 @Component
 export default class MonthTable extends Vue {
-
   // `monthData` is being used in the items property of the table
   get monthData(): WorkingMonth {
     return this.$store.state.workingTime.month;

@@ -34,12 +34,17 @@ export default class WorkingDay {
       data.afternoon != undefined
     ) {
       this._date = FormatterService.convertToDate(data.date);
+
       const holidays = store.state.workingTime.holidays;
+      const year = this.date.getFullYear();
+      const monthIndex = this.date.getMonth();
+      const day = this.date.getDay();
+
       holidays.forEach((holiday: Holiday) => {
         if (
-          holiday.date.getFullYear() === this._date.getFullYear() &&
-          holiday.date.getMonth() === this._date.getMonth() &&
-          holiday.date.getDate() === this._date.getDate()
+          holiday.date.getFullYear() === year &&
+          holiday.date.getMonth() === monthIndex &&
+          holiday.date.getDate() === day
         ) {
           this._isHoliday = true;
           this._HolidayName = holiday.name;
@@ -49,9 +54,6 @@ export default class WorkingDay {
       this._break = Boolean(data.break);
       this._afternoon = Boolean(data.afternoon);
 
-      const year = this.date.getFullYear();
-      const monthIndex = this.date.getMonth();
-      const day = this.date.getDay();
       this._begin = FormatterService.convertToTime(
         year,
         monthIndex,
@@ -190,7 +192,7 @@ export default class WorkingDay {
   }
 
   /**
-   * Returns whether a date is a actual working day.
+   * Returns whether a date is an actual working day.
    */
   get isWorkingDay() {
     return (
