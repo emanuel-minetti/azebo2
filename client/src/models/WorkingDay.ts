@@ -22,6 +22,8 @@ export default class WorkingDay {
   private _afternoonBegin?: Date;
   private _afternoonEnd?: Date;
 
+  private _isHoliday = false;
+  private _HolidayName?: string;
   private _edited: boolean;
 
   constructor(data?: any) {
@@ -32,14 +34,17 @@ export default class WorkingDay {
       data.afternoon != undefined
     ) {
       this._date = FormatterService.convertToDate(data.date);
-      // TODO set holiday
       const holidays = store.state.workingTime.holidays;
-      console.log(holidays[0]);
-      // holidays.forEach((holiday: Holiday) => {
-      //     if (holiday.date.getFullYear() === this._date.getFullYear() && holiday.date.getMonth() === this._date.getMonth() && holiday.date.getDate() === this._date.getDate()) {
-      //       console.log("Treffer");
-      //     }
-      // });
+      holidays.forEach((holiday: Holiday) => {
+        if (
+          holiday.date.getFullYear() === this._date.getFullYear() &&
+          holiday.date.getMonth() === this._date.getMonth() &&
+          holiday.date.getDate() === this._date.getDate()
+        ) {
+          this._isHoliday = true;
+          this._HolidayName = holiday.name;
+        }
+      });
 
       this._break = Boolean(data.break);
       this._afternoon = Boolean(data.afternoon);
@@ -62,8 +67,6 @@ export default class WorkingDay {
 
       this._timeOff = data.time_off;
       this._comment = data.comment;
-      // this._afternoonBegin = this.convertTime(data.afternoon_begin);
-      // this._afternoonEnd = this.convertTime(data.afternoon_end);
       this._afternoonBegin = FormatterService.convertToTime(
         year,
         monthIndex,
@@ -174,6 +177,14 @@ export default class WorkingDay {
     }
   }
 
+  get isHoliday(): boolean {
+    return this._isHoliday;
+  }
+
+  get HolidayName(): string {
+    return <string>this._HolidayName;
+  }
+
   get edited(): boolean {
     return this._edited;
   }
@@ -182,7 +193,9 @@ export default class WorkingDay {
    * Returns whether a date is a actual working day.
    */
   get isWorkingDay() {
-    return this._date.getDay() == 0 || this._date.getDay() == 6;
+    return (
+      this._date.getDay() !== 0 && this._date.getDay() !== 6 && !this._isHoliday
+    );
   }
 
   /**

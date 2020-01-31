@@ -29,7 +29,7 @@ export default class MonthTable extends Vue {
         key: "date",
         label: "Datum",
         class: "small-column",
-        formatter: FormatterService.toLongGermanDate
+        formatter: this.formatDate
       },
       {
         key: "begin",
@@ -72,7 +72,12 @@ export default class MonthTable extends Vue {
 
   rowClass(day: WorkingDay, type: string) {
     if (!day || type !== "row") return;
-    if (day.isWorkingDay) return "not-a-working-day";
+    if (!day.isWorkingDay) return "not-a-working-day";
+  }
+
+  formatDate(date: Date, key: string, day: WorkingDay) {
+    const dateString = FormatterService.toLongGermanDate(date);
+    return day.isHoliday ? dateString + " " + day.HolidayName : dateString;
   }
 
   formatBreak(hasBreak: boolean, key: string, day: WorkingDay): string {

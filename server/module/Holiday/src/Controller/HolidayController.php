@@ -28,6 +28,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 
+use WorkingTime\Model\WorkingDay;
 use Zend\Config\Factory;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -44,14 +45,14 @@ class HolidayController extends AbstractActionController
         $year = $this->params('year');
         $request = Request::fromString($this->request);
         $response = Response::fromString($this->response);
-        try {
-            $holidays = $this->getHolidays($year);
-        } catch (Exception $e) {
-            $response->setStatusCode(500);
-            $response->setContent($e->getMessage());
-            return $response;
-        }
         if (AuthorizationService::authorize($request, $response, ['GET',])) {
+            try {
+                $holidays = $this->getHolidays($year);
+            } catch (Exception $e) {
+                $response->setStatusCode(500);
+                $response->setContent($e->getMessage());
+                return $response;
+            }
             // refresh jwt ...
             $userId = $request->getQuery()->user_id;
             $expire = time() + AuthorizationService::EXPIRE_TIME;
@@ -105,23 +106,23 @@ class HolidayController extends AbstractActionController
             //add fixed holidays
             $holidays = [
                 [
-                    'date' => new DateTime("$year/1/1"),
+                    'date' => $this->formatDate( new DateTime("$year/1/1")),
                     'name' => "Neujahr",
                 ],
                 [
-                    'date' => new DateTime("$year/3/8"),
+                    'date' => $this->formatDate(new DateTime("$year/3/8")),
                     'name' => "Internationaler Frauentag",
                 ],
                 [
-                    'date' => new DateTime("$year/10/3"),
+                    'date' => $this->formatDate(new DateTime("$year/10/3")),
                     'name' => "Tag der deutschen Einheit"
                 ],
                 [
-                    'date' => new DateTime("$year/12/25"),
+                    'date' => $this->formatDate(new DateTime("$year/12/25")),
                     'name' => "1. Weihnachtsfeiertag"
                 ],
                 [
-                    'date' => new DateTime("$year/12/26"),
+                    'date' => $this->formatDate(new DateTime("$year/12/26")),
                     'name' => "2. Weihnachtsfeiertag"
                 ],
             ];
@@ -143,19 +144,19 @@ class HolidayController extends AbstractActionController
             // add movable holidays
             $holidays = array_merge($holidays, [
                 [
-                    'date' => $goodFriday,
+                    'date' => $this->formatDate($goodFriday),
                     'name' => "Karfreitag"
                 ],
                 [
-                    'date' => $easterMonday,
+                    'date' => $this->formatDate($easterMonday),
                     'name' => "Ostermontag"
                 ],
                 [
-                    'date' => $ascension,
+                    'date' => $this->formatDate($ascension),
                     'name' => "Christi Himmelfahrt"
                 ],
                 [
-                    'date' => $whitMonday,
+                    'date' => $this->formatDate($whitMonday),
                     'name' => "Pfingstmontag"
                 ],
             ]);
@@ -170,7 +171,7 @@ class HolidayController extends AbstractActionController
                 if (!isset($holiday->year) || $holiday->year == $year) {
                     $holidayDate = new DateTime("$year/$holiday->month/$holiday->day");
                     $holidays[] = [
-                        'date' => $holidayDate,
+                        'date' => $this->formatDate($holidayDate),
                         'name' => $holiday->name
                     ];
                 }
@@ -182,5 +183,9 @@ class HolidayController extends AbstractActionController
             return $a['date'] > $b['date'] ? 1 : -1;
         });
         return $holidays;
+    }
+
+    private function formatDate(DateTime $date) {
+        return $date->format(WorkingDay::DATE_FORMAT);
     }
 }
