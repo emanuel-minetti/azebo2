@@ -34,4 +34,5 @@ return [
     'Application',
     'Login',
     'WorkingTime',
+    'Holiday',
 ];

@@ -22,23 +22,32 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
-namespace Login;
+namespace Holiday;
 
 use Zend\Router\Http\Segment;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 return array(
     'router' => [
         'routes' => [
-            'login' => [
+            'holiday' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route' => '/api/login',
+                    'route' => '/api/holiday/:year',
+                    'constraints' => [
+                        'year' => '[0-9]+',
+                    ],
                     'defaults' => [
-                        'controller' => Controller\LoginController::class,
-                        'action' => 'login',
+                        'controller' => Controller\HolidayController::class,
+                        'action' => 'get',
                     ],
                 ],
             ],
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
+            Controller\HolidayController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [

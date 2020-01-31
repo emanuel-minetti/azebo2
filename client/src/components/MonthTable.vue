@@ -19,17 +19,19 @@ import { WorkingDay, WorkingMonth } from "@/models";
 
 @Component
 export default class MonthTable extends Vue {
+  // `monthData` is being used in the items property of the table
   get monthData(): WorkingMonth {
     return this.$store.state.workingTime.month;
   }
 
+  // specifies the shown columns of th table
   get fields() {
     return [
       {
         key: "date",
         label: "Datum",
         class: "small-column",
-        formatter: FormatterService.toLongGermanDate
+        formatter: this.formatDate
       },
       {
         key: "begin",
@@ -70,11 +72,19 @@ export default class MonthTable extends Vue {
     ];
   }
 
+  // adds a class for non working days
   rowClass(day: WorkingDay, type: string) {
     if (!day || type !== "row") return;
-    if (day.isWorkingDay) return "not-a-working-day";
+    if (!day.isWorkingDay) return "not-a-working-day";
   }
 
+  // formats the shown date
+  formatDate(date: Date, key: string, day: WorkingDay) {
+    const dateString = FormatterService.toLongGermanDate(date);
+    return day.isHoliday ? dateString + " " + day.HolidayName : dateString;
+  }
+
+  // formats the break column
   formatBreak(hasBreak: boolean, key: string, day: WorkingDay): string {
     if (day && !day.hasWorkingTime) return "";
     return hasBreak ? "Ja" : "Nein";

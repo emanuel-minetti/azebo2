@@ -5,7 +5,7 @@ import UserModule from "./UserModule";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+export const store = new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
