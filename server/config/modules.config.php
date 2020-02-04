@@ -36,4 +36,5 @@ return [
     'Login',
     'WorkingTime',
     'Holiday',
+    'WorkingRule',
 ];

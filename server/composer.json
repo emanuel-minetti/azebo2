@@ -28,7 +28,8 @@
             "Login\\": "module/Login/src/",
             "WorkingTime\\": "module/WorkingTime/src/",
             "Holiday\\": "module/Holiday/src",
-            "Service\\": "service/"
+            "Service\\": "service/",
+            "WorkingRule\\": "module/WorkingRule/src/"
         }
     },
     "autoload-dev": {
