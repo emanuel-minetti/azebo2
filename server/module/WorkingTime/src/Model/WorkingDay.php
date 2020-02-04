@@ -34,7 +34,7 @@ class WorkingDay extends ArrayObject
     public const DATE_FORMAT = 'Y-m-d';
 
     /**
-     * @var int the primary kes of `WorkingDay`
+     * @var int the primary key of `WorkingDay`
      */
     public $id;
     /**

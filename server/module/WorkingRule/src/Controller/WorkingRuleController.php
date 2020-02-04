@@ -24,31 +24,29 @@
 
 namespace WorkingRule\Controller;
 
-use DateTime;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
-
-use Service\AuthorizationService;
-use WorkingTime\Model\WorkingDay;
-use WorkingTime\Model\WorkingDayTable;
+use WorkingRule\Model\WorkingRuleTable;
 
 class WorkingRuleController extends AbstractActionController
 {
-    public function testAction() {
+    private $table;
+
+    public function __construct(WorkingRuleTable $table)
+    {
+        $this->table = $table;
+    }
+
+    public function testAction()
+    {
+        $rule = $this->table->find(1);
         return new JsonModel([
             'success' => true,
-            'data' => 'hallo',
+            'data' => $rule->getArrayCopy(),
         ]);
     }
 
-//    private $table;
 
-//    public function __construct(WorkingDayTable $table)
-//    {
-//        $this->table = $table;
-//    }
 //
 //    /** @noinspection PhpUnused */
 //    public function monthAction()

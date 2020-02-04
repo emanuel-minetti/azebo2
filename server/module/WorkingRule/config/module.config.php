@@ -25,8 +25,6 @@
 namespace WorkingRule;
 
 use Laminas\Router\Http\Segment;
-use Laminas\ServiceManager\Factory\InvokableFactory;
-
 use WorkingRule\Controller\WorkingRuleController;
 
 return array(
@@ -50,11 +48,11 @@ return array(
         ],
     ],
 
-    'controllers' => [
-        'factories' => [
-            WorkingRuleController::class => InvokableFactory::class,
-        ],
-    ],
+//    'controllers' => [
+//        'factories' => [
+//            WorkingRuleController::class => InvokableFactory::class,
+//        ],
+//    ],
 
     'view_manager' => [
         'strategies' => [

@@ -30,38 +30,42 @@ use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\ServiceManager\ServiceManager;
 
+use WorkingRule\Controller\WorkingRuleController;
+use WorkingRule\Model\WorkingRule;
+use WorkingRule\Model\WorkingRuleTable;
+
 class Module {
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
     }
 
-//    public function getServiceConfig()
-//    {
-//        return [
-//            'factories' => [
-//                Model\WorkingDayTable::class => function (ServiceManager $container) {
-//                    $dbAdapter = $container->get(AdapterInterface::class);
-//                    $resultSetPrototype = new ResultSet();
-//                    $resultSetPrototype->setArrayObjectPrototype(new Model\WorkingDay([]));
-//                    $tableGateway = new TableGateway('working_day', $dbAdapter, null, $resultSetPrototype);
-//                    return new Model\WorkingDayTable($tableGateway);
-//                },
-//            ],
-//        ];
-//    }
-//
-//    public function getControllerConfig()
-//    {
-//        return [
-//            'factories' => [
-//                Controller\WorkingTimeController::class => function (ServiceManager $container) {
-//                    return new Controller\WorkingTimeController(
-//                        $container->get(Model\WorkingDayTable::class)
-//                    );
-//                }
-//            ],
-//        ];
-//    }
+    public function getServiceConfig()
+    {
+        return [
+            'factories' => [
+                WorkingRuleTable::class => function (ServiceManager $container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new WorkingRule([]));
+                    $tableGateway = new TableGateway('working_rule', $dbAdapter, null, $resultSetPrototype);
+                    return new WorkingRuleTable($tableGateway);
+                },
+            ],
+        ];
+    }
+
+    public function getControllerConfig()
+    {
+        return [
+            'factories' => [
+                WorkingRuleController::class => function (ServiceManager $container) {
+                    return new WorkingRuleController(
+                        $container->get(WorkingRuleTable::class)
+                    );
+                }
+            ],
+        ];
+    }
 }
 
