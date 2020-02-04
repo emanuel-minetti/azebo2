@@ -31,7 +31,7 @@ return [
     'module_listener_options' => [
         
          // use composer autoloader instead of zend-loader
-        'use_zend_loader' => false,
+        'use_laminas_loader' => false,
         
         // An array of paths from which to glob configuration files after
         // modules are loaded. These effectively override configuration
@@ -76,6 +76,6 @@ return [
     // ],
 
     // Initial configuration with which to seed the ServiceManager.
-    // Should be compatible with Zend\ServiceManager\Config.
+    // Should be compatible with Laminas\ServiceManager\Config.
     // 'service_manager' => [],
 ];

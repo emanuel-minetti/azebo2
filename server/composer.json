@@ -14,12 +14,13 @@
         "ext-mbstring": "*",
         "ext-json": "*",
         "ext-calendar": "*",
-        "zendframework/zend-component-installer": "^1.0 || ^2.1",
-        "zendframework/zend-mvc": "^3.1.1",
-        "zfcampus/zf-development-mode": "^3.2",
-        "zendframework/zend-test": "^3.3",
-        "zendframework/zend-db": "^2.10",
-        "firebase/php-jwt": "^5.0"
+        "laminas/laminas-component-installer": "^1.0 || ^2.1",
+        "laminas/laminas-mvc": "^3.1.1",
+        "laminas/laminas-development-mode": "^3.2",
+        "laminas/laminas-test": "^3.3",
+        "laminas/laminas-db": "^2.10",
+        "firebase/php-jwt": "^5.0",
+        "laminas/laminas-dependency-plugin": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -38,9 +39,9 @@
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "development-disable": "zf-development-mode disable",
-        "development-enable": "zf-development-mode enable",
-        "development-status": "zf-development-mode status",
+        "development-disable": "laminas-development-mode disable",
+        "development-enable": "laminas-development-mode enable",
+        "development-status": "laminas-development-mode status",
         "post-create-project-cmd": [
             "@development-enable",
             "php -r \"$file = file_get_contents('.gitignore'); $file = str_replace('composer.lock', '', $file); file_put_contents('.gitignore', $file);\""

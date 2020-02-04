@@ -29,11 +29,11 @@ use DateTime;
 use Exception;
 
 use WorkingTime\Model\WorkingDay;
-use Zend\Config\Factory;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
+use Laminas\Config\Factory;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 
 use Service\AuthorizationService;
 

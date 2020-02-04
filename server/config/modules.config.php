@@ -28,9 +28,10 @@
  * This should be an array of module namespaces used in the application.
  */
 return [
-    'Zend\Db',
-    'Zend\Router',
-    'Zend\Validator',
+    'Laminas\ZendFrameworkBridge',
+    'Laminas\Db',
+    'Laminas\Router',
+    'Laminas\Validator',
     'Application',
     'Login',
     'WorkingTime',

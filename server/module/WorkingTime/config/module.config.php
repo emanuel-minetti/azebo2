@@ -24,7 +24,7 @@
 
 namespace WorkingTime;
 
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return array(
     'router' => [
