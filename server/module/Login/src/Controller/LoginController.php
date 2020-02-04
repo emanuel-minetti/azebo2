@@ -27,8 +27,8 @@
 namespace Login\Controller;
 
 use RuntimeException;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 
 use Login\Model\UserTable;
 use Service\AuthorizationService;

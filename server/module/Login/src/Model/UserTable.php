@@ -27,7 +27,7 @@ namespace Login\Model;
 
 
 use RuntimeException;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class UserTable
 {

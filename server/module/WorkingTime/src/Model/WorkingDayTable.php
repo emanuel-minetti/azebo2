@@ -26,9 +26,9 @@
 namespace WorkingTime\Model;
 
 use DateTime;
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\TableGateway\TableGateway;
 
 class WorkingDayTable
 {

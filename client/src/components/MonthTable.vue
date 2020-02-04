@@ -99,10 +99,13 @@ div {
   margin-left: 5%;
 }
 
+/deep/ table td {
+  vertical-align: middle;
+}
+
 /*noinspection CssUnusedSymbol*/
 /deep/ .small-column {
   width: 90px;
-  vertical-align: middle;
 }
 
 /*noinspection CssUnusedSymbol*/

@@ -10,8 +10,8 @@
       <sourceFolder url="file://$MODULE_DIR$/service" isTestSource="false" packagePrefix="Service\" />
       <excludeFolder url="file://$MODULE_DIR$/public" />
       <excludeFolder url="file://$MODULE_DIR$/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-component-installer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/zfcampus/zf-development-mode" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/laminas/laminas-component-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/laminas/laminas-development-mode" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -27,9 +27,9 @@ namespace Service;
 use Exception;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
-use Zend\Config\Factory;
-use Zend\Http\Request;
-use Zend\Http\Response;
+use Laminas\Config\Factory;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
 
 class AuthorizationService
 {

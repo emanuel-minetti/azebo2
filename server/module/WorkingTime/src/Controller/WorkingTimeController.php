@@ -25,10 +25,10 @@
 namespace WorkingTime\Controller;
 
 use DateTime;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 
 use Service\AuthorizationService;
 use WorkingTime\Model\WorkingDay;
