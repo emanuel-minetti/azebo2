@@ -30,18 +30,31 @@ use WorkingRule\Controller\WorkingRuleController;
 return array(
     'router' => [
         'routes' => [
-            'working-rule' => [
+            'working-rules' => [
                 'type' => Segment::class,
                 'options' => [
-                    // TODO review route
-                    'route' => '/api/working-rule[/:year/:month]',
+                    'route' => '/api/working-rule',
                     'constraints' => [
                         'year' => '[0-9]+',
                         'month' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => WorkingRuleController::class,
-                        'action' => 'test',
+                        'action' => 'all',
+                    ],
+                ],
+            ],
+            'working-rule-by-month' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/working-rule/:year/:month',
+                    'constraints' => [
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => WorkingRuleController::class,
+                        'action' => 'byMonth',
                     ],
                 ],
             ],

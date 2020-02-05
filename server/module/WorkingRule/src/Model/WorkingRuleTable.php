@@ -25,6 +25,8 @@
 
 namespace WorkingRule\Model;
 
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
 
 class WorkingRuleTable
@@ -41,23 +43,23 @@ class WorkingRuleTable
         $rowSet = $this->tableGateway->select(['id' => $id]);
         return $rowSet->current();
     }
-//
-//    public function getByUserIdAndMonth($userId, DateTime $month) {
+
+    public function getByUserId($userId) {
 //        $cloneOfMonth = clone $month;
 //        $first = $cloneOfMonth->modify('first day of this month');
 //        $cloneOfMonth = clone $month;
 //        $last = $cloneOfMonth->modify('last day of this month');
-//        $select = new Select('working_day');
-//        $where = new Where();
-//        $where->equalTo('user_id', $userId);
+        $select = new Select('working_rule');
+        $where = new Where();
+        $where->equalTo('user_id', $userId);
 //        $where->greaterThanOrEqualTo('date', $first->format(WorkingDay::DATE_FORMAT));
 //        $where->lessThanOrEqualTo('date', $last->format(WorkingDay::DATE_FORMAT));
-//        $select->where($where);
-//        $resultSet = $this->tableGateway->selectWith($select);
-//        $result = [];
-//        foreach ($resultSet as $row) {
-//            $result[] = $row;
-//        }
-//        return $result;
-//    }
+        $select->where($where);
+        $resultSet = $this->tableGateway->selectWith($select);
+        $result = [];
+        foreach ($resultSet as $row) {
+            $result[] = $row;
+        }
+        return $result;
+    }
 }
