@@ -25,12 +25,12 @@
 
 namespace WorkingRule\Controller;
 
-use Laminas\Http\Request;
-use Laminas\Http\Response;
+use DateTime;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 
 use Service\AuthorizationService;
+use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
 
 class WorkingRuleController extends AbstractActionController
@@ -44,56 +44,48 @@ class WorkingRuleController extends AbstractActionController
 
     public function allAction()
     {
-        $request = Request::fromString($this->request);
-        $response = Response::fromString($this->response);
-        if (AuthorizationService::authorize($request, $response, ['GET',])) {
-            $userId = $request->getQuery()->user_id;
+        if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+            $userId = $this->request->getQuery()->user_id;
             $arrayOfWorkingRules = $this->table->getByUserId($userId);
-            $arrayOfWorkingRuleArrays = [];
-            foreach ($arrayOfWorkingRules as $workingRule) {
-                $arrayOfWorkingRuleArrays[] = $workingRule->getArrayCopy();
-            }
-
-            // refresh jwt ...
-            $expire = time() + AuthorizationService::EXPIRE_TIME;
-            $jwt = AuthorizationService::getJwt($expire, $userId);
-            // ... and return response
-            return new JsonModel([
-                'success' => true,
-                'data' => [
-                    'jwt' => $jwt,
-                    'expire' => $expire,
-                    'working_rules' => $arrayOfWorkingRuleArrays,
-                ],
-            ]);
+            return $this->processResult($arrayOfWorkingRules, $userId);
         } else {
             // `response` was set in the call to `AuthorizationService::authorize`
-            return $response;
+            return $this->response;
         }
     }
 
     public function byMonthAction()
     {
-        $rule = $this->table->find(1);
+        if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+            $userId = $this->request->getQuery()->user_id;
+            $yearId = $this->params('year');
+            $monthId = $this->params('month');
+            $month = DateTime::createFromFormat(WorkingRule::DATE_FORMAT, "$yearId-$monthId-01");
+            $arrayOfWorkingRules = $this->table->getByUserIdAndMonth($userId, $month);
+            return $this->processResult($arrayOfWorkingRules, $userId);
+        } else {
+            return $this->response;
+        }
+    }
+
+    private function processResult($result, $userId) {
+        $arrayOfWorkingRuleArrays = [];
+        foreach ($result as $workingRule) {
+            /** @var WorkingRule $workingRule */
+            $arrayOfWorkingRuleArrays[] = $workingRule->getArrayCopy();
+        }
+
+        // refresh jwt ...
+        $expire = time() + AuthorizationService::EXPIRE_TIME;
+        $jwt = AuthorizationService::getJwt($expire, $userId);
+        // ... and return response
         return new JsonModel([
             'success' => true,
             'data' => [
-                'rule' => $rule->getArrayCopy(),
-                'text' => 'test2',
+                'jwt' => $jwt,
+                'expire' => $expire,
+                'working_rules' => $arrayOfWorkingRuleArrays,
             ],
         ]);
     }
-
-
-
-//    /** @noinspection PhpUnused */
-//    public function monthAction()
-//    {
-//        $yearId = $this->params('year');
-//        $monthId = $this->params('month');
-//        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearId-$monthId-01");
-//        $request = Request::fromString($this->request);
-//        $response = Response::fromString($this->response);
-//
-////    }
 }

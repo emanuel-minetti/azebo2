@@ -25,17 +25,19 @@
 
 namespace WorkingRule\Model;
 
-use Laminas\Db\Sql\Select;
+use DateTime;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
 
 class WorkingRuleTable
 {
     private $tableGateway;
+    private $sql;
 
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
+        $this->sql = $tableGateway->getSql();
     }
 
     public function find($id): WorkingRule
@@ -45,15 +47,34 @@ class WorkingRuleTable
     }
 
     public function getByUserId($userId) {
-//        $cloneOfMonth = clone $month;
-//        $first = $cloneOfMonth->modify('first day of this month');
-//        $cloneOfMonth = clone $month;
-//        $last = $cloneOfMonth->modify('last day of this month');
-        $select = new Select('working_rule');
+        $select = $this->sql->select();
         $where = new Where();
         $where->equalTo('user_id', $userId);
-//        $where->greaterThanOrEqualTo('date', $first->format(WorkingDay::DATE_FORMAT));
-//        $where->lessThanOrEqualTo('date', $last->format(WorkingDay::DATE_FORMAT));
+        $select->where($where);
+        $resultSet = $this->tableGateway->selectWith($select);
+        $result = [];
+        foreach ($resultSet as $row) {
+            $result[] = $row;
+        }
+        return $result;
+    }
+
+    public function getByUserIdAndMonth($userId, DateTime $month) {
+        $cloneOfMonth = clone $month;
+        $first = $cloneOfMonth->modify('first day of this month');
+        $cloneOfMonth = clone $month;
+        $last = $cloneOfMonth->modify('last day of this month');
+        $select = $this->sql->select();
+        $where = new Where();
+        $where->equalTo('user_id', $userId)
+            ->and
+            ->nest()
+            ->isNull('valid_to')
+            ->or
+            ->greaterThanOrEqualTo('valid_to', $last->format(WorkingRule::DATE_FORMAT))
+            ->unnest()
+            ->and
+            ->lessThanOrEqualTo('valid_from', $first->format(WorkingRule::DATE_FORMAT));
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];
