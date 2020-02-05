@@ -12,6 +12,7 @@ export default class WorkingDay {
     false
   );
 
+  private readonly _id: number;
   private readonly _date: Date;
   private _begin?: Date;
   private _end?: Date;
@@ -33,6 +34,8 @@ export default class WorkingDay {
       data.break != undefined &&
       data.afternoon != undefined
     ) {
+      this._id = data.id;
+
       this._date = FormatterService.convertToDate(data.date);
 
       const holidays = store.state.workingTime.holidays;
@@ -82,6 +85,7 @@ export default class WorkingDay {
         data.afternoon_end
       );
     } else {
+      this._id = 0;
       this._date = new Date();
       this._break = false;
       this._afternoon = false;
