@@ -1,4 +1,4 @@
-import { Holiday, Saldo } from "@/models";
+import { Holiday, Saldo, WorkingRule } from "@/models";
 import { timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
@@ -23,8 +23,8 @@ export default class WorkingDay {
   private _afternoonBegin?: Date;
   private _afternoonEnd?: Date;
 
-  private _isHoliday = false;
-  private _holidayName?: string;
+  private _holiday?: Holiday;
+  private _rule?: WorkingRule;
   private _edited: boolean;
 
   constructor(data?: any) {
@@ -49,10 +49,11 @@ export default class WorkingDay {
           holiday.date.getMonth() === monthIndex &&
           holiday.date.getDate() === date
         ) {
-          this._isHoliday = true;
-          this._holidayName = holiday.name;
+          this._holiday = holiday;
         }
       });
+
+      //TODO set rule!
 
       this._break = Boolean(data.break);
       this._afternoon = Boolean(data.afternoon);
@@ -184,11 +185,11 @@ export default class WorkingDay {
   }
 
   get isHoliday(): boolean {
-    return this._isHoliday;
+    return this._holiday !== undefined;
   }
 
   get holidayName(): string {
-    return <string>this._holidayName;
+    return this._holiday && this._holiday.name ? this._holiday.name : "";
   }
 
   get edited(): boolean {
@@ -200,7 +201,7 @@ export default class WorkingDay {
    */
   get isWorkingDay() {
     return (
-      this._date.getDay() !== 0 && this._date.getDay() !== 6 && !this._isHoliday
+      this._date.getDay() !== 0 && this._date.getDay() !== 6 && !this.isHoliday
     );
   }
 
