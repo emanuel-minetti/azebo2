@@ -66,11 +66,6 @@ class WorkingRule extends ArrayObject
     public $flexTimeEnd;
 
     /**
-     * @var int A number (0 or 1) indicating whether there is a core time for this rule
-     */
-    public $coreTime;
-
-    /**
      * @var DateTime The time the core time for this rule starts.
      */
     public $coreTimeBegin;
@@ -105,7 +100,6 @@ class WorkingRule extends ArrayObject
             DateTime::createFromFormat(self::TIME_FORMAT, $data['flex_time_begin']) : null;
         $this->flexTimeEnd = !empty($data['flex_time_end']) ?
             DateTime::createFromFormat(self::TIME_FORMAT, $data['flex_time_end']) : null;
-        $this->coreTime = boolval($data['core_time']) ?? true;
         $this->coreTimeBegin = !empty($data['core_time_begin']) ?
             DateTime::createFromFormat(self::TIME_FORMAT, $data['core_time_begin']) : null;
         $this->coreTimeEnd = !empty($data['core_time_end']) ?
@@ -127,7 +121,6 @@ class WorkingRule extends ArrayObject
             'calendar_week' => $this->calendarWeek,
             'flex_time_begin' => $this->flexTimeBegin->format(self::TIME_FORMAT),
             'flex_time_end' => $this->flexTimeEnd->format((self::TIME_FORMAT)),
-            'core_time' => (int) $this->coreTime,
             'core_time_begin' => $this->coreTimeBegin ? $this->coreTimeBegin->format(self::TIME_FORMAT) : null,
             'core_time_end' => $this->coreTimeEnd ? $this->coreTimeEnd->format((self::TIME_FORMAT)) : null,
             'target' => $this->target->format(self::TIME_FORMAT),
