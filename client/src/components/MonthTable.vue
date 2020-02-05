@@ -81,7 +81,7 @@ export default class MonthTable extends Vue {
   // formats the shown date
   formatDate(date: Date, key: string, day: WorkingDay) {
     const dateString = FormatterService.toLongGermanDate(date);
-    return day.isHoliday ? dateString + " " + day.HolidayName : dateString;
+    return day.isHoliday ? dateString + " " + day.holidayName : dateString;
   }
 
   // formats the break column

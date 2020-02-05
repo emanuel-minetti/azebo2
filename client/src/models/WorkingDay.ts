@@ -23,7 +23,7 @@ export default class WorkingDay {
   private _afternoonEnd?: Date;
 
   private _isHoliday = false;
-  private _HolidayName?: string;
+  private _holidayName?: string;
   private _edited: boolean;
 
   constructor(data?: any) {
@@ -47,7 +47,7 @@ export default class WorkingDay {
           holiday.date.getDate() === day
         ) {
           this._isHoliday = true;
-          this._HolidayName = holiday.name;
+          this._holidayName = holiday.name;
         }
       });
 
@@ -183,8 +183,8 @@ export default class WorkingDay {
     return this._isHoliday;
   }
 
-  get HolidayName(): string {
-    return <string>this._HolidayName;
+  get holidayName(): string {
+    return <string>this._holidayName;
   }
 
   get edited(): boolean {
