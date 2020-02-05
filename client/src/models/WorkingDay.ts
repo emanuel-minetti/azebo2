@@ -38,13 +38,13 @@ export default class WorkingDay {
       const holidays = store.state.workingTime.holidays;
       const year = this.date.getFullYear();
       const monthIndex = this.date.getMonth();
-      const day = this.date.getDay();
+      const date = this.date.getDate();
 
       holidays.forEach((holiday: Holiday) => {
         if (
           holiday.date.getFullYear() === year &&
           holiday.date.getMonth() === monthIndex &&
-          holiday.date.getDate() === day
+          holiday.date.getDate() === date
         ) {
           this._isHoliday = true;
           this._HolidayName = holiday.name;
@@ -57,13 +57,13 @@ export default class WorkingDay {
       this._begin = FormatterService.convertToTime(
         year,
         monthIndex,
-        day,
+        date,
         data.begin
       );
       this._end = FormatterService.convertToTime(
         year,
         monthIndex,
-        day,
+        date,
         data.end
       );
 
@@ -72,13 +72,13 @@ export default class WorkingDay {
       this._afternoonBegin = FormatterService.convertToTime(
         year,
         monthIndex,
-        day,
+        date,
         data.afternoon_begin
       );
       this._afternoonEnd = FormatterService.convertToTime(
         year,
         monthIndex,
-        day,
+        date,
         data.afternoon_end
       );
     } else {
