@@ -6,7 +6,7 @@ It is a new implementation of
 [azebo](https://github.com/emanuel-minetti/azebo) as a single page
 application (SPA).
 It uses [Vue](https://vuejs.org/) and
-[Zend Framework 2](https://framework.zend.com/) as a foundation.
+[~~Zend Framework 2~~](https://framework.zend.com/) [Laminas](https://getlaminas.org/) as a foundation.
 
 It is a brand new project just starting, so there is currently no proper documentation.
 Please see the documentation for
