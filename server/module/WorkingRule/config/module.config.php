@@ -34,10 +34,6 @@ return array(
                 'type' => Segment::class,
                 'options' => [
                     'route' => '/api/working-rule',
-                    'constraints' => [
-                        'year' => '[0-9]+',
-                        'month' => '[0-9]+',
-                    ],
                     'defaults' => [
                         'controller' => WorkingRuleController::class,
                         'action' => 'all',
@@ -60,13 +56,6 @@ return array(
             ],
         ],
     ],
-
-//    'controllers' => [
-//        'factories' => [
-//            WorkingRuleController::class => InvokableFactory::class,
-//        ],
-//    ],
-
     'view_manager' => [
         'strategies' => [
             'ViewJsonStrategy',
