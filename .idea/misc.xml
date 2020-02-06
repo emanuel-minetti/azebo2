@@ -3,4 +3,12 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
+  <component name="PhpEntryPointsManager">
+    <entry_point>
+      <entry_point TYPE="phpMethod" FQNAME="\Application\Module getConfig" />
+      <entry_point TYPE="phpMethod" FQNAME="\Holiday\Module getConfig" />
+    </entry_point>
+    <pattern value="\Application\Module" member="getConfig" />
+    <pattern value="\Holiday\Module" member="getConfig" />
+  </component>
 </project>

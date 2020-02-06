@@ -24,10 +24,7 @@ export default class Home extends Vue {
   //noinspection JSUnusedGlobalSymbols
   mounted() {
     this.$store
-      // TODO remove debugging
-      //.dispatch("getMonth", new Date("2020-05-01T03:00:00"))
       .dispatch("getMonth", new Date())
-      .then(() => {})
       .catch(reason => {
         this.error =
           "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +

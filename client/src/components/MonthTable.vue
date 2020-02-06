@@ -68,6 +68,16 @@ export default class MonthTable extends Vue {
         key: "actualTime",
         label: "Ist",
         class: "small-column"
+      },
+      {
+        key: "targetTime",
+        label: "Soll",
+        class: "small-column"
+      },
+      {
+        key: "saldoTime",
+        label: "Saldo",
+        class: "small-column"
       }
     ];
   }
@@ -81,7 +91,7 @@ export default class MonthTable extends Vue {
   // formats the shown date
   formatDate(date: Date, key: string, day: WorkingDay) {
     const dateString = FormatterService.toLongGermanDate(date);
-    return day.isHoliday ? dateString + " " + day.HolidayName : dateString;
+    return day.isHoliday ? dateString + " " + day.holidayName : dateString;
   }
 
   // formats the break column

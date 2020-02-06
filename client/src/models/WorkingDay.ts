@@ -1,4 +1,4 @@
-import { Holiday, Saldo } from "@/models";
+import { Holiday, Saldo, WorkingRule } from "@/models";
 import { timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
@@ -12,7 +12,10 @@ export default class WorkingDay {
     false
   );
 
+  private readonly _id: number;
   private readonly _date: Date;
+  private readonly _rule?: WorkingRule;
+
   private _begin?: Date;
   private _end?: Date;
   private _timeOff?: string;
@@ -22,8 +25,7 @@ export default class WorkingDay {
   private _afternoonBegin?: Date;
   private _afternoonEnd?: Date;
 
-  private _isHoliday = false;
-  private _HolidayName?: string;
+  private _holiday?: Holiday;
   private _edited: boolean;
 
   constructor(data?: any) {
@@ -33,6 +35,8 @@ export default class WorkingDay {
       data.break != undefined &&
       data.afternoon != undefined
     ) {
+      this._id = data.id;
+
       this._date = FormatterService.convertToDate(data.date);
 
       const holidays = store.state.workingTime.holidays;
@@ -46,10 +50,30 @@ export default class WorkingDay {
           holiday.date.getMonth() === monthIndex &&
           holiday.date.getDate() === date
         ) {
-          this._isHoliday = true;
-          this._HolidayName = holiday.name;
+          this._holiday = holiday;
         }
       });
+
+      // Find the working rule for this day if any.
+      const rules = store.state.workingTime.rules;
+      for (let i = 0; i < rules.length; i++) {
+        let rule: WorkingRule = rules[i];
+        if (
+          // If this rule has the same weekday and ...
+          rule.weekday == this._date.getDay() &&
+          // is in the right week and ..
+          rule.isCalendarWeek(this.calendarWeek) &&
+          // is valid and ...
+          rule.validFrom.valueOf() <= this._date.valueOf() &&
+          (!rule.validTo || rule.validTo.valueOf() > this._date.valueOf()) &&
+          // is not a holiday, ...
+          !this.isHoliday
+        ) {
+          // then *the* rule is found
+          this._rule = rule;
+          break;
+        }
+      }
 
       this._break = Boolean(data.break);
       this._afternoon = Boolean(data.afternoon);
@@ -82,6 +106,7 @@ export default class WorkingDay {
         data.afternoon_end
       );
     } else {
+      this._id = 0;
       this._date = new Date();
       this._break = false;
       this._afternoon = false;
@@ -180,11 +205,11 @@ export default class WorkingDay {
   }
 
   get isHoliday(): boolean {
-    return this._isHoliday;
+    return this._holiday !== undefined;
   }
 
-  get HolidayName(): string {
-    return <string>this._HolidayName;
+  get holidayName(): string {
+    return this._holiday && this._holiday.name ? this._holiday.name : "";
   }
 
   get edited(): boolean {
@@ -196,7 +221,7 @@ export default class WorkingDay {
    */
   get isWorkingDay() {
     return (
-      this._date.getDay() !== 0 && this._date.getDay() !== 6 && !this._isHoliday
+      this._date.getDay() !== 0 && this._date.getDay() !== 6 && !this.isHoliday
     );
   }
 
@@ -223,5 +248,39 @@ export default class WorkingDay {
     return this.break
       ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
       : this.totalTime;
+  }
+
+  get targetTime(): Saldo | undefined {
+    return this._rule ? this._rule.target : undefined;
+  }
+
+  get saldoTime(): Saldo | undefined {
+    if (this.hasWorkingTime) {
+      if (this._rule) {
+        let targetSaldo = this.targetTime!.clone();
+        targetSaldo.invert();
+        return Saldo.getSum(this.actualTime!, targetSaldo);
+      } else {
+        return this.actualTime;
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * Returns the number week in the year for this day.
+   */
+  private get calendarWeek(): number {
+    const d = new Date(
+      Date.UTC(
+        this._date.getFullYear(),
+        this._date.getMonth(),
+        this._date.getDate()
+      )
+    );
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
   }
 }

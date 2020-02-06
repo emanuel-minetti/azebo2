@@ -28,8 +28,8 @@ use Exception;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Laminas\Config\Factory;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Stdlib\ResponseInterface;
 
 class AuthorizationService
 {
@@ -37,8 +37,8 @@ class AuthorizationService
     public const EXPIRE_TIME = 1800; // is half an hour
 
     public static function authorize(
-        Request $request,
-        Response $response,
+        RequestInterface $request,
+        ResponseInterface $response,
         $acceptedMethods = ["GET"])
     {
         // test http method
@@ -47,6 +47,7 @@ class AuthorizationService
             $authHeader = $request->getHeader('Authorization');
             if ($authHeader) {
                 // test for JWT
+                /** @noinspection PhpUndefinedMethodInspection */
                 list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
                 if ($jwt) {
                     $config = Factory::fromFile('./../server/config/jwt.config.php', true);
