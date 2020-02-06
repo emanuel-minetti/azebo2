@@ -71,10 +71,10 @@ class WorkingRuleTable
             ->nest()
             ->isNull('valid_to')
             ->or
-            ->greaterThanOrEqualTo('valid_to', $last->format(WorkingRule::DATE_FORMAT))
+            ->greaterThanOrEqualTo('valid_to', $first->format(WorkingRule::DATE_FORMAT))
             ->unnest()
             ->and
-            ->lessThanOrEqualTo('valid_from', $first->format(WorkingRule::DATE_FORMAT));
+            ->lessThanOrEqualTo('valid_from', $last->format(WorkingRule::DATE_FORMAT));
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];

@@ -14,6 +14,8 @@ export default class WorkingDay {
 
   private readonly _id: number;
   private readonly _date: Date;
+  private readonly _rule?: WorkingRule;
+
   private _begin?: Date;
   private _end?: Date;
   private _timeOff?: string;
@@ -24,7 +26,6 @@ export default class WorkingDay {
   private _afternoonEnd?: Date;
 
   private _holiday?: Holiday;
-  private _rule?: WorkingRule;
   private _edited: boolean;
 
   constructor(data?: any) {
@@ -53,7 +54,20 @@ export default class WorkingDay {
         }
       });
 
-      //TODO set rule!
+      //TODO comment
+      const rules = store.state.workingTime.rules;
+      for (let i = 0; i < rules.length; i++) {
+        let rule: WorkingRule = rules[i];
+        if (
+          rule.weekday == this._date.getDay() &&
+          rule.validFrom.valueOf() <= this._date.valueOf() &&
+          (!rule.validTo || rule.validTo.valueOf() > this._date.valueOf()) &&
+          rule.isCalendarWeek(this.calendarWeek)
+        ) {
+          this._rule = rule;
+          break;
+        }
+      }
 
       this._break = Boolean(data.break);
       this._afternoon = Boolean(data.afternoon);
@@ -228,5 +242,24 @@ export default class WorkingDay {
     return this.break
       ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
       : this.totalTime;
+  }
+
+  get targetTime(): Saldo | undefined {
+    return this._rule ? this._rule.target : undefined;
+  }
+
+  //TODO comment
+  private get calendarWeek() {
+    const d = new Date(
+      Date.UTC(
+        this._date.getFullYear(),
+        this._date.getMonth(),
+        this._date.getDate()
+      )
+    );
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
   }
 }

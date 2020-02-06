@@ -68,6 +68,11 @@ export default class MonthTable extends Vue {
         key: "actualTime",
         label: "Ist",
         class: "small-column"
+      },
+      {
+        key: "targetTime",
+        label: "Soll",
+        class: "small-column"
       }
     ];
   }

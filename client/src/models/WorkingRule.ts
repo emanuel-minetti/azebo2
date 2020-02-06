@@ -64,4 +64,30 @@ export default class WorkingRule {
       this._validFrom = new Date();
     }
   }
+
+  get validTo(): Date | undefined {
+    return this._validTo;
+  }
+
+  get validFrom(): Date {
+    return this._validFrom;
+  }
+
+  get weekday(): number {
+    return this._weekday;
+  }
+
+  get target(): Saldo {
+    return this._target;
+  }
+
+  isCalendarWeek(cw: number): boolean {
+    if (this._calendarWeek === "all") {
+      return true;
+    }
+    if (this._calendarWeek === "even" && cw % 2 === 0) {
+      return true;
+    }
+    return this._calendarWeek == "odd" && cw % 2 === 1;
+  }
 }
