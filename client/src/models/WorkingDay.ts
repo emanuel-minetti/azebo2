@@ -63,6 +63,7 @@ export default class WorkingDay {
           rule.validFrom.valueOf() <= this._date.valueOf() &&
           (!rule.validTo || rule.validTo.valueOf() > this._date.valueOf()) &&
           rule.isCalendarWeek(this.calendarWeek)
+          //TODO test for being working day
         ) {
           this._rule = rule;
           break;
