@@ -62,7 +62,7 @@ export default class WorkingDay {
           // If this rule has the same weekday and ...
           rule.weekday == this._date.getDay() &&
           // is in the right week and ..
-          rule.isCalendarWeek(this.calendarWeek)  &&
+          rule.isCalendarWeek(this.calendarWeek) &&
           // is valid and ...
           rule.validFrom.valueOf() <= this._date.valueOf() &&
           (!rule.validTo || rule.validTo.valueOf() > this._date.valueOf()) &&
@@ -254,10 +254,23 @@ export default class WorkingDay {
     return this._rule ? this._rule.target : undefined;
   }
 
+  get saldoTime(): Saldo | undefined {
+    if (this.hasWorkingTime) {
+      if (this._rule) {
+        let targetSaldo = this.targetTime!.clone();
+        targetSaldo.invert();
+        return Saldo.getSum(this.actualTime!, targetSaldo);
+      } else {
+        return this.actualTime;
+      }
+    }
+    return undefined;
+  }
+
   /**
    * Returns the number week in the year for this day.
    */
-  private get calendarWeek():number {
+  private get calendarWeek(): number {
     const d = new Date(
       Date.UTC(
         this._date.getFullYear(),

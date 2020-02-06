@@ -41,10 +41,12 @@ export default class Saldo {
         (this._hours === other._hours && this._minutes >= other._minutes)
       ) {
         // `this` is absolut bigger or equal `other`
+        this._hours -= other._hours;
         this._minutes -= other._minutes;
         this.fix();
       } else {
         // `other` is absolut bigger
+        this._hours = other._hours - this._hours;
         this._minutes = other._minutes - this._minutes;
         this.fix();
         this._positive = !this._positive;
@@ -70,7 +72,7 @@ export default class Saldo {
   /**
    * Clones a Saldo.
    */
-  private clone(): Saldo {
+  clone(): Saldo {
     const clone = new Saldo();
     clone._hours = this._hours;
     clone._minutes = this._minutes;
@@ -100,7 +102,7 @@ export default class Saldo {
   }
 
   /**
-   * Returns a new saldo which is teh sum of two saldos.
+   * Returns a new saldo which is the sum of two saldos.
    * @param first first summand
    * @param second second summand
    */
@@ -119,5 +121,12 @@ export default class Saldo {
     result += this._minutes < 10 ? "0" : "";
     result += this._minutes;
     return result;
+  }
+
+  /**
+   * Inverts the positiveness of this Saldo.
+   */
+  invert() {
+    this._positive = !this._positive;
   }
 }

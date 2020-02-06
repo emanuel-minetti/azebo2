@@ -73,6 +73,11 @@ export default class MonthTable extends Vue {
         key: "targetTime",
         label: "Soll",
         class: "small-column"
+      },
+      {
+        key: "saldoTime",
+        label: "Saldo",
+        class: "small-column"
       }
     ];
   }
