@@ -54,17 +54,22 @@ export default class WorkingDay {
         }
       });
 
-      //TODO comment
+      // Find the working rule for this day if any.
       const rules = store.state.workingTime.rules;
       for (let i = 0; i < rules.length; i++) {
         let rule: WorkingRule = rules[i];
         if (
+          // If this rule has the same weekday and ...
           rule.weekday == this._date.getDay() &&
+          // is in the right week and ..
+          rule.isCalendarWeek(this.calendarWeek)  &&
+          // is valid and ...
           rule.validFrom.valueOf() <= this._date.valueOf() &&
           (!rule.validTo || rule.validTo.valueOf() > this._date.valueOf()) &&
-          rule.isCalendarWeek(this.calendarWeek)
-          //TODO test for being working day
+          // is not a holiday, ...
+          !this.isHoliday
         ) {
+          // then *the* rule is found
           this._rule = rule;
           break;
         }
@@ -249,8 +254,10 @@ export default class WorkingDay {
     return this._rule ? this._rule.target : undefined;
   }
 
-  //TODO comment
-  private get calendarWeek() {
+  /**
+   * Returns the number week in the year for this day.
+   */
+  private get calendarWeek():number {
     const d = new Date(
       Date.UTC(
         this._date.getFullYear(),
