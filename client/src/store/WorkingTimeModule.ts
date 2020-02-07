@@ -21,18 +21,18 @@ const WorkingTimeModule: Module<any, any> = {
 
       return HolidayService.getHolidays(year)
         .then(data => {
-          state.holidays = data.holidays.map((day: any) => new Holiday(day));
+          state.holidays = data.result.map((day: any) => new Holiday(day));
         })
         .then(() =>
           WorkingRuleService.getByMonth(year, monthString).then(data => {
-            state.rules = data.working_rules.map(
+            state.rules = data.result.map(
               (rule: any) => new WorkingRule(rule)
             );
           })
         )
         .then(() =>
           WorkingTimeService.getMonth(year, monthString).then(data => {
-            let workingDays = data.working_days.map(
+            let workingDays = data.result.map(
               (day: any) => new WorkingDay(day)
             );
             state.month = new WorkingMonth(monthDate, workingDays);

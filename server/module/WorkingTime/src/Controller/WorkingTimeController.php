@@ -10,17 +10,15 @@
 
 namespace WorkingTime\Controller;
 
+use AzeboLib\ApiController;
 use DateTime;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\JsonModel;
-
 use Service\AuthorizationService;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
 
-class WorkingTimeController extends AbstractActionController
+class WorkingTimeController extends ApiController
 {
     private $table;
 
@@ -40,23 +38,11 @@ class WorkingTimeController extends AbstractActionController
         if (AuthorizationService::authorize($request, $response, ['GET',])) {
             $userId = $request->getQuery()->user_id;
             $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
-            $arrayOfWorkingDayArrays = [];
-            foreach ($arrayOfWorkingDays as $workingDay) {
-                $arrayOfWorkingDayArrays[] = $workingDay->getArrayCopy();
+            $resultArray = [];
+            foreach ($arrayOfWorkingDays as $element) {
+                $resultArray[] = $element->getArrayCopy();
             }
-
-            // refresh jwt ...
-            $expire = time() + AuthorizationService::EXPIRE_TIME;
-            $jwt = AuthorizationService::getJwt($expire, $userId);
-            // ... and return response
-            return new JsonModel([
-                'success' => true,
-                'data' => [
-                    'jwt' => $jwt,
-                    'expire' => $expire,
-                    'working_days' => $arrayOfWorkingDayArrays,
-                ],
-            ]);
+            return $this->processResult($resultArray, $userId);
         } else {
             // `response` was set in the call to `AuthorizationService::authorize`
             return $response;

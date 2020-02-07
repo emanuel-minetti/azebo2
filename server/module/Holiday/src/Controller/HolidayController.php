@@ -14,16 +14,15 @@ use DateInterval;
 use DateTime;
 use Exception;
 
-use WorkingTime\Model\WorkingDay;
 use Laminas\Config\Factory;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\JsonModel;
 
+use AzeboLib\ApiController;
+use WorkingTime\Model\WorkingDay;
 use Service\AuthorizationService;
 
-class HolidayController extends AbstractActionController
+class HolidayController extends ApiController
 {
     /** @noinspection PhpUnused */
     public function getAction()
@@ -39,19 +38,21 @@ class HolidayController extends AbstractActionController
                 $response->setContent($e->getMessage());
                 return $response;
             }
-            // refresh jwt ...
             $userId = $request->getQuery()->user_id;
-            $expire = time() + AuthorizationService::EXPIRE_TIME;
-            $jwt = AuthorizationService::getJwt($expire, $userId);
-            // ... and return response
-            return new JsonModel([
-                'success' => true,
-                'data' => [
-                    'jwt' => $jwt,
-                    'expire' => $expire,
-                    'holidays' => $holidays,
-                ],
-            ]);
+            return $this->processResult($holidays, $userId);
+//            // refresh jwt ...
+//            $userId = $request->getQuery()->user_id;
+//            $expire = time() + AuthorizationService::EXPIRE_TIME;
+//            $jwt = AuthorizationService::getJwt($expire, $userId);
+//            // ... and return response
+//            return new JsonModel([
+//                'success' => true,
+//                'data' => [
+//                    'jwt' => $jwt,
+//                    'expire' => $expire,
+//                    'holidays' => $holidays,
+//                ],
+//            ]);
         } else {
             // `response` was set in the call to `AuthorizationService::authorize`
             return $response;

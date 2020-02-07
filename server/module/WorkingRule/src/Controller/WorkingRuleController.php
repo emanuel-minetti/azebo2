@@ -10,15 +10,13 @@
 
 namespace WorkingRule\Controller;
 
+use AzeboLib\ApiController;
 use DateTime;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\JsonModel;
-
 use Service\AuthorizationService;
 use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
 
-class WorkingRuleController extends AbstractActionController
+class WorkingRuleController extends ApiController
 {
     private $table;
 
@@ -32,7 +30,11 @@ class WorkingRuleController extends AbstractActionController
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
             $userId = $this->request->getQuery()->user_id;
             $arrayOfWorkingRules = $this->table->getByUserId($userId);
-            return $this->processResult($arrayOfWorkingRules, $userId);
+            $resultArray = [];
+            foreach ($arrayOfWorkingRules as $element) {
+                $resultArray[] = $element->getArrayCopy();
+            }
+            return $this->processResult($resultArray, $userId);
         } else {
             // `response` was set in the call to `AuthorizationService::authorize`
             return $this->response;
@@ -47,30 +49,13 @@ class WorkingRuleController extends AbstractActionController
             $monthId = $this->params('month');
             $month = DateTime::createFromFormat(WorkingRule::DATE_FORMAT, "$yearId-$monthId-01");
             $arrayOfWorkingRules = $this->table->getByUserIdAndMonth($userId, $month);
-            return $this->processResult($arrayOfWorkingRules, $userId);
+            $resultArray = [];
+            foreach ($arrayOfWorkingRules as $element) {
+                $resultArray[] = $element->getArrayCopy();
+            }
+            return $this->processResult($resultArray, $userId);
         } else {
             return $this->response;
         }
-    }
-
-    private function processResult($result, $userId) {
-        $arrayOfWorkingRuleArrays = [];
-        foreach ($result as $workingRule) {
-            /** @var WorkingRule $workingRule */
-            $arrayOfWorkingRuleArrays[] = $workingRule->getArrayCopy();
-        }
-
-        // refresh jwt ...
-        $expire = time() + AuthorizationService::EXPIRE_TIME;
-        $jwt = AuthorizationService::getJwt($expire, $userId);
-        // ... and return response
-        return new JsonModel([
-            'success' => true,
-            'data' => [
-                'jwt' => $jwt,
-                'expire' => $expire,
-                'working_rules' => $arrayOfWorkingRuleArrays,
-            ],
-        ]);
     }
 }
