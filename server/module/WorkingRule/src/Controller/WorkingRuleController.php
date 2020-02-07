@@ -10,8 +10,9 @@
 
 namespace WorkingRule\Controller;
 
-use AzeboLib\ApiController;
 use DateTime;
+
+use AzeboLib\ApiController;
 use Service\AuthorizationService;
 use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
