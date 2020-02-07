@@ -20,9 +20,14 @@
             </button>
           </li>
           <li>
-            <button class="btn btn-primary">
-              <router-link to="/about">Monate</router-link>
-            </button>
+<!--            <button class="btn btn-primary">-->
+<!--              <router-link to="/about">Monate</router-link>-->
+<!--            </button>-->
+            <b-dropdown text="Monate" variant="primary">
+              <b-dropdown-item>Januar</b-dropdown-item>
+              <b-dropdown-item>Februar</b-dropdown-item>
+              <b-dropdown-item>März</b-dropdown-item>
+            </b-dropdown>
           </li>
           <li>
             <b-button variant="primary" v-on:click="onLogout">
@@ -134,6 +139,10 @@ export default class App extends Vue {
 
   button:hover {
     background-color: theme-color("text");
+  }
+
+  .dropdown-menu {
+    background-color: #e70036;
   }
 }
 

@@ -23,13 +23,11 @@ export default class Home extends Vue {
   }
   //noinspection JSUnusedGlobalSymbols
   mounted() {
-    this.$store
-      .dispatch("getMonth", new Date())
-      .catch(reason => {
-        this.error =
-          "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
-          reason;
-      });
+    this.$store.dispatch("getMonth", new Date()).catch(reason => {
+      this.error =
+        "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
+        reason;
+    });
   }
 }
 </script>
