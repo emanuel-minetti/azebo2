@@ -29,7 +29,8 @@
             "WorkingTime\\": "module/WorkingTime/src/",
             "Holiday\\": "module/Holiday/src",
             "Service\\": "service/",
-            "WorkingRule\\": "module/WorkingRule/src/"
+            "WorkingRule\\": "module/WorkingRule/src/",
+            "AzeboLib\\": "lib"
         }
     },
     "autoload-dev": {

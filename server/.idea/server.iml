@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/module/Login/src" isTestSource="false" packagePrefix="Login\" />
       <sourceFolder url="file://$MODULE_DIR$/module/WorkingTime/src" isTestSource="false" packagePrefix="WorkingTime\" />
       <sourceFolder url="file://$MODULE_DIR$/module/Application/test" isTestSource="true" packagePrefix="ApplicationTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" packagePrefix="AzeboLib\" />
       <sourceFolder url="file://$MODULE_DIR$/module/WorkingRule/src" isTestSource="false" packagePrefix="WorkingRule\" />
       <sourceFolder url="file://$MODULE_DIR$/module/Holiday/src" isTestSource="false" packagePrefix="Holiday\" />
       <sourceFolder url="file://$MODULE_DIR$/service" isTestSource="false" packagePrefix="Service\" />
