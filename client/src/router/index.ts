@@ -13,6 +13,11 @@ const routes = [
     component: Home
   },
   {
+    path: "/month/:id",
+    name: "month",
+    component: Home
+  },
+  {
     path: "/login",
     name: "login",
     component: Login
