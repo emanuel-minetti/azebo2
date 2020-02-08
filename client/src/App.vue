@@ -20,13 +20,19 @@
             </button>
           </li>
           <li>
-<!--            <button class="btn btn-primary">-->
-<!--              <router-link to="/about">Monate</router-link>-->
-<!--            </button>-->
             <b-dropdown text="Monate" variant="primary">
               <b-dropdown-item>Januar</b-dropdown-item>
               <b-dropdown-item>Februar</b-dropdown-item>
               <b-dropdown-item>März</b-dropdown-item>
+              <b-dropdown-item>April</b-dropdown-item>
+              <b-dropdown-item>Mai</b-dropdown-item>
+              <b-dropdown-item>Juni</b-dropdown-item>
+              <b-dropdown-item>Juli</b-dropdown-item>
+              <b-dropdown-item>August</b-dropdown-item>
+              <b-dropdown-item>September</b-dropdown-item>
+              <b-dropdown-item>Oktober</b-dropdown-item>
+              <b-dropdown-item>November</b-dropdown-item>
+              <b-dropdown-item>Dezember</b-dropdown-item>
             </b-dropdown>
           </li>
           <li>
@@ -143,6 +149,14 @@ export default class App extends Vue {
 
   .dropdown-menu {
     background-color: #e70036;
+
+    li {
+      padding: 0;
+
+      :hover {
+        background-color: #211e1e;
+      }
+    }
   }
 }
 
