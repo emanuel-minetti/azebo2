@@ -10,8 +10,11 @@
 
 namespace Application;
 
+use Laminas\Config\Factory;
 use Laminas\Router\Http\Hostname;
 use Laminas\ServiceManager\Factory\InvokableFactory;
+
+$config = Factory::fromFile(__DIR__ . '/../../../config/autoload/local.php');
 
 return [
     'router' => [
@@ -20,8 +23,8 @@ return [
             'home' => [
                 'type'    => Hostname::class,
                 'options' => [
-                    //TODO make configurable
-                    'route'    => 'localhost',
+                    // get hostname from config
+                    'route'    => $config['hostname'],
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
