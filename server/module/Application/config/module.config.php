@@ -10,7 +10,7 @@
 
 namespace Application;
 
-use Laminas\Router\Http\Wildcard;
+use Laminas\Router\Http\Hostname;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
@@ -18,9 +18,10 @@ return [
         'routes' => [
             // route everything to vue
             'home' => [
-                'type'    => Wildcard::class,
+                'type'    => Hostname::class,
                 'options' => [
-                    'route'    => '/',
+                    //TODO make configurable
+                    'route'    => 'localhost',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
