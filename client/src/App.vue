@@ -20,42 +20,154 @@
             </button>
           </li>
           <li>
-            <b-dropdown text="Monate" variant="primary">
-              <b-dropdown-item :to="{ name: 'month', params: { id: 1 } }">
+            <b-dropdown text="Monate" variant="primary" v-on:hide="cancelHide">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 1 } }">
                 Januar
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 2 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 2 } }">
                 Februar
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 3 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 3 } }">
                 März
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 4 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 4 } }">
                 April
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 5 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 5 } }">
                 Mai
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 6 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 6 } }">
                 Juni
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 7 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 7 } }">
                 Juli
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 8 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 8 } }">
                 August
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 9 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 9 } }">
                 September
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 10 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 10 } }">
                 Oktober
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 11 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 11 } }">
                 November
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'month', params: { id: 12 } }">
+              <b-dropdown-item :to="{ name: 'month', params: { month: 12 } }">
                 Dezember
+              </b-dropdown-item>
+              <b-dropdown-divider />
+              <b-dropdown-item-button v-on:click="onShowLastYear">{{
+                this.lastYearShowString
+              }}</b-dropdown-item-button>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 1, year: this.lastYearString }
+                }"
+              >
+                Januar {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 2, year: this.lastYearString }
+                }"
+              >
+                Februar {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 3, year: this.lastYearString }
+                }"
+              >
+                März {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 4, year: this.lastYearString }
+                }"
+              >
+                April {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 5, year: this.lastYearString }
+                }"
+              >
+                Mai {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 6, year: this.lastYearString }
+                }"
+              >
+                Juni {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 7, year: this.lastYearString }
+                }"
+              >
+                Juli {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 8, year: this.lastYearString }
+                }"
+              >
+                August {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 9, year: this.lastYearString }
+                }"
+              >
+                September {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 10, year: this.lastYearString }
+                }"
+              >
+                Oktober {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 11, year: this.lastYearString }
+                }"
+              >
+                November {{ this.lastYearString }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="this.lastYearShown"
+                :to="{
+                  name: 'month',
+                  params: { month: 12, year: this.lastYearString }
+                }"
+              >
+                Dezember {{ this.lastYearString }}
               </b-dropdown-item>
             </b-dropdown>
           </li>
@@ -78,6 +190,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { LoginService } from "@/services";
+import { BvEvent } from "bootstrap-vue";
 
 const config = require("../package.json");
 
@@ -85,6 +198,10 @@ const config = require("../package.json");
 export default class App extends Vue {
   copyrightyear = "";
   version = "";
+  lastYearShowString = "Vorjahr einblenden";
+  lastYearString = new Date().getFullYear() - 1;
+  lastYearShown = false;
+  noHide = false;
 
   get name() {
     return this.$store.state.user.user.fullName;
@@ -104,6 +221,21 @@ export default class App extends Vue {
   onLogout() {
     LoginService.logout();
     this.$router.push({ name: "login" });
+  }
+
+  onShowLastYear() {
+    this.lastYearShown = !this.lastYearShown;
+    this.lastYearShowString = this.lastYearShown
+      ? "Vorjahr ausblenden"
+      : "Vorjahr einblenden";
+    this.noHide = true;
+  }
+
+  cancelHide(evt: BvEvent) {
+    if (this.noHide) {
+      evt.preventDefault();
+      this.noHide = false;
+    }
   }
 }
 </script>
@@ -159,6 +291,7 @@ export default class App extends Vue {
   a {
     font-weight: bold;
     color: white;
+    background-color: #e70036;
   }
 
   a:hover {
@@ -167,6 +300,7 @@ export default class App extends Vue {
 
   button:hover {
     background-color: theme-color("text");
+    text-decoration-line: none;
   }
 
   .dropdown-menu {
