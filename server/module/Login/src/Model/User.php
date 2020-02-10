@@ -33,13 +33,15 @@ class User extends ArrayObject
 
     public function getArrayCopy()
     {
-        return [
+        $copy = [
             'id' => $this->id,
             'username' => $this->username,
-            'password_hash' => $this->password_hash,
             'name' => $this->name,
             'given_name' => $this->given_name,
         ];
+        if (isset($this->password_hash)) {
+            $copy['password_hash'] =  $this->password_hash;
+        }
     }
 
     public function verifyPassword($password) {
