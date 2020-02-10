@@ -18,4 +18,5 @@ return [
         'username' => '<yourUsername>',
         'password' => '<yourPassword>',
     ],
+    'hostname' => '<yourHostname>',
 ];

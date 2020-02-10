@@ -10,24 +10,25 @@
 
 namespace Application;
 
-use Laminas\Router\Http\Segment;
+use Laminas\Config\Factory;
+use Laminas\Router\Http\Hostname;
 use Laminas\ServiceManager\Factory\InvokableFactory;
+
+$config = Factory::fromFile(__DIR__ . '/../../../config/autoload/local.php');
 
 return [
     'router' => [
         'routes' => [
             // route everything to vue
             'home' => [
-                'type'    => Segment::class,
+                'type'    => Hostname::class,
                 'options' => [
-                    'route'    => '/[:route]',
+                    // get hostname from config
+                    'route'    => $config['hostname'],
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
                     ],
-                    'constraints' => [
-                        'route' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ]
                 ],
             ],
         ],

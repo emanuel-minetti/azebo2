@@ -7,8 +7,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { Title, MonthTable } from "@/components";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { Route } from "vue-router";
 
 @Component({
   components: {
@@ -21,15 +22,24 @@ export default class Home extends Vue {
   get monthName() {
     return this.$store.state.workingTime.month.monthName;
   }
+  @Watch("$route")
+  routeChanged(to: Route) {
+    let month = new Date();
+    if (to.name === "month") {
+      month.setMonth(Number(to.params.month) - 1);
+      if (to.params.year) {
+        month.setFullYear(Number(to.params.year));
+      }
+    }
+    this.$store.dispatch("getMonth", month).catch(reason => {
+      this.error =
+        "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
+        reason;
+    });
+  }
   //noinspection JSUnusedGlobalSymbols
   mounted() {
-    this.$store
-      .dispatch("getMonth", new Date())
-      .catch(reason => {
-        this.error =
-          "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
-          reason;
-      });
+    this.routeChanged(this.$route);
   }
 }
 </script>

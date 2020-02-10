@@ -77,7 +77,7 @@ export default class MonthTable extends Vue {
       {
         key: "saldoTime",
         label: "Saldo",
-        class: "small-column"
+        class: ["small-column", "saldo"]
       }
     ];
   }
@@ -121,5 +121,10 @@ div {
 /*noinspection CssUnusedSymbol*/
 /deep/ .not-a-working-day {
   color: #e70036;
+}
+
+/*noinspection CssUnusedSymbol*/
+/deep/ .saldo {
+  border-left: 2px solid #211e1e;
 }
 </style>

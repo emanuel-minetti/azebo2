@@ -25,9 +25,7 @@ const WorkingTimeModule: Module<any, any> = {
         })
         .then(() =>
           WorkingRuleService.getByMonth(year, monthString).then(data => {
-            state.rules = data.result.map(
-              (rule: any) => new WorkingRule(rule)
-            );
+            state.rules = data.result.map((rule: any) => new WorkingRule(rule));
           })
         )
         .then(() =>
