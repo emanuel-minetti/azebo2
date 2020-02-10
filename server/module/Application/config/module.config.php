@@ -10,7 +10,7 @@
 
 namespace Application;
 
-use Laminas\Router\Http\Segment;
+use Laminas\Router\Http\Wildcard;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
@@ -18,16 +18,13 @@ return [
         'routes' => [
             // route everything to vue
             'home' => [
-                'type'    => Segment::class,
+                'type'    => Wildcard::class,
                 'options' => [
-                    'route'    => '/[:route]',
+                    'route'    => '/',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
                     ],
-                    'constraints' => [
-                        'route' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ]
                 ],
             ],
         ],

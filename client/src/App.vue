@@ -21,18 +21,42 @@
           </li>
           <li>
             <b-dropdown text="Monate" variant="primary">
-              <b-dropdown-item>Januar</b-dropdown-item>
-              <b-dropdown-item>Februar</b-dropdown-item>
-              <b-dropdown-item>März</b-dropdown-item>
-              <b-dropdown-item>April</b-dropdown-item>
-              <b-dropdown-item>Mai</b-dropdown-item>
-              <b-dropdown-item>Juni</b-dropdown-item>
-              <b-dropdown-item>Juli</b-dropdown-item>
-              <b-dropdown-item>August</b-dropdown-item>
-              <b-dropdown-item>September</b-dropdown-item>
-              <b-dropdown-item>Oktober</b-dropdown-item>
-              <b-dropdown-item>November</b-dropdown-item>
-              <b-dropdown-item>Dezember</b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 1 } }">
+                Januar
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 2 } }">
+                Februar
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 3 } }">
+                März
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 4 } }">
+                April
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 5 } }">
+                Mai
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 6 } }">
+                Juni
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 7 } }">
+                Juli
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 8 } }">
+                August
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 9 } }">
+                September
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 10 } }">
+                Oktober
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 11 } }">
+                November
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'month', params: { id: 12 } }">
+                Dezember
+              </b-dropdown-item>
             </b-dropdown>
           </li>
           <li>
@@ -96,8 +120,6 @@ export default class App extends Vue {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  //text-align: center;
-  color: #2c3e50;
 }
 
 #logo {
