@@ -257,6 +257,7 @@ export default class App extends Vue {
 #logo {
   width: 33%;
   display: inline-block;
+  text-align: center;
 
   img {
     height: 10em;
@@ -266,6 +267,8 @@ export default class App extends Vue {
 #site-title {
   width: 33%;
   display: inline-block;
+  text-align: center;
+
   hgroup {
     padding-left: 10%;
     padding-right: 10%;
