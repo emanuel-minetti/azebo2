@@ -265,7 +265,7 @@ export default class App extends Vue {
 }
 
 #site-title {
-  width: 33%;
+  width: 34%;
   display: inline-block;
   text-align: center;
 
@@ -278,7 +278,7 @@ export default class App extends Vue {
 }
 
 #nav {
-  width: 34%;
+  width: 33%;
   display: inline-block;
 
   ul {
