@@ -30,6 +30,7 @@
             "Holiday\\": "module/Holiday/src",
             "Service\\": "service/",
             "WorkingRule\\": "module/WorkingRule/src/",
+            "Carry\\": "module/Carry/src",
             "AzeboLib\\": "lib"
         }
     },
