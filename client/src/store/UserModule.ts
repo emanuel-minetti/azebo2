@@ -17,9 +17,11 @@ const UserModule: Module<any, any> = {
       return LoginService.login(credentials.username, credentials.password)
         .then(data => {
           commit("setUser", new User(data.user));
-          return data;
+          //TODO remove debugging
+          console.log("Nanu");
+          //return data;
         })
-        .catch(() => commit("setUser", new User()));
+        //.catch(() => commit("setUser", new User()));
     }
   }
 };
