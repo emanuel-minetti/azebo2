@@ -1,4 +1,3 @@
-
 drop table if exists working_rule;
 
 create table working_rule

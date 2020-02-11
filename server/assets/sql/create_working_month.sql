@@ -1,4 +1,5 @@
 drop table if exists working_month;
+
 create table working_month
 (
     id                     int auto_increment

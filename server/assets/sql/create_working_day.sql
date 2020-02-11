@@ -1,4 +1,5 @@
 drop table if exists working_day;
+
 create table working_day
 (
     id              int auto_increment
