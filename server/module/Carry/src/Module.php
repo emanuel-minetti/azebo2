@@ -18,6 +18,8 @@ use Laminas\ServiceManager\ServiceManager;
 use Carry\Model\WorkingMonth;
 use Carry\Model\WorkingMonthTable;
 use Carry\Controller\CarryController;
+use Carry\Model\Carry;
+use Carry\Model\CarryTable;
 
 class Module {
     public function getConfig()
@@ -35,6 +37,13 @@ class Module {
                     $resultSetPrototype->setArrayObjectPrototype(new WorkingMonth());
                     $tableGateway = new TableGateway('working_month', $dbAdapter, null, $resultSetPrototype);
                     return new WorkingMonthTable($tableGateway);
+                },
+                CarryTable::class => function (ServiceManager $container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Carry());
+                    $tableGateway = new TableGateway('carry', $dbAdapter, null, $resultSetPrototype);
+                    return new CarryTable($tableGateway);
                 }
             ],
         ];
@@ -45,7 +54,7 @@ class Module {
         return [
             'factories' => [
                 CarryController::class => function (ServiceManager $container) {
-                    return new CarryController($container->get(WorkingMonthTable::class));
+                    return new CarryController($container->get(WorkingMonthTable::class), $container->get(CarryTable::class));
                 }
             ],
         ];

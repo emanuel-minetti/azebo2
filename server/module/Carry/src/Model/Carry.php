@@ -54,8 +54,8 @@ class Carry extends ArrayObject
     {
         $this->id = (int)$data['id'] ?? 0;
         $this->userId = (int)$data['user_id'] ?? 0;
-        $this->year = !empty($data['month'])
-            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $data['month']) : null;
+        $this->year = !empty($data['year'])
+            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $data['year']) : null;
         $this->saldo = !(empty($data['saldo_hours']) && empty($data['saldo_minutes']) && empty($data['saldo_positive']))
             ? Saldo::createFromHoursAndMinutes($data['saldo_hours'], $data['saldo_minutes'], $data['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();
@@ -68,7 +68,7 @@ class Carry extends ArrayObject
         return [
             'id' => $this->id,
             'user_id' => $this->userId,
-            'month' => $this->year->format(WorkingDay::DATE_FORMAT),
+            'year' => $this->year->format(WorkingDay::DATE_FORMAT),
             'saldo_hours' => $this->saldo->getHours(),
             'saldo_minutes' => $this->saldo->getMinutes(),
             'saldo_positive' => $this->saldo->isPositive(),
