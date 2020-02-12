@@ -10,7 +10,14 @@
 
 namespace Carry;
 
-use Laminas\ServiceManager\Factory\InvokableFactory;
+use Laminas\Db\Adapter\AdapterInterface;
+use Laminas\Db\ResultSet\ResultSet;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\ServiceManager\ServiceManager;
+
+use Carry\Model\WorkingMonth;
+use Carry\Model\WorkingMonthTable;
+use Carry\Controller\CarryController;
 
 class Module {
     public function getConfig()
@@ -18,11 +25,28 @@ class Module {
         return include __DIR__ . '/../config/module.config.php';
     }
 
+    public function getServiceConfig()
+    {
+        return [
+            'factories' => [
+                WorkingMonthTable::class => function (ServiceManager $container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new WorkingMonth());
+                    $tableGateway = new TableGateway('working_month', $dbAdapter, null, $resultSetPrototype);
+                    return new WorkingMonthTable($tableGateway);
+                }
+            ],
+        ];
+    }
+
     public function getControllerConfig()
     {
         return [
             'factories' => [
-                Controller\CarryController::class => InvokableFactory::class
+                CarryController::class => function (ServiceManager $container) {
+                    return new CarryController($container->get(WorkingMonthTable::class));
+                }
             ],
         ];
     }

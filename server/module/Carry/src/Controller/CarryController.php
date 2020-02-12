@@ -11,21 +11,29 @@
 namespace Carry\Controller;
 
 use AzeboLib\ApiController;
-use Laminas\View\Model\JsonModel;
+use Carry\Model\WorkingMonthTable;
+use DateTime;
+use WorkingTime\Model\WorkingDay;
 
 class CarryController extends ApiController
 {
-//    private $table;
+    private $monthTable;
 
-//    public function __construct(WorkingDayTable $table)
-//    {
-//        $this->table = $table;
-//    }
+    public function __construct(WorkingMonthTable $monthTable)
+    {
+        $this->monthTable = $monthTable;
+    }
 
     /** @noinspection PhpUnused */
     public function carryAction() {
-        return new JsonModel([
-            'text' => "Hallo"
-        ]);
+        $result = $this->monthTable->getByUserIdAndMonth(1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
+        $resultArray = [];
+        foreach ($result as $object) {
+            $resultArray[] = $object->getArrayCopy();
+        }
+        return $this->processResult($resultArray, 1);
+//        return new JsonModel([
+//            'text' => "Hallo"
+//        ]);
     }
 }
