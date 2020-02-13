@@ -29,6 +29,11 @@ class WorkingMonthTable
         $this->sql = $this->tableGateway->getSql();
     }
 
+    /**
+     * @param $userId
+     * @param DateTime $month
+     * @return WorkingMonth[]
+     */
     public function getByUserIdAndMonth($userId, DateTime $month) {
         $select = $this->sql->select();
         $where = new Where();

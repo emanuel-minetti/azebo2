@@ -11,6 +11,7 @@
 namespace Carry\Controller;
 
 use AzeboLib\ApiController;
+use AzeboLib\Saldo;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
@@ -35,19 +36,22 @@ class CarryController extends ApiController
         $resultMonth = $this->monthTable->getByUserIdAndMonth(
             1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
         $resultCarry = $this->carryTable->getByUserIdAndYear(
-            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2019-02-01'))[0];
-        //$saldo = $resultCarry->
+            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2019-02-01'));
+        $saldo = $resultCarry->saldo;
+        foreach ($resultMonth as $workingMonth) {
+            $saldo = Saldo::getSum($saldo, $workingMonth->saldo);
+        }
         $resultArray = [
-
+            'saldo_hours' => $saldo->getHours(),
+            'saldo_minutes' => $saldo->getMinutes(),
+            'saldo_positive' => $saldo->isPositive(),
         ];
-        foreach ($resultMonth as $object) {
-            $resultArray[] = $object->getArrayCopy();
-        }
-        foreach ($resultCarry as $object) {
-            $resultArray[] = $object->getArrayCopy();
-        }
-        $resultArray[] = $resultCarry->getArrayCopy();
-        //var_dump($resultCarry);
+        //TODO remove debugging
+//        $resultArray = [];
+//        $resultArray[] = $resultCarry->getArrayCopy();
+//        foreach ($resultMonth as $workingMonth) {
+//            $resultArray[] = $workingMonth->getArrayCopy();
+//        }
         return $this->processResult($resultArray, 1);
     }
 }

@@ -26,6 +26,11 @@ class CarryTable
         $this->sql = $this->tableGateway->getSql();
     }
 
+    /**
+     * @param int $userId the User id
+     * @param DateTime $year the year
+     * @return Carry
+     */
     public function getByUserIdAndYear($userId, DateTime $year) {
         $select = $this->sql->select();
         $where = new Where();
@@ -34,11 +39,7 @@ class CarryTable
             ->equalTo(new Literal('YEAR(year)'), $year->format('Y'));
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
-        $result = [];
-        foreach ($resultSet as $row) {
-            $result[] = $row;
-        }
-        return $result;
+        return $resultSet->current();
     }
 
 }
