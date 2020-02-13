@@ -1,6 +1,13 @@
 import { Module } from "vuex";
-import { Holiday, WorkingDay, WorkingMonth, WorkingRule } from "@/models";
 import {
+  Carry,
+  Holiday,
+  WorkingDay,
+  WorkingMonth,
+  WorkingRule
+} from "@/models";
+import {
+  CarryService,
   HolidayService,
   WorkingRuleService,
   WorkingTimeService
@@ -10,7 +17,8 @@ const WorkingTimeModule: Module<any, any> = {
   state: {
     month: WorkingMonth,
     holidays: Array<Holiday>(),
-    rules: Array<WorkingRule>()
+    rules: Array<WorkingRule>(),
+    carry: Carry
   },
   actions: {
     getMonth({ commit, dispatch, state }, monthDate: Date) {
@@ -34,6 +42,11 @@ const WorkingTimeModule: Module<any, any> = {
               (day: any) => new WorkingDay(day)
             );
             state.month = new WorkingMonth(monthDate, workingDays);
+          })
+        )
+        .then(() =>
+          CarryService.getByMonth(year, monthString).then(data => {
+            state.carry = new Carry(data.result);
           })
         );
     }
