@@ -5,7 +5,6 @@
       caption-top
       :fields="fields"
       :items="items"
-      thead-class="hidden_header"
       borderless
     />
   </div>
@@ -20,12 +19,19 @@ export default class MonthAggregate extends Vue {
     {
       key: "key",
       label: "",
-      class: "key_column"
+      class: "first_column"
     },
     {
-      key: "value",
-      label: "",
-      class: "value_column"
+      key: "carry",
+      label: "Übertrag"
+    },
+    {
+      key: "month",
+      label: "Bisher"
+    },
+    {
+      key: "total",
+      label: "Gesamt"
     }
   ];
 
@@ -35,25 +41,24 @@ export default class MonthAggregate extends Vue {
   get items() {
     // TODO discriminate closed and unclosed month
     return [
-      { key: "Saldo Vormonat", value: this.carry.saldo },
-      { key: "Saldo Bisher", value: this.$store.getters.saldo },
-      { key: "Saldo Gesamt", value: this.$store.getters.saldoTotal }
+      {
+        key: "Saldo",
+        carry: this.carry.saldo,
+        month: this.$store.getters.saldo,
+        total: this.$store.getters.saldoTotal
+      }
     ];
   }
 }
 </script>
 
 <!--suppress CssUnusedSymbol -->
-<style>
-.hidden_header {
-  display: none;
+<style scoped>
+table {
+  font-size: larger;
 }
-.key_column {
+
+/deep/ .first_column {
   font-weight: bold;
-  font-size: 130%;
-  width: 15rem;
-}
-.value_column {
-  font-size: 130%;
 }
 </style>
