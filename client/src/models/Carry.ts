@@ -18,7 +18,7 @@ export default class Carry {
     }
   }
 
-  get saldo(): Saldo {
+  public get saldo(): Saldo {
     return this._saldo;
   }
 }

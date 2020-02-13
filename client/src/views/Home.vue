@@ -3,18 +3,20 @@
     <div class="alert-danger" v-if="error" v-html="error" />
     <Title v-bind:prop-title="monthName" />
     <MonthTable />
+    <MonthAggregate />
   </div>
 </template>
 
 <script lang="ts">
-import { Title, MonthTable } from "@/components";
+import { Title, MonthTable, MonthAggregate } from "@/components";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route } from "vue-router";
 
 @Component({
   components: {
     Title,
-    MonthTable
+    MonthTable,
+    MonthAggregate
   }
 })
 export default class Home extends Vue {
