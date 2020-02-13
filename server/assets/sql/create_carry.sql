@@ -5,7 +5,7 @@ create table carry
     id                     int auto_increment
         primary key,
     user_id                int        not null,
-    year                   date       not null,
+    year                   date       not null comment 'The year to which this row is carried over',
     saldo_hours            int        not null,
     saldo_minutes          int        not null,
     saldo_positive         tinyint(1) not null,

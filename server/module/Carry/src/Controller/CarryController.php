@@ -36,7 +36,7 @@ class CarryController extends ApiController
         $resultMonth = $this->monthTable->getByUserIdAndMonth(
             1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
         $resultCarry = $this->carryTable->getByUserIdAndYear(
-            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2019-02-01'));
+            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
         $saldo = $resultCarry->saldo;
         foreach ($resultMonth as $workingMonth) {
             $saldo = Saldo::getSum($saldo, $workingMonth->saldo);
