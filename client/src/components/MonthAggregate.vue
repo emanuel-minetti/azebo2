@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry } from "@/models";
 
 @Component
 export default class MonthAggregate extends Vue {
@@ -30,7 +29,7 @@ export default class MonthAggregate extends Vue {
     }
   ];
 
-  get carry(): Carry {
+  get carry() {
     return this.$store.state.workingTime.carry;
   }
   get items() {
