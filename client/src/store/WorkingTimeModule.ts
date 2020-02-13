@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import {
   Carry,
   Holiday,
+  Saldo,
   WorkingDay,
   WorkingMonth,
   WorkingRule
@@ -19,6 +20,28 @@ const WorkingTimeModule: Module<any, any> = {
     holidays: Array<Holiday>(),
     rules: Array<WorkingRule>(),
     carry: Carry
+  },
+  getters: {
+    saldo(state) {
+      if (state.month.days) {
+        return state.month.days
+          .map((day: WorkingDay) => day.saldoTime)
+          .reduce(
+            (previousValue: Saldo, currentValue: Saldo | undefined) =>
+              currentValue
+                ? Saldo.getSum(previousValue, currentValue)
+                : previousValue,
+            Saldo.createFromMillis(0)
+          );
+      }
+      return "";
+    },
+    saldoTotal(state, getters) {
+      if (getters.saldo !== "" && state.carry.saldo) {
+        return Saldo.getSum(getters.saldo, state.carry.saldo);
+      }
+      return "";
+    }
   },
   actions: {
     getMonth({ commit, dispatch, state }, monthDate: Date) {

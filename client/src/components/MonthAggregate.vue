@@ -34,7 +34,12 @@ export default class MonthAggregate extends Vue {
     return this.$store.state.workingTime.carry;
   }
   get items() {
-    return [{ key: "Saldo Vormonat", value: this.carry.saldo }];
+    // TODO discriminate closed and unclosed month
+    return [
+      { key: "Saldo Vormonat", value: this.carry.saldo },
+      { key: "Saldo Bisher", value: this.$store.getters.saldo },
+      { key: "Saldo Gesamt", value: this.$store.getters.saldoTotal }
+    ];
   }
 }
 </script>
