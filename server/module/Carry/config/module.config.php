@@ -18,7 +18,7 @@ return array(
             'carry' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route' => '/api/carry/:year/:month',
+                    'route' => '/api/carry-result/:year/:month',
                     'constraints' => [
                         'year' => '[0-9]+',
                         'month' => '[0-9]+',

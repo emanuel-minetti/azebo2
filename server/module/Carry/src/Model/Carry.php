@@ -20,6 +20,9 @@ use WorkingTime\Model\WorkingDay;
 
 class Carry extends ArrayObject
 {
+
+    public const PREVIOUS_HOLIDAYS_VALID_TO_MONTH = 9;
+
     /**
      * @var int the primary key of the table
      */

@@ -12,10 +12,12 @@ namespace Carry\Controller;
 
 use AzeboLib\ApiController;
 use AzeboLib\Saldo;
+use Carry\Model\Carry;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
-use WorkingTime\Model\WorkingDay;
+use Service\AuthorizationService;
+use WorkingRule\Model\WorkingRule;
 
 class CarryController extends ApiController
 {
@@ -28,30 +30,45 @@ class CarryController extends ApiController
         $this->carryTable = $carryTable;
     }
 
-    //TODO return the resulting carry over for this month!!
-
     /** @noinspection PhpUnused */
     public function carryResultAction()
     {
-        $resultMonth = $this->monthTable->getByUserIdAndMonth(
-            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
-        $resultCarry = $this->carryTable->getByUserIdAndYear(
-            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
-        $saldo = $resultCarry->saldo;
-        foreach ($resultMonth as $workingMonth) {
-            $saldo = Saldo::getSum($saldo, $workingMonth->saldo);
+        if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+            $userId = $this->request->getQuery()->user_id;
+            $yearId = $this->params('year');
+            $monthId = $this->params('month');
+            $month = DateTime::createFromFormat(WorkingRule::DATE_FORMAT, "$yearId-$monthId-01");
+            $resultMonth = $this->monthTable->getByUserIdAndMonth($userId, $month);
+            $resultCarry = $this->carryTable->getByUserIdAndYear($userId, $month);
+            $saldo = $resultCarry->saldo;
+            $holidaysPrevious = $resultCarry->holidaysPreviousYear;
+            $holidaysLeft = $resultCarry->holidays;
+            foreach ($resultMonth as $workingMonth) {
+                $saldo = Saldo::getSum($saldo, $workingMonth->saldo);
+                $holidays = $workingMonth->holidays;
+                if ($workingMonth->month->format('n') <= Carry::PREVIOUS_HOLIDAYS_VALID_TO_MONTH) {
+                    if ($holidaysPrevious >= $holidays) {
+                        $holidaysPrevious -= $holidays;
+                    } else {
+                        $holidays -= $holidaysPrevious;
+                        $holidaysPrevious = 0;
+                        $holidaysLeft -= $holidays;
+                    }
+                } else {
+                    $holidaysLeft -= $holidays;
+                }
+            }
+
+            $resultArray = [
+                'saldo_hours' => $saldo->getHours(),
+                'saldo_minutes' => $saldo->getMinutes(),
+                'saldo_positive' => $saldo->isPositive(),
+                'holidays_previous_year' => $holidaysPrevious,
+                'holidays' => $holidaysLeft,
+            ];
+            return $this->processResult($resultArray, 1);
+        } else {
+            return $this->response;
         }
-        $resultArray = [
-            'saldo_hours' => $saldo->getHours(),
-            'saldo_minutes' => $saldo->getMinutes(),
-            'saldo_positive' => $saldo->isPositive(),
-        ];
-        //TODO remove debugging
-//        $resultArray = [];
-//        $resultArray[] = $resultCarry->getArrayCopy();
-//        foreach ($resultMonth as $workingMonth) {
-//            $resultArray[] = $workingMonth->getArrayCopy();
-//        }
-        return $this->processResult($resultArray, 1);
     }
 }
