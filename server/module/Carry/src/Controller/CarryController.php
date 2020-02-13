@@ -27,18 +27,26 @@ class CarryController extends ApiController
         $this->carryTable = $carryTable;
     }
 
+    //TODO return the resulting carry over for this month!!
+
     /** @noinspection PhpUnused */
-    public function carryAction() {
-        $resultMonth = $this->monthTable->getByUserIdAndMonth(1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
-        $resultCarry = $this->carryTable->getByUserId(1);
-        $resultArray = [];
+    public function carryResultAction()
+    {
+        $resultMonth = $this->monthTable->getByUserIdAndMonth(
+            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2020-02-01'));
+        $resultCarry = $this->carryTable->getByUserIdAndYear(
+            1, DateTime::createFromFormat(WorkingDay::DATE_FORMAT, '2019-02-01'))[0];
+        //$saldo = $resultCarry->
+        $resultArray = [
+
+        ];
         foreach ($resultMonth as $object) {
             $resultArray[] = $object->getArrayCopy();
         }
-//        foreach ($resultCarry as $object) {
-//            $resultArray[] = $object->getArrayCopy();
-//        }
-        $resultArray[] = $resultCarry[0]->getArrayCopy();
+        foreach ($resultCarry as $object) {
+            $resultArray[] = $object->getArrayCopy();
+        }
+        $resultArray[] = $resultCarry->getArrayCopy();
         //var_dump($resultCarry);
         return $this->processResult($resultArray, 1);
     }

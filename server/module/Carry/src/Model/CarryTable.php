@@ -10,6 +10,8 @@
 
 namespace Carry\Model;
 
+use DateTime;
+use Laminas\Db\Sql\Literal;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
 
@@ -24,10 +26,12 @@ class CarryTable
         $this->sql = $this->tableGateway->getSql();
     }
 
-    public function getByUserId($userId) {
+    public function getByUserIdAndYear($userId, DateTime $year) {
         $select = $this->sql->select();
         $where = new Where();
-        $where->equalTo('user_id', $userId);
+        $where->equalTo('user_id', $userId)
+            ->and
+            ->equalTo(new Literal('YEAR(year)'), $year->format('Y'));
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];

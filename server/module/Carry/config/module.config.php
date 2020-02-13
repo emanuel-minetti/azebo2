@@ -25,7 +25,7 @@ return array(
                     ],
                     'defaults' => [
                         'controller' => Controller\CarryController::class,
-                        'action' => 'carry',
+                        'action' => 'carryResult',
                     ],
                 ],
             ],

@@ -13,9 +13,9 @@ namespace Carry\Model;
 
 
 use DateTime;
+use Laminas\Db\Sql\Literal;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
-use WorkingTime\Model\WorkingDay;
 
 class WorkingMonthTable
 {
@@ -36,7 +36,7 @@ class WorkingMonthTable
             ->and
             ->equalTo('carried', 0)
             ->and
-            ->lessThanOrEqualTo('month', $month->format(WorkingDay::DATE_FORMAT));
+            ->lessThanOrEqualTo(new Literal('MONTH(month)'), $month->format('n'));
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];
