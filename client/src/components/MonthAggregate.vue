@@ -13,6 +13,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Carry } from "@/models";
+import { timesConfig } from "@/configs";
 
 @Component
 export default class MonthAggregate extends Vue {
@@ -41,13 +42,29 @@ export default class MonthAggregate extends Vue {
   }
 
   get month() {
-    return this.$store.state.workingTime.month.monthNumber;
+    return this.$store.state.workingTime.month;
   }
 
-  get holidayString() {
-    return this.month <= Carry.PREVIOUS_HOLIDAYS_VALID_TO_MONTH
+  get holidaysLeftString() {
+    return this.month.monthNumber <= timesConfig.previousHolidaysValidTo
       ? this.carry.holidays + " (Vorjahr: " + this.carry.holidaysPrevious + ")"
       : this.carry.holidays;
+  }
+
+  get holidaysTotalString() {
+    let holidays = this.carry.holidays;
+    let taken = this.month.takenHolidays;
+    if (this.month.monthNumber <= timesConfig.previousHolidaysValidTo) {
+      let holidaysPrevious = this.carry.holidaysPrevious;
+      if (holidaysPrevious >= taken) {
+        holidaysPrevious -= taken;
+      } else {
+        taken -= holidaysPrevious;
+        holidays -= taken;
+      }
+      return holidays + " (Vorjahr: " + holidaysPrevious + ")";
+    }
+    return holidays - taken;
   }
 
   get items() {
@@ -61,7 +78,9 @@ export default class MonthAggregate extends Vue {
       },
       {
         key: "Urlaub",
-        carry: this.holidayString
+        carry: this.holidaysLeftString,
+        month: this.month.takenHolidays,
+        total: this.holidaysTotalString
       }
     ];
   }

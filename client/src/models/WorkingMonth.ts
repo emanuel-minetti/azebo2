@@ -60,4 +60,8 @@ export default class WorkingMonth {
   get monthNumber() {
     return this.monthDate.getMonth() + 1;
   }
+
+  get takenHolidays() {
+    return this.days.filter(day => day.timeOff === "Urlaub").length;
+  }
 }

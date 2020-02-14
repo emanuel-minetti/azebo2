@@ -1,9 +1,6 @@
 import { Saldo } from "@/models/index";
 
 export default class Carry {
-  //TODO make configurable (between client and server?)
-  public static readonly PREVIOUS_HOLIDAYS_VALID_TO_MONTH = 9;
-
   private readonly _saldo: Saldo;
   private readonly _holidaysPrevious: number;
   private readonly _holidays: number;
