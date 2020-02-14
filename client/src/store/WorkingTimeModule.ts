@@ -68,7 +68,7 @@ const WorkingTimeModule: Module<any, any> = {
           })
         )
         .then(() =>
-          CarryService.getByMonth(year, monthString).then(data => {
+          CarryService.getCarryByMonth(year, monthString).then(data => {
             state.carry = new Carry(data.result);
           })
         );
