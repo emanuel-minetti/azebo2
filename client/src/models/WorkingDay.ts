@@ -142,6 +142,7 @@ export default class WorkingDay {
     }
   }
 
+  //TODO Format output
   get timeOff(): string | undefined {
     return this._timeOff;
   }

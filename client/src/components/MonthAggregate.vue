@@ -12,6 +12,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Carry } from "@/models";
 
 @Component
 export default class MonthAggregate extends Vue {
@@ -35,9 +36,20 @@ export default class MonthAggregate extends Vue {
     }
   ];
 
-  get carry() {
+  get carry(): Carry {
     return this.$store.state.workingTime.carry;
   }
+
+  get month() {
+    return this.$store.state.workingTime.month.monthNumber;
+  }
+
+  get holidayString() {
+    return this.month <= Carry.PREVIOUS_HOLIDAYS_VALID_TO_MONTH
+      ? this.carry.holidays + " (Vorjahr: " + this.carry.holidaysPrevious + ")"
+      : this.carry.holidays;
+  }
+
   get items() {
     // TODO discriminate closed and unclosed month
     return [
@@ -46,6 +58,10 @@ export default class MonthAggregate extends Vue {
         carry: this.carry.saldo,
         month: this.$store.getters.saldo,
         total: this.$store.getters.saldoTotal
+      },
+      {
+        key: "Urlaub",
+        carry: this.holidayString
       }
     ];
   }

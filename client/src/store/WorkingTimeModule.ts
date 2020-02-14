@@ -42,6 +42,7 @@ const WorkingTimeModule: Module<any, any> = {
       }
       return "";
     }
+    //TODO Add getter for taken holidays
   },
   actions: {
     getMonth({ commit, dispatch, state }, monthDate: Date) {

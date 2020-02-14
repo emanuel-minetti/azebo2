@@ -1,9 +1,12 @@
 import { Saldo } from "@/models/index";
 
 export default class Carry {
-  private _saldo: Saldo;
-  private _holidaysPrevious: number;
-  private _holidays: number;
+  //TODO make configurable (between client and server?)
+  public static readonly PREVIOUS_HOLIDAYS_VALID_TO_MONTH = 9;
+
+  private readonly _saldo: Saldo;
+  private readonly _holidaysPrevious: number;
+  private readonly _holidays: number;
 
   constructor(data?: any) {
     if (data) {
@@ -18,7 +21,15 @@ export default class Carry {
     }
   }
 
-  public get saldo(): Saldo {
+  get saldo(): Saldo {
     return this._saldo;
+  }
+
+  get holidaysPrevious(): number {
+    return this._holidaysPrevious;
+  }
+
+  get holidays(): number {
+    return this._holidays;
   }
 }
