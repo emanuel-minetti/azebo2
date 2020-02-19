@@ -9,7 +9,12 @@
       :fields="fields"
       :tbody-tr-class="rowClass"
       thead-class="sticky"
+      @row-clicked="rowClickHandler"
     />
+    <div v-if="formShown">
+      <!--TODO remove debugging -->
+      Hallo!
+    </div>
   </div>
 </template>
 
@@ -20,6 +25,7 @@ import { WorkingDay, WorkingMonth } from "@/models";
 
 @Component
 export default class MonthTable extends Vue {
+  formShown = false;
   // `monthData` is being used in the items property of the table
   get monthData(): WorkingMonth {
     return this.$store.state.workingTime.month;
@@ -100,6 +106,12 @@ export default class MonthTable extends Vue {
     if (day && !day.hasWorkingTime) return "";
     return hasBreak ? "Ja" : "Nein";
   }
+
+  rowClickHandler(row: any) {
+    this.formShown = !this.formShown;
+    // TODO remove debugging
+    console.log(row.date);
+  }
 }
 </script>
 
@@ -115,7 +127,7 @@ div {
   vertical-align: middle;
 }
 
-/deep/ .sticky  th{
+/deep/ .sticky th {
   position: sticky;
   top: 0;
   background-color: white;
