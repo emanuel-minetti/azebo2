@@ -115,10 +115,11 @@ div {
   vertical-align: middle;
 }
 
-/deep/ .sticky {
+/deep/ .sticky  th{
   position: sticky;
   top: 0;
   background-color: white;
+  background-clip: padding-box;
 }
 
 /deep/ .small-column {
