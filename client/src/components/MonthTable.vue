@@ -26,9 +26,18 @@ import { WorkingDay, WorkingMonth } from "@/models";
 @Component
 export default class MonthTable extends Vue {
   formShown = false;
+  dateToEdit = null as null | Date;
+
   // `monthData` is being used in the items property of the table
   get monthData(): WorkingMonth {
-    return this.$store.state.workingTime.month;
+    if (!this.formShown) {
+      return this.$store.state.workingTime.month;
+    }
+    let month = Object.assign({}, this.$store.state.workingTime.month);
+    month.days = month.days.filter(
+      (day: WorkingDay) => day.date.valueOf() < this.dateToEdit!.valueOf()
+    );
+    return month;
   }
 
   // specifies the shown columns of th table
@@ -109,8 +118,7 @@ export default class MonthTable extends Vue {
 
   rowClickHandler(row: any) {
     this.formShown = !this.formShown;
-    // TODO remove debugging
-    console.log(row.date);
+    this.dateToEdit = row.date;
   }
 }
 </script>
