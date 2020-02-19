@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div id="month-aggregate">
     <b-table-lite
       caption="Zusammenfassung:"
       caption-top
       :fields="fields"
       :items="items"
-      borderless
+      bordered
     />
   </div>
 </template>
@@ -89,11 +89,29 @@ export default class MonthAggregate extends Vue {
 
 <!--suppress CssUnusedSymbol -->
 <style scoped>
+#month-aggregate {
+  padding-left: 40px;
+}
+
 table {
+  width: 500px;
   font-size: larger;
+}
+
+/deep/ table caption {
+  font-weight: bold;
+  color: inherit;
 }
 
 /deep/ .first_column {
   font-weight: bold;
+}
+
+/deep/ table td {
+  text-align: center;
+}
+
+/deep/ table th {
+  text-align: center;
 }
 </style>
