@@ -17,7 +17,7 @@
         "laminas/laminas-component-installer": "^1.0 || ^2.1",
         "laminas/laminas-mvc": "^3.1.1",
         "laminas/laminas-development-mode": "^3.2",
-        "laminas/laminas-test": "^3.3",
+        "laminas/laminas-test": "^3.4",
         "laminas/laminas-db": "^2.10",
         "firebase/php-jwt": "^5.0",
         "laminas/laminas-dependency-plugin": "^1.0"
@@ -30,6 +30,7 @@
             "Holiday\\": "module/Holiday/src",
             "Service\\": "service/",
             "WorkingRule\\": "module/WorkingRule/src/",
+            "Carry\\": "module/Carry/src",
             "AzeboLib\\": "lib"
         }
     },

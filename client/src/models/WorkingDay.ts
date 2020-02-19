@@ -143,7 +143,16 @@ export default class WorkingDay {
   }
 
   get timeOff(): string | undefined {
-    return this._timeOff;
+    switch (this._timeOff) {
+      case "urlaub":
+        return "Urlaub";
+      case "AZV":
+        return "AZV";
+      case "krankheit":
+        return "Krankheit";
+      default:
+        return undefined;
+    }
   }
 
   set timeOff(value: string | undefined) {

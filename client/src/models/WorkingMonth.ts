@@ -56,4 +56,12 @@ export default class WorkingMonth {
     };
     return this.monthDate.toLocaleString("de-DE", options);
   }
+
+  get monthNumber() {
+    return this.monthDate.getMonth() + 1;
+  }
+
+  get takenHolidays() {
+    return this.days.filter(day => day.timeOff === "Urlaub").length;
+  }
 }

@@ -4,6 +4,7 @@ import LoginService from "./LoginService";
 import WorkingTimeService from "./WorkingTimeService";
 import HolidayService from "./HolidayService";
 import WorkingRuleService from "./WorkingRuleService";
+import CarryService from "./CarryService";
 
 export {
   ApiService,
@@ -11,5 +12,6 @@ export {
   HolidayService,
   LoginService,
   WorkingTimeService,
-  WorkingRuleService
+  WorkingRuleService,
+  CarryService
 };

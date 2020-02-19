@@ -42,6 +42,7 @@ class User extends ArrayObject
         if (isset($this->password_hash)) {
             $copy['password_hash'] =  $this->password_hash;
         }
+        return $copy;
     }
 
     public function verifyPassword($password) {

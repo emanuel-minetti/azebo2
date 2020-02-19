@@ -1,6 +1,14 @@
 import { Module } from "vuex";
-import { Holiday, WorkingDay, WorkingMonth, WorkingRule } from "@/models";
 import {
+  Carry,
+  Holiday,
+  Saldo,
+  WorkingDay,
+  WorkingMonth,
+  WorkingRule
+} from "@/models";
+import {
+  CarryService,
   HolidayService,
   WorkingRuleService,
   WorkingTimeService
@@ -10,10 +18,34 @@ const WorkingTimeModule: Module<any, any> = {
   state: {
     month: WorkingMonth,
     holidays: Array<Holiday>(),
-    rules: Array<WorkingRule>()
+    rules: Array<WorkingRule>(),
+    carry: Carry
+  },
+  getters: {
+    saldo(state) {
+      if (state.month.days) {
+        return state.month.days
+          .map((day: WorkingDay) => day.saldoTime)
+          .reduce(
+            (previousValue: Saldo, currentValue: Saldo | undefined) =>
+              currentValue
+                ? Saldo.getSum(previousValue, currentValue)
+                : previousValue,
+            Saldo.createFromMillis(0)
+          );
+      }
+      return "";
+    },
+    saldoTotal(state, getters) {
+      if (getters.saldo !== "" && state.carry.saldo) {
+        return Saldo.getSum(getters.saldo, state.carry.saldo);
+      }
+      return "";
+    }
   },
   actions: {
-    getMonth({ commit, dispatch, state }, monthDate: Date) {
+    getMonth({ commit, dispatch, state, rootState }, monthDate: Date) {
+      rootState.loading = true;
       // make sure holidays are loaded before creating the working days
       const year = monthDate.getFullYear().toString();
       const month = monthDate.getMonth() + 1;
@@ -35,7 +67,16 @@ const WorkingTimeModule: Module<any, any> = {
             );
             state.month = new WorkingMonth(monthDate, workingDays);
           })
-        );
+        )
+        .then(() =>
+          CarryService.getCarryByMonth(year, monthString).then(data => {
+            state.carry = new Carry(data.result);
+          })
+        )
+        .then(() => {
+          rootState.loading = false;
+          return this;
+        });
     }
   }
 };

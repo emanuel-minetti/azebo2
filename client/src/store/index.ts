@@ -6,7 +6,9 @@ import UserModule from "./UserModule";
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-  state: {},
+  state: {
+    loading: false
+  },
   mutations: {},
   actions: {},
   modules: {

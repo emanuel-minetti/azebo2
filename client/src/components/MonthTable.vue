@@ -8,6 +8,7 @@
       primary-key="date"
       :fields="fields"
       :tbody-tr-class="rowClass"
+      thead-class="sticky"
     />
   </div>
 </template>
@@ -102,6 +103,7 @@ export default class MonthTable extends Vue {
 }
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
 div {
   text-align: center;
@@ -113,17 +115,20 @@ div {
   vertical-align: middle;
 }
 
-/*noinspection CssUnusedSymbol*/
+/deep/ .sticky {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
 /deep/ .small-column {
   width: 90px;
 }
 
-/*noinspection CssUnusedSymbol*/
 /deep/ .not-a-working-day {
   color: #e70036;
 }
 
-/*noinspection CssUnusedSymbol*/
 /deep/ .saldo {
   border-left: 2px solid #211e1e;
 }

@@ -23,4 +23,5 @@ return [
     'WorkingTime',
     'Holiday',
     'WorkingRule',
+    'Carry',
 ];
