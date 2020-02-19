@@ -1,9 +1,14 @@
 <template>
   <div class="home">
-    <div class="alert-danger" v-if="error" v-html="error" />
-    <Title v-bind:prop-title="monthName" />
-    <MonthTable />
-    <MonthAggregate />
+    <div v-if="loading" class="d-flex justify-content-center mb-3">
+      <b-spinner id="spinner" label="Loading..."></b-spinner>
+    </div>
+    <div v-else>
+      <div class="alert-danger" v-if="error" v-html="error" />
+      <Title v-bind:prop-title="monthName" />
+      <MonthTable />
+      <MonthAggregate />
+    </div>
   </div>
 </template>
 
@@ -23,6 +28,9 @@ export default class Home extends Vue {
   error = "";
   get monthName() {
     return this.$store.state.workingTime.month.monthName;
+  }
+  get loading() {
+    return this.$store.state.loading;
   }
   @Watch("$route")
   routeChanged(to: Route) {
@@ -45,3 +53,11 @@ export default class Home extends Vue {
   }
 }
 </script>
+
+<style scoped>
+#spinner {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 100px;
+}
+</style>

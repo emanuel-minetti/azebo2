@@ -44,7 +44,8 @@ const WorkingTimeModule: Module<any, any> = {
     }
   },
   actions: {
-    getMonth({ commit, dispatch, state }, monthDate: Date) {
+    getMonth({ commit, dispatch, state, rootState }, monthDate: Date) {
+      rootState.loading = true;
       // make sure holidays are loaded before creating the working days
       const year = monthDate.getFullYear().toString();
       const month = monthDate.getMonth() + 1;
@@ -71,7 +72,11 @@ const WorkingTimeModule: Module<any, any> = {
           CarryService.getCarryByMonth(year, monthString).then(data => {
             state.carry = new Carry(data.result);
           })
-        );
+        )
+        .then(() => {
+          rootState.loading = false;
+          return this;
+        });
     }
   }
 };
