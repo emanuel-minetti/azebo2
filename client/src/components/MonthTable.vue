@@ -13,7 +13,7 @@
     />
     <div v-if="formShown" id="lower">
       <!--TODO remove debugging -->
-      Hallo!
+      <DayForm id="form" />
       <b-table
         bordered
         striped
@@ -33,8 +33,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import { FormatterService } from "@/services";
 import { WorkingDay } from "@/models";
+import DayForm from "@/components/DayForm.vue";
 
-@Component
+@Component({
+  components: {
+    DayForm
+  }
+})
 export default class MonthTable extends Vue {
   formShown = false;
   dateToEdit = null as null | Date;
@@ -177,7 +182,7 @@ div {
   border-left: 2px solid #211e1e;
 }
 
-#lower {
+#lower, #form {
   width: 100%;
   margin: 0;
 }
