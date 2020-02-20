@@ -1,5 +1,5 @@
 <template>
-  <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+  <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="mb-3">
     <fieldset>
       <legend>{{ title }}</legend>
       <b-form-group label="Arbeitsbeginn:" label-for="begin-input">
