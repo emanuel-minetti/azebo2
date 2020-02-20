@@ -43,9 +43,15 @@ class CarryController extends ApiController
             $saldo = $resultCarry->saldo;
             $holidaysPrevious = $resultCarry->holidaysPreviousYear;
             $holidaysLeft = $resultCarry->holidays;
+            $finalized = false;
             foreach ($resultMonth as $workingMonth) {
                 $saldo = Saldo::getSum($saldo, $workingMonth->saldo);
                 $holidays = $workingMonth->holidays;
+                // set finalized
+                if ($month->format('n') === $workingMonth->month->format('n')) {
+                    $finalized = true;
+                }
+                //if month can have holidays from previous year
                 if ($workingMonth->month->format('n') <= Carry::PREVIOUS_HOLIDAYS_VALID_TO_MONTH) {
                     if ($holidaysPrevious >= $holidays) {
                         $holidaysPrevious -= $holidays;
@@ -65,6 +71,7 @@ class CarryController extends ApiController
                 'saldo_positive' => $saldo->isPositive(),
                 'holidays_previous_year' => $holidaysPrevious,
                 'holidays' => $holidaysLeft,
+                'finalized' => $finalized,
             ];
             return $this->processResult($resultArray, 1);
         } else {
