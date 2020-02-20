@@ -20,7 +20,11 @@
           placeholder="Arbeitsende"
         ></b-form-input>
       </b-form-group>
-      <b-form-group label="Dienstbefreiung:" label-for="time-off-input" id="select">
+      <b-form-group
+        label="Dienstbefreiung:"
+        label-for="time-off-input"
+        id="select"
+      >
         <b-form-select
           id="time-off-input"
           v-model="form.timeOff"
@@ -52,9 +56,9 @@ export default class DayForm extends Vue {
   show = true;
   // TODO make configurable
   timeOffOptions = [
-    {text: "Urlaub", value: "urlaub"},
-    {text: "Gleitzeittag", value: "gleitzeit"},
-    {text: "AZV-Tag", value: "azv"}
+    { text: "Urlaub", value: "urlaub" },
+    { text: "Gleitzeit-Tag", value: "gleitzeit" },
+    { text: "AZV-Tag", value: "azv" }
   ];
 
   get title() {
