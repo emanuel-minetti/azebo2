@@ -11,6 +11,22 @@
           placeholder="Arbeitsbeginn"
         ></b-form-input>
       </b-form-group>
+      <b-form-group label="Arbeitsende:" label-for="end-input">
+        <b-form-input
+          id="end-input"
+          type="time"
+          v-model="form.end"
+          required
+          placeholder="Arbeitsende"
+        ></b-form-input>
+      </b-form-group>
+      <b-form-group label="Dienstbefreiung:" label-for="time-off-input" id="select">
+        <b-form-select
+          id="time-off-input"
+          v-model="form.timeOff"
+          :options="timeOffOptions"
+        ></b-form-select>
+      </b-form-group>
       <b-button type="submit" variant="primary">Absenden</b-button>
       <b-button type="reset" variant="secondary" class="ml-2">
         Zurücksetzen
@@ -29,9 +45,17 @@ import { Component, Vue } from "vue-property-decorator";
 })
 export default class DayForm extends Vue {
   form = {
-    begin: ""
+    begin: "",
+    end: "",
+    timeOff: ""
   };
   show = true;
+  // TODO make configurable
+  timeOffOptions = [
+    {text: "Urlaub", value: "urlaub"},
+    {text: "Gleitzeittag", value: "gleitzeit"},
+    {text: "AZV-Tag", value: "azv"}
+  ];
 
   get title() {
     let date = this.$props.propDate;
@@ -65,11 +89,16 @@ form {
   width: 30%;
 }
 
+/deep/ label {
+  text-align: left;
+}
+
 /deep/ input[type="time"] {
   width: 30%;
 }
 
-/deep/ label {
+/deep/ #select {
+  width: 30%;
   text-align: left;
 }
 </style>

@@ -12,7 +12,7 @@
       @row-clicked="rowClickHandler"
     />
     <div v-if="formShown" id="lower">
-      <DayForm id="form" v-bind:prop-date="dateToEdit"/>
+      <DayForm id="form" v-bind:prop-date="dateToEdit" />
       <b-table
         bordered
         striped
