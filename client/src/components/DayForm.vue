@@ -29,7 +29,16 @@
           id="time-off-input"
           v-model="form.timeOff"
           :options="timeOffOptions"
+          class="left"
         ></b-form-select>
+      </b-form-group>
+      <b-form-group label="Bemerkung:" label-for="comment-input">
+        <b-form-textarea id="comment-input" size="sm" v-model="form.comment">
+        </b-form-textarea>
+      </b-form-group>
+      <b-form-group label="Ohne Pause:" label-for="break-input">
+        <b-form-checkbox id="break-input" v-model="form.break" class="left">
+        </b-form-checkbox>
       </b-form-group>
       <b-button type="submit" variant="primary">Absenden</b-button>
       <b-button type="reset" variant="secondary" class="ml-2">
@@ -51,7 +60,9 @@ export default class DayForm extends Vue {
   form = {
     begin: "",
     end: "",
-    timeOff: ""
+    timeOff: "",
+    comment: "",
+    break: false
   };
   show = true;
   // TODO make configurable
@@ -93,16 +104,19 @@ form {
   width: 30%;
 }
 
-/deep/ label {
+>>> label {
   text-align: left;
 }
 
-/deep/ input[type="time"] {
+.left {
+  text-align: left;
+}
+
+input[type="time"] {
   width: 30%;
 }
 
-/deep/ #select {
+>>> #select {
   width: 30%;
-  text-align: left;
 }
 </style>
