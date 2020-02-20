@@ -1,7 +1,7 @@
 <template>
   <b-form @submit="onSubmit" @reset="onReset" v-if="show">
     <fieldset>
-      <legend>{{title}}</legend>
+      <legend>{{ title }}</legend>
       <b-form-group label="Arbeitsbeginn:" label-for="begin-input">
         <b-form-input
           id="begin-input"
@@ -12,7 +12,9 @@
         ></b-form-input>
       </b-form-group>
       <b-button type="submit" variant="primary">Absenden</b-button>
-      <b-button type="reset" variant="secondary" class="ml-2">Zurücksetzen</b-button>
+      <b-button type="reset" variant="secondary" class="ml-2">
+        Zurücksetzen
+      </b-button>
     </fieldset>
   </b-form>
 </template>
@@ -33,9 +35,9 @@ export default class DayForm extends Vue {
 
   get title() {
     let date = this.$props.propDate;
-    let title = date.toLocaleDateString('de-DE', {weekday: "long"});
+    let title = date.toLocaleDateString("de-DE", { weekday: "long" });
     title += ", den ";
-    title += date.toLocaleDateString('de-DE');
+    title += date.toLocaleDateString("de-DE");
     title += " bearbeiten";
     return title;
   }
