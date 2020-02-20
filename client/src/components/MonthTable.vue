@@ -182,7 +182,8 @@ div {
   border-left: 2px solid #211e1e;
 }
 
-#lower, #form {
+#lower,
+#form {
   width: 100%;
   margin: 0;
 }
