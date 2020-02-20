@@ -9,6 +9,7 @@
           v-model="form.begin"
           required
           placeholder="Arbeitsbeginn"
+          autofocus
         ></b-form-input>
       </b-form-group>
       <b-form-group label="Arbeitsende:" label-for="end-input">
