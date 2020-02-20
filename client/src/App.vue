@@ -244,9 +244,8 @@ export default class App extends Vue {
 // Import custom SASS variable overrides
 @import "assets/custom-vars.scss";
 
-// Import Bootstrap and BootstrapVue source SCSS files
+// Import Bootstrap source SCSS file
 @import "~bootstrap/scss/bootstrap.scss";
-@import "~bootstrap-vue/src/index.scss";
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -319,7 +318,9 @@ export default class App extends Vue {
   }
 }
 
-.form-control:focus {
+.form-control:focus,
+.custom-select:focus,
+.custom-control-input:focus ~ .custom-control-label::before {
   border-color: theme-color("text");
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
     0 0 8px theme-color-level("text", -0.4);
