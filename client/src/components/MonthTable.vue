@@ -125,6 +125,10 @@ export default class MonthTable extends Vue {
     ];
   }
 
+  get finalized() {
+    return this.$store.state.workingTime.carry.finalized;
+  }
+
   // adds a class for non working days
   rowClass(day: WorkingDay, type: string) {
     if (!day || type !== "row") return;
@@ -144,8 +148,10 @@ export default class MonthTable extends Vue {
   }
 
   rowClickHandler(row: any) {
-    this.formShown = !this.formShown;
-    this.dateToEdit = row.date;
+    if (!this.finalized) {
+      this.formShown = !this.formShown;
+      this.dateToEdit = row.date;
+    }
   }
 }
 </script>
