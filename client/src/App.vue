@@ -16,7 +16,7 @@
         <ul>
           <li>
             <button class="btn btn-primary">
-              <router-link to="/">Einstellungen</router-link>
+              <router-link to="about">Einstellungen</router-link>
             </button>
           </li>
           <li>
