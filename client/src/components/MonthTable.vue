@@ -12,8 +12,7 @@
       @row-clicked="rowClickHandler"
     />
     <div v-if="formShown" id="lower">
-      <!--TODO remove debugging -->
-      <DayForm id="form" />
+      <DayForm id="form" v-bind:prop-date="dateToEdit"/>
       <b-table
         bordered
         striped
@@ -182,8 +181,7 @@ div {
   border-left: 2px solid #211e1e;
 }
 
-#lower,
-#form {
+#lower {
   width: 100%;
   margin: 0;
 }
