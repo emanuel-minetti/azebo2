@@ -16,6 +16,7 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 
 use AzeboLib\ApiController;
+use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
@@ -49,5 +50,12 @@ class WorkingTimeController extends ApiController
             // `response` was set in the call to `AuthorizationService::authorize`
             return $response;
         }
+    }
+
+    public function setDayAction()
+    {
+        return new JsonModel([
+            'text' => 'Hallo',
+        ]);
     }
 }

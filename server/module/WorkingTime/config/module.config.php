@@ -10,6 +10,7 @@
 
 namespace WorkingTime;
 
+use Laminas\Router\Http\Method;
 use Laminas\Router\Http\Segment;
 
 return array(
@@ -25,9 +26,31 @@ return array(
                     ],
                     'defaults' => [
                         'controller' => Controller\WorkingTimeController::class,
-                        'action' => 'month',
+                        //'action' => 'month',
                     ],
                 ],
+                'child_routes' => [
+                    'get' => [
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'get',
+                            'defaults' => [
+                                'action' => 'month',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'post' => [
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'post',
+                            'defaults' => [
+                                'action' => 'setDay',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                ]
             ],
         ],
     ],
