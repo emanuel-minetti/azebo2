@@ -26,7 +26,6 @@ return array(
                     ],
                     'defaults' => [
                         'controller' => Controller\WorkingTimeController::class,
-                        //'action' => 'month',
                     ],
                 ],
                 'child_routes' => [
