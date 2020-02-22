@@ -50,7 +50,7 @@ class WorkingTimeController extends ApiController
     public function setDayAction()
     {
         $this->prepare();
-        $post = $this->httpRequest->getPost();
+        $post = json_decode($this->httpRequest->getContent());
         return new JsonModel([
             'text' => $post,
         ]);
