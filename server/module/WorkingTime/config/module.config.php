@@ -19,7 +19,7 @@ return array(
             'working-time' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route' => '/api/working-time/:year/:month',
+                    'route' => '/api/working-time[/:year/:month]',
                     'constraints' => [
                         'year' => '[0-9]+',
                         'month' => '[0-9]+',

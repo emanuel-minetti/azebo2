@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
 /**
  * azebo2 is an application to print working time tables
  *
@@ -10,12 +11,8 @@
 
 namespace WorkingTime\Controller;
 
-use DateTime;
-
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-
 use AzeboLib\ApiController;
+use DateTime;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use WorkingTime\Model\WorkingDay;
@@ -30,16 +27,14 @@ class WorkingTimeController extends ApiController
         $this->table = $table;
     }
 
-    /** @noinspection PhpUnused */
     public function monthAction()
     {
-        $yearId = $this->params('year');
-        $monthId = $this->params('month');
-        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearId-$monthId-01");
-        $request = Request::fromString($this->request);
-        $response = Response::fromString($this->response);
-        if (AuthorizationService::authorize($request, $response, ['GET',])) {
-            $userId = $request->getQuery()->user_id;
+        $this->prepare();
+        $yearParam = $this->params('year');
+        $monthParam = $this->params('month');
+        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['GET',])) {
+            $userId = $this->httpRequest->getQuery()->user_id;
             $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
             $resultArray = [];
             foreach ($arrayOfWorkingDays as $element) {
@@ -47,15 +42,17 @@ class WorkingTimeController extends ApiController
             }
             return $this->processResult($resultArray, $userId);
         } else {
-            // `response` was set in the call to `AuthorizationService::authorize`
-            return $response;
+            // `httpResponse` was set in the call to `AuthorizationService::authorize`
+            return $this->httpResponse;
         }
     }
 
     public function setDayAction()
     {
+        $this->prepare();
+        $post = $this->httpRequest->getPost();
         return new JsonModel([
-            'text' => 'Hallo',
+            'text' => $post,
         ]);
     }
 }
