@@ -16,7 +16,6 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 
 $config = Factory::fromFile(__DIR__ . '/../../../config/autoload/local.php');
 
-//TODO review
 return [
     'router' => [
         'routes' => [
