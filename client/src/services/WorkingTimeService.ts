@@ -1,4 +1,5 @@
 import { ApiService } from "@/services";
+import { WorkingDay } from "@/models";
 
 export default class WorkingTimeService extends ApiService {
   /**
@@ -15,6 +16,18 @@ export default class WorkingTimeService extends ApiService {
     const requestOptions = {
       method: "GET",
       headers: headers
+    };
+    return fetch(url, requestOptions).then(this.handleResponse);
+  }
+
+  static setDay(day: WorkingDay) {
+    const url = this.getBaseUrl() + "working-time";
+    let headers = this.getHeaders();
+    headers = { ...headers, ...this.getAuthHeader() };
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(day)
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }

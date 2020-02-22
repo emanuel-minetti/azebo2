@@ -77,6 +77,12 @@ const WorkingTimeModule: Module<any, any> = {
           rootState.loading = false;
           return this;
         });
+    },
+    setDay({}, day: WorkingDay ) {
+      return WorkingTimeService.setDay(day)
+        .then((request) => {
+          console.log(request);
+        });
     }
   }
 };

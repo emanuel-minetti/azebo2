@@ -51,6 +51,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { WorkingDay } from "@/models";
 
 @Component({
   props: {
@@ -85,6 +86,7 @@ export default class DayForm extends Vue {
   onSubmit(evt: Event) {
     evt.preventDefault();
     console.log(JSON.stringify(this.form));
+    this.$store.dispatch("setDay", new WorkingDay(this.form));
   }
 
   onReset(evt: Event) {
