@@ -84,10 +84,8 @@ const WorkingTimeModule: Module<any, any> = {
           return this;
         });
     },
-    setDay(state, day: WorkingDay) {
-      return WorkingTimeService.setDay(day).then(request => {
-        console.log(request);
-      });
+    setDay({ state }, day: WorkingDay) {
+      return WorkingTimeService.setDay(day).then(() => {});
     }
   }
 };

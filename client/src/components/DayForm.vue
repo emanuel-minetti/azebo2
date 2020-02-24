@@ -45,6 +45,9 @@
       <b-button type="reset" variant="secondary" class="ml-2">
         Zurücksetzen
       </b-button>
+      <b-button type="button" variant="secondary" class="ml-2" v-on:click="onCancel">
+        Abbrechen
+      </b-button>
     </fieldset>
   </b-form>
 </template>
@@ -118,7 +121,12 @@ export default class DayForm extends Vue {
 
   onSubmit(evt: Event) {
     evt.preventDefault();
-    this.$store.dispatch("setDay", this.form);
+    this.$store
+      .dispatch("setDay", this.form)
+      .then(() => this.$store.dispatch("getMonth", this.form.date))
+      .then(() => {
+        this.$emit("submitted");
+      });
   }
 
   onReset(evt: Event) {
@@ -134,6 +142,10 @@ export default class DayForm extends Vue {
     this.$nextTick(() => {
       this.show = true;
     });
+  }
+
+  onCancel() {
+    this.$emit("submitted");
   }
 }
 </script>
