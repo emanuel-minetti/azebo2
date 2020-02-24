@@ -6,7 +6,7 @@
         <b-form-input
           id="begin-input"
           type="time"
-          v-model="form.begin"
+          v-model="begin"
           required
           placeholder="Arbeitsbeginn"
           autofocus
@@ -16,7 +16,7 @@
         <b-form-input
           id="end-input"
           type="time"
-          v-model="form.end"
+          v-model="end"
           required
           placeholder="Arbeitsende"
         ></b-form-input>
@@ -53,19 +53,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import { WorkingDay } from "@/models";
 
-@Component({
-  props: {
-    propDate: Date
-  }
-})
+@Component
 export default class DayForm extends Vue {
-  form = {
-    begin: "",
-    end: "",
-    timeOff: "",
-    comment: "",
-    break: false
-  };
+  private _form = null as null | WorkingDay;
   show = true;
   // TODO make configurable
   timeOffOptions = [
@@ -74,13 +64,41 @@ export default class DayForm extends Vue {
     { text: "AZV-Tag", value: "azv" }
   ];
 
+  get form() {
+    if (!this._form)
+      this._form = this.$store.state.workingTime.dayToEdit as WorkingDay;
+    return this._form;
+  }
+
+  set form(day: WorkingDay) {
+    this._form = day;
+  }
+
   get title() {
-    let date = this.$props.propDate;
+    let date = this.form.date;
     let title = date.toLocaleDateString("de-DE", { weekday: "long" });
     title += ", den ";
     title += date.toLocaleDateString("de-DE");
     title += " bearbeiten";
     return title;
+  }
+
+  get begin() {
+    if (this.form.begin)
+      return this.form.begin.toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    return "";
+  }
+
+  get end() {
+    if (this.form.end)
+      return this.form.end.toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    return "";
   }
 
   onSubmit(evt: Event) {
@@ -92,7 +110,7 @@ export default class DayForm extends Vue {
   onReset(evt: Event) {
     evt.preventDefault();
     // Reset our form values
-    this.form.begin = "";
+    this.form = this.$store.state.workingTime.dayToEdit;
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {

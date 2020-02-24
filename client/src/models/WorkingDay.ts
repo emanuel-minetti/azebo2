@@ -35,7 +35,7 @@ export default class WorkingDay {
       data.break != undefined &&
       data.afternoon != undefined
     ) {
-      this._id = data.id;
+      this._id = data.id ? data.id : 0;
 
       this._date = FormatterService.convertToDate(data.date);
 
@@ -274,6 +274,10 @@ export default class WorkingDay {
       }
     }
     return undefined;
+  }
+
+  get id(): number {
+    return this._id;
   }
 
   /**

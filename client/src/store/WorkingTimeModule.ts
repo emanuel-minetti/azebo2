@@ -19,7 +19,8 @@ const WorkingTimeModule: Module<any, any> = {
     month: WorkingMonth,
     holidays: Array<Holiday>(),
     rules: Array<WorkingRule>(),
-    carry: Carry
+    carry: Carry,
+    dayToEdit: WorkingDay
   },
   getters: {
     saldo(state) {
@@ -41,6 +42,11 @@ const WorkingTimeModule: Module<any, any> = {
         return Saldo.getSum(getters.saldo, state.carry.saldo);
       }
       return "";
+    }
+  },
+  mutations: {
+    setDay(state, date: Date) {
+      state.dayToEdit = state.month.getDayByDate(date);
     }
   },
   actions: {
@@ -78,11 +84,10 @@ const WorkingTimeModule: Module<any, any> = {
           return this;
         });
     },
-    setDay({}, day: WorkingDay ) {
-      return WorkingTimeService.setDay(day)
-        .then((request) => {
-          console.log(request);
-        });
+    setDay(state, day: WorkingDay) {
+      return WorkingTimeService.setDay(day).then(request => {
+        console.log(request);
+      });
     }
   }
 };

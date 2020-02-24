@@ -51,8 +51,11 @@ class WorkingTimeController extends ApiController
     {
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
+        $date = $post->_date;
+        //$day = $this->table->find($post)
         return new JsonModel([
             'text' => $post,
+            'date' => $date,
         ]);
     }
 }
