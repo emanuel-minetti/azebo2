@@ -12,8 +12,8 @@
 namespace WorkingTime\Controller;
 
 use AzeboLib\ApiController;
+use DateInterval;
 use DateTime;
-use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
@@ -51,11 +51,24 @@ class WorkingTimeController extends ApiController
     {
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
-        $date = $post->_date;
-        //$day = $this->table->find($post)
-        return new JsonModel([
-            'text' => $post,
-            'date' => $date,
-        ]);
+
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
+            $userId = $this->httpRequest->getQuery()->user_id;
+            $id = $post->_id;
+            if ($id != 0) {
+                $day = $this->table->find($id);
+            } else {
+                $day = new WorkingDay();
+                $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
+                $day->userId = $userId;
+            }
+            $day->begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", trim($post->_begin));
+            $day->begin->add(new DateInterval('PT1H'));
+            $this->table->upsert($day);
+            return $this->processResult([$userId, $day->begin, $post->_begin, DateTime::getLastErrors()], $userId);
+        } else {
+            // `httpResponse` was set in the call to `AuthorizationService::authorize`
+            return $this->httpResponse;
+        }
     }
 }
