@@ -127,8 +127,10 @@ export default class WorkingDay {
   set begin(value: Date | undefined) {
     if (value) {
       this._begin = value;
-      this._edited = true;
+    } else {
+      this._begin = undefined;
     }
+    this._edited = true;
   }
 
   get end(): Date | undefined {
@@ -138,8 +140,10 @@ export default class WorkingDay {
   set end(value: Date | undefined) {
     if (value) {
       this._end = value;
-      this._edited = true;
+    } else {
+      this._end = undefined;
     }
+    this._edited = true;
   }
 
   get timeOff(): string | undefined {
@@ -158,8 +162,10 @@ export default class WorkingDay {
   set timeOff(value: string | undefined) {
     if (value) {
       this._timeOff = value;
-      this._edited = true;
+    } else {
+      this._timeOff = undefined;
     }
+    this._edited = true;
   }
 
   get comment(): string | undefined {
@@ -169,8 +175,10 @@ export default class WorkingDay {
   set comment(value: string | undefined) {
     if (value) {
       this._comment = value;
-      this._edited = true;
+    } else {
+      this._comment = undefined;
     }
+    this._edited = true;
   }
 
   get break(): boolean {

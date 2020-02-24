@@ -55,7 +55,6 @@ import { WorkingDay } from "@/models";
 
 @Component
 export default class DayForm extends Vue {
-  private _form = null as null | WorkingDay;
   show = true;
   // TODO make configurable
   timeOffOptions = [
@@ -65,13 +64,7 @@ export default class DayForm extends Vue {
   ];
 
   get form() {
-    if (!this._form)
-      this._form = this.$store.state.workingTime.dayToEdit as WorkingDay;
-    return this._form;
-  }
-
-  set form(day: WorkingDay) {
-    this._form = day;
+    return this.$store.state.workingTime.dayToEdit as WorkingDay;
   }
 
   get title() {
@@ -101,16 +94,41 @@ export default class DayForm extends Vue {
     return "";
   }
 
+  set begin(value: string) {
+    if (value.length > 0) {
+      if (!this.form.begin) this.form.begin = new Date();
+      this.form.begin.setHours(
+        Number(value.substring(0, 2)),
+        Number(value.substring(3, 5))
+      );
+    } else {
+      this.form.begin = undefined;
+    }
+  }
+
+  set end(value: string) {
+    if (value.length > 0) {
+      if (!this.form.end) this.form.end = new Date();
+      this.form.end.setHours(
+        Number(value.substring(0, 2)),
+        Number(value.substring(3, 5))
+      );
+    }
+  }
+
   onSubmit(evt: Event) {
     evt.preventDefault();
-    console.log(JSON.stringify(this.form));
-    this.$store.dispatch("setDay", new WorkingDay(this.form));
+    this.$store.dispatch("setDay", this.form);
   }
 
   onReset(evt: Event) {
     evt.preventDefault();
     // Reset our form values
-    this.form = this.$store.state.workingTime.dayToEdit;
+    this.form.begin = undefined;
+    this.form.end = undefined;
+    this.form.timeOff = undefined;
+    this.form.comment = undefined;
+    this.form.break = false;
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {
