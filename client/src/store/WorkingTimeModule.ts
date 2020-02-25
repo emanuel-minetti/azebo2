@@ -56,17 +56,37 @@ const WorkingTimeModule: Module<any, any> = {
       const year = monthDate.getFullYear().toString();
       const month = monthDate.getMonth() + 1;
       const monthString = month < 10 ? "0" + month : "" + month;
+      const params = year + "/" + monthString;
 
       // TODO review
-      return HolidayService.getHolidays(year)
-        .then(data => {
-          state.holidays = data.result.map((day: any) => new Holiday(day));
-        })
-        .then(() =>
-          WorkingRuleService.getByMonth(year, monthString).then(data => {
-            state.rules = data.result.map((rule: any) => new WorkingRule(rule));
-          })
-        )
+      // return HolidayService.getHolidays(year)
+      //   .then(data => {
+      //     state.holidays = data.result.map((day: any) => new Holiday(day));
+      //   })
+      //   .then(() =>
+      //     WorkingRuleService.getByMonth(params).then(data => {
+      //       state.rules = data.result.map((rule: any) => new WorkingRule(rule));
+      //     })
+      //   )
+      //   .then(() =>
+      //     WorkingTimeService.getMonth(year, monthString).then(data => {
+      //       let workingDays = data.result.map(
+      //         (day: any) => new WorkingDay(day)
+      //       );
+      //       state.month = new WorkingMonth(monthDate, workingDays);
+      //     })
+      //   )
+      //   .then(() =>
+      //     CarryService.getCarryByMonth(year, monthString).then(data => {
+      //       state.carry = new Carry(data.result);
+      //     })
+      //   )
+      //   .then(() => {
+      //     rootState.loading = false;
+      //     return this;
+      //   });
+      dispatch("getHolidays", year)
+        .then(() => dispatch("getWorkingRules", params))
         .then(() =>
           WorkingTimeService.getMonth(year, monthString).then(data => {
             let workingDays = data.result.map(
@@ -84,6 +104,28 @@ const WorkingTimeModule: Module<any, any> = {
           rootState.loading = false;
           return this;
         });
+    },
+
+    getHolidays({ state }, year: string) {
+      if (!state.holidays.length) {
+        return HolidayService.getHolidays(year).then(
+          data =>
+            (state.holidays = data.result.map((day: any) => new Holiday(day)))
+        );
+      }
+      return Promise.resolve(state.holidays);
+    },
+
+    getWorkingRules({ state }, params: string) {
+      if (!state.rules.length) {
+        return WorkingRuleService.getByMonth(params).then(
+          data =>
+            (state.rules = data.result.map(
+              (rule: any) => new WorkingRule(rule)
+            ))
+        );
+      }
+      return Promise.resolve(state.rules);
     },
 
     setDay({ state }, day: WorkingDay) {
