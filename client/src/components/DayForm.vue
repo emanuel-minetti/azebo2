@@ -7,7 +7,6 @@
           id="begin-input"
           type="time"
           v-model="begin"
-          required
           placeholder="Arbeitsbeginn"
           autofocus
         ></b-form-input>
@@ -18,7 +17,6 @@
           id="end-input"
           type="time"
           v-model="end"
-          required
           placeholder="Arbeitsende"
         ></b-form-input>
       </b-form-group>
@@ -59,19 +57,14 @@
 </template>
 
 <script lang="ts">
-import { timesConfig } from "@/configs";
+import { timesConfig, timeOffsConfig } from "@/configs";
 import { Component, Vue } from "vue-property-decorator";
 import { WorkingDay } from "@/models";
 
 @Component
 export default class DayForm extends Vue {
   show = true;
-  // TODO make configurable
-  timeOffOptions = [
-    { text: "Urlaub", value: "urlaub" },
-    { text: "Gleitzeit-Tag", value: "gleitzeit" },
-    { text: "AZV-Tag", value: "azv" }
-  ];
+  timeOffOptions = timeOffsConfig;
 
   get form() {
     return this.$store.state.workingTime.dayToEdit as WorkingDay;
