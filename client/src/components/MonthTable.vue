@@ -12,7 +12,7 @@
       @row-clicked="rowClickHandler"
     />
     <div v-if="formShown" id="lower">
-      <DayForm id="form" v-on:submitted="onSubmitted"/>
+      <DayForm id="form" v-on:submitted="onSubmitted" />
       <b-table
         bordered
         striped
@@ -153,7 +153,7 @@ export default class MonthTable extends Vue {
         this.formShown = true;
       }
       this.dateToEdit = row.date;
-      this.$store.commit("setDay", this.dateToEdit);
+      this.$store.commit("setDayToEdit", this.dateToEdit);
     }
   }
 

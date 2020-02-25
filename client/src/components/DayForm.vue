@@ -45,7 +45,12 @@
       <b-button type="reset" variant="secondary" class="ml-2">
         Zurücksetzen
       </b-button>
-      <b-button type="button" variant="secondary" class="ml-2" v-on:click="onCancel">
+      <b-button
+        type="button"
+        variant="secondary"
+        class="ml-2"
+        v-on:click="onCancel"
+      >
         Abbrechen
       </b-button>
     </fieldset>

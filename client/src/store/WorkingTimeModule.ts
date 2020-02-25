@@ -45,8 +45,7 @@ const WorkingTimeModule: Module<any, any> = {
     }
   },
   mutations: {
-    // TODO rename!
-    setDay(state, date: Date) {
+    setDayToEdit(state, date: Date) {
       state.dayToEdit = state.month.getDayByDate(date);
     }
   },
