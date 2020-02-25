@@ -59,6 +59,7 @@
 </template>
 
 <script lang="ts">
+import { timesConfig } from "@/configs";
 import { Component, Vue } from "vue-property-decorator";
 import { WorkingDay } from "@/models";
 
@@ -104,23 +105,22 @@ export default class DayForm extends Vue {
   }
 
   get compareTimes() {
-    //TODO make configurable
     if (this.begin !== "") {
       let shortBreak = new Date(this.form.begin!.valueOf());
-      shortBreak.setHours(shortBreak.getHours() + 6);
+      shortBreak.setHours(shortBreak.getHours() + timesConfig.breakRequiredFrom);
       let longBreak = new Date(this.form.begin!.valueOf());
-      longBreak.setHours(longBreak.getHours() + 9);
+      longBreak.setHours(longBreak.getHours() + timesConfig.longBreakRequiredFrom);
       let longDay = new Date(this.form.begin!.valueOf());
-      longDay.setHours(longDay.getHours() + 10);
-      let result =
-        "30 Minuten Pause ab: " +
+      longDay.setHours(longDay.getHours() + timesConfig.longDayFrom);
+      let result = timesConfig.breakDuration +
+        " Minuten Pause ab: " +
         shortBreak.toLocaleTimeString("de-DE", {
           hour: "2-digit",
           minute: "2-digit"
         }) +
         "<br />";
-      result +=
-        "45 Minuten Pause ab: " +
+      result += timesConfig.longBreakDuration +
+        " Minuten Pause ab: " +
         longBreak.toLocaleTimeString("de-DE", {
           hour: "2-digit",
           minute: "2-digit"

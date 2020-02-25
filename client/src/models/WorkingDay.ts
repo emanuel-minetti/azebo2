@@ -8,7 +8,7 @@ export default class WorkingDay {
    * The time intervall to subtract for total working time if a break was taken
    */
   private static readonly BREAK_DURATION = Saldo.createFromMillis(
-    timesConfig.breakDuration,
+    timesConfig.breakDuration * 60 * 1000,
     false
   );
 
