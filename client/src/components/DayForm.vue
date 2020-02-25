@@ -107,19 +107,25 @@ export default class DayForm extends Vue {
   get compareTimes() {
     if (this.begin !== "") {
       let shortBreak = new Date(this.form.begin!.valueOf());
-      shortBreak.setHours(shortBreak.getHours() + timesConfig.breakRequiredFrom);
+      shortBreak.setHours(
+        shortBreak.getHours() + timesConfig.breakRequiredFrom
+      );
       let longBreak = new Date(this.form.begin!.valueOf());
-      longBreak.setHours(longBreak.getHours() + timesConfig.longBreakRequiredFrom);
+      longBreak.setHours(
+        longBreak.getHours() + timesConfig.longBreakRequiredFrom
+      );
       let longDay = new Date(this.form.begin!.valueOf());
       longDay.setHours(longDay.getHours() + timesConfig.longDayFrom);
-      let result = timesConfig.breakDuration +
+      let result =
+        timesConfig.breakDuration +
         " Minuten Pause ab: " +
         shortBreak.toLocaleTimeString("de-DE", {
           hour: "2-digit",
           minute: "2-digit"
         }) +
         "<br />";
-      result += timesConfig.longBreakDuration +
+      result +=
+        timesConfig.longBreakDuration +
         " Minuten Pause ab: " +
         longBreak.toLocaleTimeString("de-DE", {
           hour: "2-digit",
