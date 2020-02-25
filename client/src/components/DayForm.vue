@@ -11,6 +11,7 @@
           placeholder="Arbeitsbeginn"
           autofocus
         ></b-form-input>
+        <div v-html="compareTimes"></div>
       </b-form-group>
       <b-form-group label="Arbeitsende:" label-for="end-input">
         <b-form-input
@@ -99,6 +100,40 @@ export default class DayForm extends Vue {
         hour: "2-digit",
         minute: "2-digit"
       });
+    return "";
+  }
+
+  get compareTimes() {
+    //TODO make configurable
+    if (this.begin !== "") {
+      let shortBreak = new Date(this.form.begin!.valueOf());
+      shortBreak.setHours(shortBreak.getHours() + 6);
+      let longBreak = new Date(this.form.begin!.valueOf());
+      longBreak.setHours(longBreak.getHours() + 9);
+      let longDay = new Date(this.form.begin!.valueOf());
+      longDay.setHours(longDay.getHours() + 10);
+      let result =
+        "30 Minuten Pause ab: " +
+        shortBreak.toLocaleTimeString("de-DE", {
+          hour: "2-digit",
+          minute: "2-digit"
+        }) +
+        "<br />";
+      result +=
+        "45 Minuten Pause ab: " +
+        longBreak.toLocaleTimeString("de-DE", {
+          hour: "2-digit",
+          minute: "2-digit"
+        }) +
+        "<br /> ";
+      result +=
+        "10 Stunden erreicht ab: " +
+        longDay.toLocaleTimeString("de-DE", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      return result;
+    }
     return "";
   }
 
