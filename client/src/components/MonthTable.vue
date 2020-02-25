@@ -67,7 +67,7 @@ export default class MonthTable extends Vue {
     return [];
   }
 
-  // specifies the shown columns of th table
+  // specifies the shown columns of the table
   get fields() {
     return [
       {
