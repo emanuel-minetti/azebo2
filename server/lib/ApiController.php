@@ -10,12 +10,29 @@
 
 namespace AzeboLib;
 
+use Laminas\Http\Request;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 
 class ApiController extends AbstractActionController
 {
+    /**
+     * @var Request
+     */
+    protected $httpRequest;
+    /**
+     * @var Response
+     */
+    protected $httpResponse;
+
+    protected function prepare()
+    {
+        $this->httpRequest = Request::fromString($this->request);
+        $this->httpResponse = Response::fromString($this->response);
+    }
+
     protected function processResult($result, $userId) {
         // refresh jwt ...
         $expire = time() + AuthorizationService::EXPIRE_TIME;

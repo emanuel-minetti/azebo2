@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
 /**
  * azebo2 is an application to print working time tables
  *
@@ -10,12 +11,9 @@
 
 namespace WorkingTime\Controller;
 
-use DateTime;
-
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-
 use AzeboLib\ApiController;
+use DateInterval;
+use DateTime;
 use Service\AuthorizationService;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
@@ -29,16 +27,14 @@ class WorkingTimeController extends ApiController
         $this->table = $table;
     }
 
-    /** @noinspection PhpUnused */
     public function monthAction()
     {
-        $yearId = $this->params('year');
-        $monthId = $this->params('month');
-        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearId-$monthId-01");
-        $request = Request::fromString($this->request);
-        $response = Response::fromString($this->response);
-        if (AuthorizationService::authorize($request, $response, ['GET',])) {
-            $userId = $request->getQuery()->user_id;
+        $this->prepare();
+        $yearParam = $this->params('year');
+        $monthParam = $this->params('month');
+        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['GET',])) {
+            $userId = $this->httpRequest->getQuery()->user_id;
             $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
             $resultArray = [];
             foreach ($arrayOfWorkingDays as $element) {
@@ -46,8 +42,43 @@ class WorkingTimeController extends ApiController
             }
             return $this->processResult($resultArray, $userId);
         } else {
-            // `response` was set in the call to `AuthorizationService::authorize`
-            return $response;
+            // `httpResponse` was set in the call to `AuthorizationService::authorize`
+            return $this->httpResponse;
+        }
+    }
+
+    public function setDayAction()
+    {
+        $this->prepare();
+        $post = json_decode($this->httpRequest->getContent());
+
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
+            $userId = $this->httpRequest->getQuery()->user_id;
+            $id = $post->_id;
+            $oneHour = new DateInterval('PT1H');
+            if ($id != 0) {
+                $day = $this->table->find($id);
+            } else {
+                $day = new WorkingDay();
+                $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
+                $day->date->add($oneHour);
+                $day->userId = $userId;
+            }
+            if (isset($day->begin)) {
+                $day->begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_begin);
+                $day->begin->add($oneHour);
+            }
+            if (isset($day->end)) {
+                $day->end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
+                $day->end->add($oneHour);
+            }
+            $day->timeOff = $post->_timeOff;
+            $day->comment = $post->_comment;
+            $this->table->upsert($day);
+            return $this->processResult([$post], $userId);
+        } else {
+            // `httpResponse` was set in the call to `AuthorizationService::authorize`
+            return $this->httpResponse;
         }
     }
 }

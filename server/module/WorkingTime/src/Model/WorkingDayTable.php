@@ -47,4 +47,13 @@ class WorkingDayTable
         }
         return $result;
     }
+
+    public function upsert(WorkingDay $day) {
+        if ($day->id == 0) {
+            unset($day->id);
+            $this->tableGateway->insert($day->getArrayCopy());
+        } else {
+            $this->tableGateway->update($day->getArrayCopy(), ['id' => $day->id]);
+        }
+    }
 }

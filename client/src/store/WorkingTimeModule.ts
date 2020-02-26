@@ -19,7 +19,8 @@ const WorkingTimeModule: Module<any, any> = {
     month: WorkingMonth,
     holidays: Array<Holiday>(),
     rules: Array<WorkingRule>(),
-    carry: Carry
+    carry: Carry,
+    dayToEdit: WorkingDay
   },
   getters: {
     saldo(state) {
@@ -43,6 +44,11 @@ const WorkingTimeModule: Module<any, any> = {
       return "";
     }
   },
+  mutations: {
+    setDayToEdit(state, date: Date) {
+      state.dayToEdit = state.month.getDayByDate(date);
+    }
+  },
   actions: {
     getMonth({ commit, dispatch, state, rootState }, monthDate: Date) {
       rootState.loading = true;
@@ -50,18 +56,20 @@ const WorkingTimeModule: Module<any, any> = {
       const year = monthDate.getFullYear().toString();
       const month = monthDate.getMonth() + 1;
       const monthString = month < 10 ? "0" + month : "" + month;
+      const params = year + "/" + monthString;
 
+      // TODO review (see Issue #28)
       return HolidayService.getHolidays(year)
         .then(data => {
           state.holidays = data.result.map((day: any) => new Holiday(day));
         })
         .then(() =>
-          WorkingRuleService.getByMonth(year, monthString).then(data => {
+          WorkingRuleService.getByMonth(params).then(data => {
             state.rules = data.result.map((rule: any) => new WorkingRule(rule));
           })
         )
         .then(() =>
-          WorkingTimeService.getMonth(year, monthString).then(data => {
+          WorkingTimeService.getMonth(params).then(data => {
             let workingDays = data.result.map(
               (day: any) => new WorkingDay(day)
             );
@@ -69,7 +77,7 @@ const WorkingTimeModule: Module<any, any> = {
           })
         )
         .then(() =>
-          CarryService.getCarryByMonth(year, monthString).then(data => {
+          CarryService.getCarryByMonth(params).then(data => {
             state.carry = new Carry(data.result);
           })
         )
@@ -77,6 +85,55 @@ const WorkingTimeModule: Module<any, any> = {
           rootState.loading = false;
           return this;
         });
+      //   dispatch("getHolidays", year)
+      //     .then(() => dispatch("getWorkingRules", params))
+      //     .then(() =>
+      //       WorkingTimeService.getMonth(params).then(data => {
+      //         let workingDays = data.result.map(
+      //           (day: any) => new WorkingDay(day)
+      //         );
+      //         state.month = new WorkingMonth(monthDate, workingDays);
+      //       })
+      //     )
+      //     .then(() =>
+      //       CarryService.getCarryByMonth(year, monthString).then(data => {
+      //         state.carry = new Carry(data.result);
+      //       })
+      //     )
+      //     .then(() => {
+      //       rootState.loading = false;
+      //       return this;
+      //     });
+      // },
+      //
+      // getHolidays({ state }, year: string) {
+      //   if (!state.holidays.length) {
+      //     return HolidayService.getHolidays(year).then(
+      //       data =>
+      //         (state.holidays = data.result.map((day: any) => new Holiday(day)))
+      //     );
+      //   }
+      //   return Promise.resolve(state.holidays);
+      // },
+      //
+      // getWorkingRules({ state }, params: string) {
+      //   if (!state.rules.length) {
+      //     return WorkingRuleService.getByMonth(params).then(
+      //       data =>
+      //         (state.rules = data.result.map(
+      //           (rule: any) => new WorkingRule(rule)
+      //         ))
+      //     );
+      //   }
+      //   return Promise.resolve(state.rules);
+      // },
+      //
+      // getWorkingDays({ state }, params) {
+      //
+    },
+
+    setDay({ state }, day: WorkingDay) {
+      return WorkingTimeService.setDay(day).then(() => {});
     }
   }
 };

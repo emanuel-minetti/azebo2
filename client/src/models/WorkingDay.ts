@@ -1,5 +1,5 @@
 import { Holiday, Saldo, WorkingRule } from "@/models";
-import { timesConfig } from "@/configs";
+import { timeOffsConfig, timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
 
@@ -8,7 +8,7 @@ export default class WorkingDay {
    * The time intervall to subtract for total working time if a break was taken
    */
   private static readonly BREAK_DURATION = Saldo.createFromMillis(
-    timesConfig.breakDuration,
+    timesConfig.breakDuration * 60 * 1000,
     false
   );
 
@@ -35,7 +35,7 @@ export default class WorkingDay {
       data.break != undefined &&
       data.afternoon != undefined
     ) {
-      this._id = data.id;
+      this._id = data.id ? data.id : 0;
 
       this._date = FormatterService.convertToDate(data.date);
 
@@ -127,8 +127,10 @@ export default class WorkingDay {
   set begin(value: Date | undefined) {
     if (value) {
       this._begin = value;
-      this._edited = true;
+    } else {
+      this._begin = undefined;
     }
+    this._edited = true;
   }
 
   get end(): Date | undefined {
@@ -138,28 +140,29 @@ export default class WorkingDay {
   set end(value: Date | undefined) {
     if (value) {
       this._end = value;
-      this._edited = true;
+    } else {
+      this._end = undefined;
     }
+    this._edited = true;
   }
 
   get timeOff(): string | undefined {
-    switch (this._timeOff) {
-      case "urlaub":
-        return "Urlaub";
-      case "AZV":
-        return "AZV";
-      case "krankheit":
-        return "Krankheit";
-      default:
-        return undefined;
+    let foundTimeOff = timeOffsConfig.filter(
+      entry => entry.value == this._timeOff
+    );
+    if (foundTimeOff.length) {
+      return foundTimeOff[0].text;
     }
+    return "";
   }
 
   set timeOff(value: string | undefined) {
     if (value) {
       this._timeOff = value;
-      this._edited = true;
+    } else {
+      this._timeOff = undefined;
     }
+    this._edited = true;
   }
 
   get comment(): string | undefined {
@@ -169,8 +172,10 @@ export default class WorkingDay {
   set comment(value: string | undefined) {
     if (value) {
       this._comment = value;
-      this._edited = true;
+    } else {
+      this._comment = undefined;
     }
+    this._edited = true;
   }
 
   get break(): boolean {
@@ -274,6 +279,10 @@ export default class WorkingDay {
       }
     }
     return undefined;
+  }
+
+  get id(): number {
+    return this._id;
   }
 
   /**

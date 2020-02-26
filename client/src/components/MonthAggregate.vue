@@ -68,7 +68,6 @@ export default class MonthAggregate extends Vue {
   }
 
   get items() {
-    // TODO discriminate closed and unclosed month
     return [
       {
         key: "Saldo",

@@ -4,28 +4,70 @@
       bordered
       striped
       hover
-      :items="monthData.days"
+      :items="upperDays"
       primary-key="date"
       :fields="fields"
       :tbody-tr-class="rowClass"
       thead-class="sticky"
+      @row-clicked="rowClickHandler"
     />
+    <div v-if="formShown" id="lower">
+      <DayForm id="form" v-on:submitted="onSubmitted" />
+      <b-table
+        bordered
+        striped
+        hover
+        :items="lowerDays"
+        primary-key="date"
+        :fields="fields"
+        :tbody-tr-class="rowClass"
+        thead-class="sticky"
+        @row-clicked="rowClickHandler"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { FormatterService } from "@/services";
-import { WorkingDay, WorkingMonth } from "@/models";
+import { WorkingDay } from "@/models";
+import DayForm from "@/components/DayForm.vue";
 
-@Component
+@Component({
+  components: {
+    DayForm
+  }
+})
 export default class MonthTable extends Vue {
-  // `monthData` is being used in the items property of the table
-  get monthData(): WorkingMonth {
-    return this.$store.state.workingTime.month;
+  formShown = false;
+  dateToEdit = null as null | Date;
+
+  get upperDays(): WorkingDay[] {
+    if (this.$store.state.workingTime.month.days) {
+      let upperDays = this.$store.state.workingTime.month.days.slice();
+      if (this.formShown) {
+        upperDays = upperDays.filter(
+          (day: WorkingDay) => day.date.valueOf() < this.dateToEdit!.valueOf()
+        );
+      }
+      return upperDays;
+    }
+    return [];
   }
 
-  // specifies the shown columns of th table
+  get lowerDays(): WorkingDay[] {
+    if (this.$store.state.workingTime.month.days && this.formShown) {
+      let lowerDays = this.$store.state.workingTime.month.days.slice();
+      lowerDays = lowerDays.filter(
+        (day: WorkingDay) => day.date.valueOf() > this.dateToEdit!.valueOf()
+      );
+      return lowerDays;
+    }
+    return [];
+  }
+
+  // specifies the shown columns of the table
   get fields() {
     return [
       {
@@ -83,6 +125,10 @@ export default class MonthTable extends Vue {
     ];
   }
 
+  get finalized() {
+    return this.$store.state.workingTime.carry.finalized;
+  }
+
   // adds a class for non working days
   rowClass(day: WorkingDay, type: string) {
     if (!day || type !== "row") return;
@@ -100,6 +146,20 @@ export default class MonthTable extends Vue {
     if (day && !day.hasWorkingTime) return "";
     return hasBreak ? "Ja" : "Nein";
   }
+
+  rowClickHandler(row: any) {
+    if (!this.finalized) {
+      if (!this.formShown) {
+        this.formShown = true;
+      }
+      this.dateToEdit = row.date;
+      this.$store.commit("setDayToEdit", this.dateToEdit);
+    }
+  }
+
+  onSubmitted() {
+    this.formShown = false;
+  }
 }
 </script>
 
@@ -115,7 +175,7 @@ div {
   vertical-align: middle;
 }
 
-/deep/ .sticky  th{
+/deep/ .sticky th {
   position: sticky;
   top: 0;
   background-color: white;
@@ -132,5 +192,10 @@ div {
 
 /deep/ .saldo {
   border-left: 2px solid #211e1e;
+}
+
+#lower {
+  width: 100%;
+  margin: 0;
 }
 </style>

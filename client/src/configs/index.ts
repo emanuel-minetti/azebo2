@@ -1,3 +1,4 @@
-import timesConfig from "@/configs/times.local";
+import timesConfig from "./times.local";
+import timeOffsConfig from "./timeOffs.local";
 
-export { timesConfig };
+export { timesConfig, timeOffsConfig };
