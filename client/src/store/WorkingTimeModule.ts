@@ -58,7 +58,7 @@ const WorkingTimeModule: Module<any, any> = {
       const monthString = month < 10 ? "0" + month : "" + month;
       const params = year + "/" + monthString;
 
-      // TODO review
+      // TODO review (see Issue #28)
       return HolidayService.getHolidays(year)
         .then(data => {
           state.holidays = data.result.map((day: any) => new Holiday(day));
