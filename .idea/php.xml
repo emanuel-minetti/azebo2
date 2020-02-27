@@ -57,6 +57,26 @@
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-eventmanager" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-escaper" />
       <path value="$PROJECT_DIR$/server/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-http" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-modulemanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-console" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-eventmanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-escaper" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-loader" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-router" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-config" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-servicemanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-mvc" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-json" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-stdlib" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-view" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-validator" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-uri" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-component-installer" />
+      <path value="$PROJECT_DIR$/server/vendor/zfcampus/zf-development-mode" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-dom" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-test" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-db" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
