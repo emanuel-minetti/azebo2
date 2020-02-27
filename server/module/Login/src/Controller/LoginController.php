@@ -15,6 +15,7 @@ use Laminas\Config\Factory;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Login\Model\UserTable;
+use RuntimeException;
 use Service\AuthorizationService;
 
 class LoginController extends AbstractActionController
@@ -49,13 +50,6 @@ class LoginController extends AbstractActionController
             return $declineRequest;
         }
 
-//        // get user from DB
-//        try {
-//            $user = $this->table->getUserByUsername($username);
-//        } catch (RuntimeException $e) {
-//            return $declineRequest;
-//        }
-
         $config = Factory::fromFile('./../server/config/ldap.config.php', true);
         $options = $config->ldap->toArray();
         $baseDn = $options['baseDn'];
@@ -69,24 +63,40 @@ class LoginController extends AbstractActionController
             exec("ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'", $ldif, $val);
         }
         if ($val === 0) {
+            $result['username'] = $username;
             foreach ($ldif as $line) {
                 if (substr($line, 0, 4) === "sn: ") {
-                    $test['nachname'] = substr($line, 4);
+                    $result['nachname'] = substr($line, 4);
                 }
                 if (substr($line, 0, 11) === 'givenName: ') {
-                    $test['vorname'] = substr($line, 11);
+                    $result['vorname'] = substr($line, 11);
+                }
+                if (substr($line, 0, 17) === 'udkDfnAaiStatus: ') {
+                    $result['status'] = substr($line, 17);
                 }
             }
         } else {
-            $test = "Nicht authentifiziert";
-
+            $result = false;
         }
-        var_dump($test);
-        var_dump($val);
-        die();
+        if (strtolower($result['status']) === "false") {
+            $result = false;
+        }
 
-        // authenticate
-        if ($user->verifyPassword($password)) {
+        if (!$result) {
+            return $declineRequest;
+        }
+//        var_dump($result);
+//        die();
+
+        // get user from DB
+        try {
+            $user = $this->table->getUserByUsername($username);
+        } catch (RuntimeException $e) {
+            // TODO Insert new user in db table
+            return $declineRequest;
+        }
+
+        // return response
             unset($user->password_hash);
             $expire = time() + AuthorizationService::EXPIRE_TIME;
             $jwt = AuthorizationService::getJwt($expire, $user->id);
@@ -98,9 +108,6 @@ class LoginController extends AbstractActionController
                     'expire' => $expire,
                 ],
             ]);
-        } else { // not authenticated
-            return $declineRequest;
-        }
     }
 
 }
