@@ -15,9 +15,13 @@
       <nav id="nav">
         <ul>
           <li>
-            <button class="btn btn-primary">
-              <router-link to="about">Einstellungen</router-link>
-            </button>
+            <b-button
+              variant="primary"
+              router-tag="button"
+              :to="{ name: 'about' }"
+            >
+              Einstellungen
+            </b-button>
           </li>
           <li>
             <b-dropdown text="Monate" variant="primary" v-on:hide="cancelHide">
