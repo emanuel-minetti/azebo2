@@ -34,6 +34,7 @@ export default class Home extends Vue {
   }
   @Watch("$route")
   routeChanged(to: Route) {
+    this.error = "";
     let month = new Date();
     if (to.name === "month") {
       month.setMonth(Number(to.params.month) - 1);
@@ -45,6 +46,8 @@ export default class Home extends Vue {
       this.error =
         "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
         reason;
+      this.$store.commit("cancelLoading");
+      //console.log("Angekommen");
     });
   }
   //noinspection JSUnusedGlobalSymbols
