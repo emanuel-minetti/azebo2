@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Title v-bind:prop-title="test" />
+    <Title v-bind:prop-title="title" />
   </div>
 </template>
 <script lang="ts">
@@ -12,7 +12,7 @@ import { Title } from "@/components";
     Title
   }
 })
-export default class About extends Vue {
-  test = "hallo";
+export default class Settings extends Vue {
+  title = "Einstellungen";
 }
 </script>

@@ -26,7 +26,7 @@ const routes = [
     path: "/about",
     name: "about",
     component: () =>
-      import(/* webpackChunkName: "about"  */ "../views/About.vue")
+      import(/* webpackChunkName: "settings"  */ "../views/Settings.vue")
   },
   {
     // route all other request to a 404 page
