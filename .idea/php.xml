@@ -8,33 +8,24 @@
       <path value="$PROJECT_DIR$/server/vendor/composer" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-component-installer" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-development-mode" />
-      <path value="$PROJECT_DIR$/server/vendor/sebastian/object-enumerator" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/global-state" />
-      <path value="$PROJECT_DIR$/server/vendor/sebastian/object-reflector" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/exporter" />
       <path value="$PROJECT_DIR$/server/vendor/firebase/php-jwt" />
       <path value="$PROJECT_DIR$/server/vendor/doctrine/instantiator" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/recursion-context" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/server/vendor/sebastian/type" />
-      <path value="$PROJECT_DIR$/server/vendor/sebastian/code-unit-reverse-lookup" />
       <path value="$PROJECT_DIR$/server/vendor/phpdocumentor/type-resolver" />
       <path value="$PROJECT_DIR$/server/vendor/webmozart/assert" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/comparator" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/server/vendor/sebastian/resource-operations" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/server/vendor/phar-io/version" />
-      <path value="$PROJECT_DIR$/server/vendor/myclabs/deep-copy" />
       <path value="$PROJECT_DIR$/server/vendor/phpspec/prophecy" />
-      <path value="$PROJECT_DIR$/server/vendor/phar-io/manifest" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-stdlib" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-servicemanager" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-config" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-console" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/php-code-coverage" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/php-text-template" />
-      <path value="$PROJECT_DIR$/server/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/phpunit" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/php-token-stream" />
@@ -57,6 +48,8 @@
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-eventmanager" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-escaper" />
       <path value="$PROJECT_DIR$/server/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/server/vendor/phpunit/phpunit-mock-objects" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/yaml" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
