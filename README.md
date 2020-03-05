@@ -12,7 +12,7 @@ It is a brand new project just starting, so there is currently no proper documen
 Please see also the documentation for
 [azebo](https://github.com/emanuel-minetti/azebo).
 
-##Installation
+## Installation
 Installation of azebo2 is described for a fresh CentOS 7.4 Installation.
 It should be easy to transfer these instructions to other Linux distributions.
 
