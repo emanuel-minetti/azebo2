@@ -17,10 +17,9 @@ const UserModule: Module<any, any> = {
       return LoginService.login(
         credentials.username,
         credentials.password
-      ).then(data => state.user = new User(data.user));
-    },
-  },
-}
-;
+      ).then(data => (state.user = new User(data.user)));
+    }
+  }
+};
 
 export default UserModule;
