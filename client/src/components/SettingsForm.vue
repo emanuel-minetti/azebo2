@@ -1,14 +1,13 @@
 <template>
   <b-form>
     <b-form-group label="Arbeitszeit:">
-      <b-form-radio-group>
-        <b-form-radio value="proportional">
-          Vollzeit / Anteilige Wochenarbeitzeit
-        </b-form-radio>
-        <b-form-radio value="absolute">
-          Feste Wochenarbeitszeit
-        </b-form-radio>
+      <b-form-radio-group
+      :options="workingTimeOptions"
+      v-model="relative">
       </b-form-radio-group>
+      <div v-if="relative">
+        hallo
+      </div>
     </b-form-group>
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
       <!--TODO introduce component for saldo -->
@@ -21,7 +20,20 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class SettingsForm extends Vue {}
+export default class SettingsForm extends Vue {
+  relative = true;
+
+  workingTimeOptions = [
+    {text: "Vollzeit / anteilige Arbeitszeit" , value: true},
+    {text: "Feste Wochenarbeitszeit" , value: false}
+  ];
+
+  onRelationalEntered(evt: Event) {
+    console.log("Haloo");
+    console.log(evt);
+  }
+}
+
 </script>
 
 <style scoped>
@@ -31,7 +43,7 @@ form {
   margin-right: 35%;
 }
 
->>> label {
+>>> label, >>> legend {
   font-size: large;
   font-weight: bold;
 }
