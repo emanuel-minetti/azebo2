@@ -25,11 +25,6 @@ export default class SettingsForm extends Vue {
     { text: "Vollzeit / anteilige Arbeitszeit", value: true },
     { text: "Feste Wochenarbeitszeit", value: false }
   ];
-
-  onRelationalEntered(evt: Event) {
-    console.log("Haloo");
-    console.log(evt);
-  }
 }
 </script>
 
