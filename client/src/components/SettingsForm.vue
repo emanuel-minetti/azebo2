@@ -1,9 +1,7 @@
 <template>
   <b-form>
     <b-form-group label="Arbeitszeit:">
-      <b-form-radio-group
-      :options="workingTimeOptions"
-      v-model="relative">
+      <b-form-radio-group :options="workingTimeOptions" v-model="relative">
       </b-form-radio-group>
       <div v-if="relative">
         hallo
@@ -24,8 +22,8 @@ export default class SettingsForm extends Vue {
   relative = true;
 
   workingTimeOptions = [
-    {text: "Vollzeit / anteilige Arbeitszeit" , value: true},
-    {text: "Feste Wochenarbeitszeit" , value: false}
+    { text: "Vollzeit / anteilige Arbeitszeit", value: true },
+    { text: "Feste Wochenarbeitszeit", value: false }
   ];
 
   onRelationalEntered(evt: Event) {
@@ -33,7 +31,6 @@ export default class SettingsForm extends Vue {
     console.log(evt);
   }
 }
-
 </script>
 
 <style scoped>
@@ -43,7 +40,8 @@ form {
   margin-right: 35%;
 }
 
->>> label, >>> legend {
+>>> label,
+>>> legend {
   font-size: large;
   font-weight: bold;
 }
