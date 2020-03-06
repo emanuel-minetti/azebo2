@@ -13,15 +13,14 @@ const UserModule: Module<any, any> = {
     }
   },
   actions: {
-    login({ commit }, credentials) {
+    login({ state }, credentials) {
       return LoginService.login(
         credentials.username,
         credentials.password
-      ).then(data => {
-        commit("setUser", new User(data.user));
-      });
-    }
-  }
-};
+      ).then(data => state.user = new User(data.user));
+    },
+  },
+}
+;
 
 export default UserModule;
