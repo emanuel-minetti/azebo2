@@ -5,9 +5,9 @@
       </b-form-radio-group>
       <div v-if="relative">
         <b-form-group label="Anteil an der Wochenarbeitszeit">
-          <b-form-input type="range" min="0" max="100" v-model="percentage">
+          <!-- TODO insert tab -->
+          <b-form-input type="number" min="0" max="100" v-model="percentage">
           </b-form-input>
-          Anteil: {{ percentage }}
         </b-form-group>
       </div>
     </b-form-group>
