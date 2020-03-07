@@ -4,7 +4,11 @@
       <b-form-radio-group :options="workingTimeOptions" v-model="relative">
       </b-form-radio-group>
       <div v-if="relative">
-        hallo
+        <b-form-group label="Anteil an der Wochenarbeitszeit">
+          <b-form-input type="range" min="0" max="100" v-model="percentage">
+          </b-form-input>
+          Anteil: {{ percentage }}h
+        </b-form-group>
       </div>
     </b-form-group>
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
@@ -20,6 +24,7 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class SettingsForm extends Vue {
   relative = true;
+  percentage = 100;
 
   workingTimeOptions = [
     { text: "Vollzeit / anteilige Arbeitszeit", value: true },
