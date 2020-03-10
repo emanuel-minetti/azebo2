@@ -8,13 +8,14 @@
  * @license   https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  */
 
- // German legal bank holidays are used per default. (See `module/Holiday/Controller/HolidayController`)
+ // German (i.e. Berlin) legal bank holidays are used per default.
+ // (See `module/Holiday/Controller/HolidayController`)
  // Copy this file to `holiday.config.php` and fill in your settings
  // If a holiday happens regularly every year just omit the `year` entry.
 
 return [
     [
-        // Extraordinary holiday 75 years after WWII german kapitulation
+        // Extraordinary holiday 75 years after WWII german capitulation
         'day' => 8,
         'month' => 5,
         'year' => 2020,
