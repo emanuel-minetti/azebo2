@@ -40,19 +40,6 @@ class HolidayController extends ApiController
             }
             $userId = $request->getQuery()->user_id;
             return $this->processResult($holidays, $userId);
-//            // refresh jwt ...
-//            $userId = $request->getQuery()->user_id;
-//            $expire = time() + AuthorizationService::EXPIRE_TIME;
-//            $jwt = AuthorizationService::getJwt($expire, $userId);
-//            // ... and return response
-//            return new JsonModel([
-//                'success' => true,
-//                'data' => [
-//                    'jwt' => $jwt,
-//                    'expire' => $expire,
-//                    'holidays' => $holidays,
-//                ],
-//            ]);
         } else {
             // `response` was set in the call to `AuthorizationService::authorize`
             return $response;
