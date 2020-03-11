@@ -1,34 +1,51 @@
 <template>
   <b-form>
+    <!--TODO Should only be shown to new users (See #30)-->
+    <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
+      <b-form-input id="carry-over-input" type="time"></b-form-input>
+    </b-form-group>
     <b-form-group label="Arbeitszeit:">
-      <b-form-radio-group :options="workingTimeOptions" v-model="relative">
+      <b-form-radio-group
+        :options="workingTimeOptions"
+        v-model="workingTimeMode"
+      >
       </b-form-radio-group>
-      <div v-if="relative">
+      <div v-if="workingTimeMode === 'relative'">
         <b-form-group label="Anteil an der Wochenarbeitszeit">
-          <!-- TODO insert tab -->
+          <!-- TODO insert tab-index -->
           <b-form-input type="number" min="0" max="100" v-model="percentage">
           </b-form-input>
         </b-form-group>
       </div>
-    </b-form-group>
-    <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
-      <!--TODO introduce component for saldo -->
-      <b-form-input id="carry-over-input" type="time"></b-form-input>
+      <div v-if="workingTimeMode === 'fixed'">
+        <b-form-group label="Wochenarbeitszeit in Stunden und Minuten ">
+          <!-- TODO insert tab-index -->
+          <SaldoInput :prop-value="fixed.toString()" />
+        </b-form-group>
+      </div>
     </b-form-group>
   </b-form>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import SaldoInput from "@/components/SaldoInput.vue";
+import { Saldo } from "@/models";
 
-@Component
+@Component({
+  components: {
+    SaldoInput
+  }
+})
 export default class SettingsForm extends Vue {
-  relative = true;
+  workingTimeMode = "full";
   percentage = 100;
+  fixed = Saldo.createFromMillis(0);
 
   workingTimeOptions = [
-    { text: "Vollzeit / anteilige Arbeitszeit", value: true },
-    { text: "Feste Wochenarbeitszeit", value: false }
+    { text: "Vollzeit", value: "full" },
+    { text: "Anteilige Arbeitszeit", value: "relative" },
+    { text: "Feste Arbeitszeit", value: "fixed" }
   ];
 }
 </script>
