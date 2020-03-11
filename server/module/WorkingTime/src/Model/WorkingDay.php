@@ -86,7 +86,7 @@ class WorkingDay extends ArrayObject
     public function getArrayCopy()
     {
         return [
-            'id' => $this->id,
+            'id' => isset($this->id) ? $this->id : null,
             'user_id' => $this->userId,
             'date' => $this->date->format(self::DATE_FORMAT),
             'begin' => $this->begin ? $this->begin->format(self::TIME_FORMAT) : null,

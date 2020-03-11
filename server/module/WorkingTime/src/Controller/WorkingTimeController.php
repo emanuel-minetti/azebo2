@@ -63,19 +63,20 @@ class WorkingTimeController extends ApiController
                 $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
                 $day->date->add($oneHour);
                 $day->userId = $userId;
+                $day->id = 0;
             }
-            if (isset($day->begin)) {
+            if (isset($post->_begin)) {
                 $day->begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_begin);
                 $day->begin->add($oneHour);
             }
-            if (isset($day->end)) {
+            if (isset($post->_end)) {
                 $day->end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
                 $day->end->add($oneHour);
             }
-            $day->timeOff = $post->_timeOff;
-            $day->comment = $post->_comment;
+            $day->timeOff = isset($post->_timeOff) ? $post->_timeOff : null;
+            $day->comment = isset($post->_comment) ? $post->_comment : null;
             $this->table->upsert($day);
-            return $this->processResult([$post], $userId);
+            return $this->processResult($day->getArrayCopy(), $userId);
         } else {
             // `httpResponse` was set in the call to `AuthorizationService::authorize`
             return $this->httpResponse;
