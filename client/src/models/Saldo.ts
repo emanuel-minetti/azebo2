@@ -4,11 +4,11 @@ export default class Saldo {
   private _positive: boolean;
 
   /**
-   * The private constructor.
+   * The constructor.
    * @param millis a time intervall in milliseconds
    * @param positive whether the intervall should be added or subtracted
    */
-  private constructor(millis?: number, positive = true) {
+  public constructor(millis?: number, positive = true) {
     if (millis === undefined) {
       this._hours = 0;
       this._minutes = 0;
