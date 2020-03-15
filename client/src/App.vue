@@ -3,7 +3,7 @@
     <header>
       <div id="logo">
         <router-link to="/">
-          <img src="./assets/UdK-Logo_lang.jpg" alt="Das Logo der UdK" />
+          <img src="./assets/Universitaet_der_Kuenste_Berlin_4c_transparenz.png" alt="Das Logo der UdK" />
         </router-link>
       </div>
       <div id="site-title">
@@ -263,7 +263,8 @@ export default class App extends Vue {
   text-align: center;
 
   img {
-    height: 10em;
+    height: 3rem;
+    margin-top: 32px;
   }
 }
 
