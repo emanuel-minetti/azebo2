@@ -2,7 +2,7 @@
   <b-form>
     <!--TODO Should only be shown to new users (See #30)-->
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
-      <b-form-input id="carry-over-input" type="time"></b-form-input>
+      <SaldoInput :prop-saldo.sync="carryOver" :prop-sign="true" />
     </b-form-group>
     <b-form-group label="Arbeitszeit:">
       <b-form-radio-group
@@ -20,7 +20,7 @@
       <div v-if="workingTimeMode === 'fixed'">
         <b-form-group label="Wochenarbeitszeit in Stunden und Minuten ">
           <!-- TODO insert tab-index -->
-          <SaldoInput :prop-value="fixed" />
+          <SaldoInput :prop-saldo.sync="fixed" :prop-sign="false" />
         </b-form-group>
       </div>
     </b-form-group>
@@ -41,6 +41,7 @@ export default class SettingsForm extends Vue {
   workingTimeMode = "full";
   percentage = 100;
   // TODO Get Saldo from server!
+  carryOver = Saldo.createFromMillis(1000000);
   fixed = Saldo.createFromMillis(1000000);
 
   workingTimeOptions = [

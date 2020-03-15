@@ -114,13 +114,21 @@ export default class Saldo {
   /**
    * Returns a nicely formatted string representation of a saldo.
    */
-  toString(): string {
+  toString(withSign = true): string {
     if (this._hours === 0 && this._minutes === 0) return "0:00";
-    let result = this._positive ? "+" : "-";
+    let result = withSign ? (this._positive ? "+" : "-") : "";
     result += this._hours + ":";
     result += this._minutes < 10 ? "0" : "";
     result += this._minutes;
     return result;
+  }
+
+  get hours(): number {
+    return this._hours;
+  }
+
+  get minutes(): number {
+    return this._minutes;
   }
 
   /**
