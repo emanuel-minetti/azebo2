@@ -40,4 +40,9 @@ class UserTable
         }
         return $row;
     }
+
+    public function insert(User $user)
+    {
+        $this->tableGateway->insert($user->getArrayCopy());
+    }
 }

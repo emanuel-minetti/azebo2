@@ -10,10 +10,14 @@
 
 namespace Login;
 
+use Carry\Model\Carry;
+use Carry\Model\CarryTable;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\ServiceManager\ServiceManager;
+use Login\Controller\LoginController;
+use Login\Model\UserTable;
 
 class Module
 {
@@ -26,12 +30,19 @@ class Module
     {
         return [
             'factories' => [
-                Model\UserTable::class => function (ServiceManager $container) {
+                UserTable::class => function(ServiceManager $container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Model\User());
                     $tableGateway = new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
-                    return new Model\UserTable($tableGateway);
+                    return new UserTable($tableGateway);
+                },
+                CarryTable::class => function(ServiceManager $container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Carry());
+                    $tableGateway = new TableGateway('carry', $dbAdapter, null, $resultSetPrototype);
+                    return new CarryTable($tableGateway);
                 },
             ],
         ];
@@ -41,9 +52,9 @@ class Module
     {
         return [
             'factories' => [
-                Controller\LoginController::class => function (ServiceManager $container) {
-                    return new Controller\LoginController(
-                        $container->get(Model\UserTable::class)
+                LoginController::class => function(ServiceManager $container) {
+                    return new LoginController(
+                        $container->get(UserTable::class), $container->get(CarryTable::class)
                     );
                 }
             ],
