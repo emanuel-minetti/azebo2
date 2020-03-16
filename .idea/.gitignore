@@ -6,3 +6,6 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 /shelf/
+/deployment.xml
+/terminal.xml
+/webServers.xml
