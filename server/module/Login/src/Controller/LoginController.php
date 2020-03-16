@@ -54,57 +54,76 @@ class LoginController extends ApiController
             return $declineRequest;
         }
 
+        $username = mb_strtolower($username);
+
         $config = Factory::fromFile('./../server/config/ldap.config.php', true);
-        $options = $config->ldap->toArray();
-        $baseDn = $options['baseDn'];
-        $host = $options['host'];
-        $internBaseDn = "ou=intra,$baseDn";
-        $externBaseDn = "ou=people,$baseDn";
-        $internDn = "uid=$username,$internBaseDn";
-        $externDn = "uid=$username,$externBaseDn";
-        exec("ldapsearch -h $host -D '$internDn' -w $password -Z -b '$internDn'", $ldif, $val);
-        if ($val !== 0) {
-            exec("ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'", $ldif, $val);
-        }
-        if ($val === 0) {
-            $result['username'] = $username;
-            foreach ($ldif as $line) {
-                if (substr($line, 0, 4) === "sn: ") {
-                    $result['name'] = substr($line, 4);
+        $useLdap = $config->useLdap;
+
+        if ($useLdap) {
+            // authenticate via LDAP
+            $options = $config->ldap->toArray();
+            $baseDn = $options['baseDn'];
+            $host = $options['host'];
+            $internBaseDn = "ou=intra,$baseDn";
+            $externBaseDn = "ou=people,$baseDn";
+            $internDn = "uid=$username,$internBaseDn";
+            $externDn = "uid=$username,$externBaseDn";
+            exec("ldapsearch -h $host -D '$internDn' -w $password -Z -b '$internDn'", $ldif, $val);
+            if ($val !== 0) {
+                exec("ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'", $ldif, $val);
+            }
+            if ($val === 0) {
+                $result['username'] = $username;
+                foreach ($ldif as $line) {
+                    if (substr($line, 0, 4) === "sn: ") {
+                        $result['name'] = substr($line, 4);
+                    }
+                    if (substr($line, 0, 11) === 'givenName: ') {
+                        $result['given_name'] = substr($line, 11);
+                    }
+                    if (substr($line, 0, 17) === 'udkDfnAaiStatus: ') {
+                        $result['status'] = substr($line, 17);
+                    }
                 }
-                if (substr($line, 0, 11) === 'givenName: ') {
-                    $result['given_name'] = substr($line, 11);
-                }
-                if (substr($line, 0, 17) === 'udkDfnAaiStatus: ') {
-                    $result['status'] = substr($line, 17);
-                }
+            } else {
+                $result = false;
+            }
+            if (strtolower($result['status']) === "false") {
+                $result = false;
+            }
+
+            if (!$result) {
+                return $declineRequest;
+            }
+
+            // get user from DB ...
+            try {
+                $user = $this->userTable->getUserByUsername($username);
+            } catch (RuntimeException $e) {
+                // ... or insert new user in tables `user` and `carry`
+                $user = new User();
+                $user->exchangeArray($result);
+                $this->userTable->insert($user);
+                $user = $this->userTable->getUserByUsername($username);
+                $this->carryTable->insert($user);
             }
         } else {
-            $result = false;
-        }
-        if (strtolower($result['status']) === "false") {
-            $result = false;
-        }
+            // authenticate via DB table
+            // get user from DB
+            try {
+                $user = $this->userTable->getUserByUsername($username);
+            } catch (RuntimeException $e) {
+                return $declineRequest;
+            }
 
-        if (!$result) {
-            return $declineRequest;
+            // authenticate
+            if (!$user->verifyPassword($password)) {
+                // not authenticated
+                return $declineRequest;
+            }
+            unset($user->password_hash);
         }
-
-        // get user from DB ...
-        try {
-            $user = $this->userTable->getUserByUsername($username);
-        } catch (RuntimeException $e) {
-            // ... or insert new user in tables `user` and `carry`
-            $user = new User();
-            $user->exchangeArray($result);
-            $this->userTable->insert($user);
-            $user = $this->userTable->getUserByUsername($username);
-            $this->carryTable->insert($user);
-        }
-
         // return response
-        unset($user->password_hash);
         return $this->processResult($user->getArrayCopy(), $user->id);
     }
-
 }
