@@ -10,5 +10,4 @@ create table user
     given_name    varchar(20) not null,
     constraint user_username_uindex
         unique (username)
-)
-    charset = utf8;
+);
