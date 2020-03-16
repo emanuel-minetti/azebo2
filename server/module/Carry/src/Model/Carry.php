@@ -71,7 +71,7 @@ class Carry extends ArrayObject
         return [
             'id' => $this->id,
             'user_id' => $this->userId,
-            'year' => $this->year->format(WorkingDay::DATE_FORMAT),
+            'year' => isset($this->year) ? $this->year->format(WorkingDay::DATE_FORMAT) : null,
             'saldo_hours' => $this->saldo->getHours(),
             'saldo_minutes' => $this->saldo->getMinutes(),
             'saldo_positive' => $this->saldo->isPositive(),

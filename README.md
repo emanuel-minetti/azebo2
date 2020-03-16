@@ -147,6 +147,15 @@ cp cp server/config/holiday.config.php.dist server/config/holiday.config.php
 
 and adjust it to your needs.
 
+* Install LDAP
+
+If you plan to use LDAP authentication you must install openldap and
+openldap-clients (for ldapsearch)
+
+```
+yum install openldap openldap-clients
+```
+
 * Create and serve JavaScript modules for deployment:
 
 Azebo uses Vue Cli which in turn uses 'webpack'. So in order to deploy the application

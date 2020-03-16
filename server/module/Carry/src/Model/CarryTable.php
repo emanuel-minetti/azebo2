@@ -14,6 +14,7 @@ use DateTime;
 use Laminas\Db\Sql\Literal;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
+use Login\Model\User;
 
 class CarryTable
 {
@@ -40,6 +41,16 @@ class CarryTable
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
         return $resultSet->current();
+    }
+
+    public function insert(User $user)
+    {
+        $data = [];
+        $data['user_id'] = $user->id;
+        $carry = new Carry();
+        $carry->exchangeArray($data);
+        $carry->year = new DateTime();
+        $this->tableGateway->insert($carry->getArrayCopy());
     }
 
 }
