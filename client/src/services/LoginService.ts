@@ -26,7 +26,7 @@ export default class LoginService extends ApiService {
         if (data.jwt && data.expire) {
           localStorage.setItem("jwt", JSON.stringify(data.jwt));
           localStorage.setItem("expire", JSON.stringify(data.expire));
-          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("user", JSON.stringify(data.result));
         }
         return data;
       });

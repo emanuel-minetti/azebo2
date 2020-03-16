@@ -11,25 +11,29 @@
 
 namespace Login\Controller;
 
+use AzeboLib\ApiController;
+use Carry\Model\CarryTable;
 use Laminas\Config\Factory;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
+use Login\Model\User;
 use Login\Model\UserTable;
 use RuntimeException;
-use Service\AuthorizationService;
 
-class LoginController extends AbstractActionController
+class LoginController extends ApiController
 {
-    private $table;
+    private $userTable;
+    private $carryTable;
 
-    public function __construct(UserTable $table)
+    public function __construct(UserTable $userTable, CarryTable $carryTable)
     {
-        $this->table = $table;
+        $this->userTable = $userTable;
+        $this->carryTable = $carryTable;
     }
 
     /** @noinspection PhpUnused */
     public function loginAction()
     {
+        //$this->prepare();
         $request = $this->getRequest();
         $content = $request->getContent();
         $requestData = json_decode($content);
@@ -66,10 +70,10 @@ class LoginController extends AbstractActionController
             $result['username'] = $username;
             foreach ($ldif as $line) {
                 if (substr($line, 0, 4) === "sn: ") {
-                    $result['nachname'] = substr($line, 4);
+                    $result['name'] = substr($line, 4);
                 }
                 if (substr($line, 0, 11) === 'givenName: ') {
-                    $result['vorname'] = substr($line, 11);
+                    $result['given_name'] = substr($line, 11);
                 }
                 if (substr($line, 0, 17) === 'udkDfnAaiStatus: ') {
                     $result['status'] = substr($line, 17);
@@ -85,29 +89,22 @@ class LoginController extends AbstractActionController
         if (!$result) {
             return $declineRequest;
         }
-//        var_dump($result);
-//        die();
 
-        // get user from DB
+        // get user from DB ...
         try {
-            $user = $this->table->getUserByUsername($username);
+            $user = $this->userTable->getUserByUsername($username);
         } catch (RuntimeException $e) {
-            // TODO Insert new user in db table
-            return $declineRequest;
+            // ... or insert new user in tables `user` and `carry`
+            $user = new User();
+            $user->exchangeArray($result);
+            $this->userTable->insert($user);
+            $user = $this->userTable->getUserByUsername($username);
+            $this->carryTable->insert($user);
         }
 
         // return response
-            unset($user->password_hash);
-            $expire = time() + AuthorizationService::EXPIRE_TIME;
-            $jwt = AuthorizationService::getJwt($expire, $user->id);
-            return new JsonModel([
-                'success' => true,
-                'data' => [
-                    'jwt' => $jwt,
-                    'user' => $user->getArrayCopy(),
-                    'expire' => $expire,
-                ],
-            ]);
+        unset($user->password_hash);
+        return $this->processResult($user->getArrayCopy(), $user->id);
     }
 
 }
