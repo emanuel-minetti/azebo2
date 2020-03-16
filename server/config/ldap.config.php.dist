@@ -25,9 +25,9 @@
  // Copy this file to `local.php` and fill in your settings
 
 return [
-    'db' => [
-        'username' => '<yourUsername>',
-        'password' => '<yourPassword>',
-    ],
-    'hostname' => '<yourHostname>',
+     'useLdap' => <boolean>, // whether to use LDAP or DB authentication
+     'ldap' => [
+         'host' => '<HostnameOrIpOfLdapServer>',
+         'baseDn' => '<baseDn>',
+     ],
 ];
