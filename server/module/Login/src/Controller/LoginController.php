@@ -61,6 +61,7 @@ class LoginController extends ApiController
 
         if ($useLdap) {
             // authenticate via LDAP
+            /** @noinspection PhpUndefinedFieldInspection */
             $options = $config->ldap->toArray();
             $baseDn = $options['baseDn'];
             $host = $options['host'];
@@ -68,12 +69,14 @@ class LoginController extends ApiController
             $externBaseDn = "ou=people,$baseDn";
             $internDn = "uid=$username,$internBaseDn";
             $externDn = "uid=$username,$externBaseDn";
-            exec("ldapsearch -h $host -D '$internDn' -w $password -Z -b '$internDn'",
+            exec(
+                "ldapsearch -h $host -D '$internDn' -w $password -Z -b '$internDn'",
                 $ldif,
                 $val
             );
             if ($val !== 0) {
-                exec("ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'",
+                exec(
+                    "ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'",
                     $ldif,
                     $val
                 );
