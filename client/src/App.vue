@@ -5,7 +5,7 @@
         <router-link to="/">
           <img
             src="./assets/Universitaet_der_Kuenste_Berlin_4c_transparenz.png"
-            alt="Das Logo der UdK"
+            alt="Das Logo der Universität der Künste Berlin"
           />
         </router-link>
       </div>
