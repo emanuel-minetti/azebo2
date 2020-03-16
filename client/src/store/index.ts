@@ -9,7 +9,11 @@ export const store = new Vuex.Store({
   state: {
     loading: false
   },
-  mutations: {},
+  mutations: {
+    cancelLoading(state) {
+      state.loading = false;
+    }
+  },
   actions: {},
   modules: {
     workingTime: WorkingTimeModule,

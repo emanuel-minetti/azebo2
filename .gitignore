@@ -1,2 +1,6 @@
 module/Application/test/
 module/Application/view/application/
+/.idea/deployment.xml
+/server/.idea/server.iml
+/.idea/terminal.xml
+/.idea/webServers.xml
