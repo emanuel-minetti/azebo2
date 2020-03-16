@@ -52,7 +52,7 @@ class Module
     {
         return [
             'factories' => [
-                Controller\LoginController::class => function(ServiceManager $container) {
+                LoginController::class => function(ServiceManager $container) {
                     return new LoginController(
                         $container->get(UserTable::class), $container->get(CarryTable::class)
                     );
