@@ -57,7 +57,7 @@ class LoginController extends ApiController
         $username = mb_strtolower($username);
 
         $config = Factory::fromFile('./../server/config/ldap.config.php', true);
-        $useLdap = $config->useLdap;
+        $useLdap = isset($config->useLdap) ? $config->useLdap : false;
 
         if ($useLdap) {
             // authenticate via LDAP
