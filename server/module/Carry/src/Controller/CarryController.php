@@ -74,7 +74,7 @@ class CarryController extends ApiController
                 'holidays' => $holidaysLeft,
                 'finalized' => $finalized,
             ];
-            return $this->processResult($resultArray, 1);
+            return $this->processResult($resultArray, $userId);
         } else {
             return $this->response;
         }
