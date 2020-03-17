@@ -47,7 +47,6 @@ export default class Home extends Vue {
         "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
         reason;
       this.$store.commit("cancelLoading");
-      //console.log("Angekommen");
     });
   }
   //noinspection JSUnusedGlobalSymbols
