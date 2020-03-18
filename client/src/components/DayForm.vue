@@ -66,7 +66,7 @@ export default class DayForm extends Vue {
   show = true;
   timeOffOptions = timeOffsConfig;
 
-  // get a copy of the `WorkingDay`
+  // get a copy of the `WorkingDay` to work on
   form = Object.assign({}, this.$store.state.workingTime.dayToEdit);
 
   mounted() {
