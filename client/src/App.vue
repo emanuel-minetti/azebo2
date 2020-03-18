@@ -5,7 +5,7 @@
         <router-link to="/">
           <img
             src="./assets/Universitaet_der_Kuenste_Berlin_4c_transparenz.png"
-            alt="Das Logo der Universität der Künste Berlin"
+            alt="Das Logo der UdK"
           />
         </router-link>
       </div>
@@ -18,13 +18,9 @@
       <nav id="nav">
         <ul>
           <li>
-            <b-button
-              variant="primary"
-              router-tag="button"
-              :to="{ name: 'about' }"
-            >
-              Einstellungen
-            </b-button>
+            <button class="btn btn-primary">
+              <router-link to="about">Einstellungen</router-link>
+            </button>
           </li>
           <li>
             <b-dropdown text="Monate" variant="primary" v-on:hide="cancelHide">
@@ -250,10 +246,10 @@ export default class App extends Vue {
 <!--suppress CssInvalidFunction -->
 <style lang="scss">
 // Import custom SASS variable overrides
-@import "assets/custom-vars";
+@import "assets/custom-vars.scss";
 
 // Import Bootstrap source SCSS file
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap.scss";
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
