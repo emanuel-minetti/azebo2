@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/server/service" isTestSource="false" packagePrefix="Service\" />
+      <sourceFolder url="file://$MODULE_DIR$/server/module/Carry/src" isTestSource="false" packagePrefix="Carry\" />
+      <sourceFolder url="file://$MODULE_DIR$/server/module/Application/src" isTestSource="false" packagePrefix="Application\" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/server/lib" isTestSource="false" packagePrefix="AzeboLib\" />
+      <sourceFolder url="file://$MODULE_DIR$/server/module/Holiday/src" isTestSource="false" packagePrefix="Holiday\" />
+      <sourceFolder url="file://$MODULE_DIR$/server/module/WorkingRule/src" isTestSource="false" packagePrefix="WorkingRule\" />
+      <sourceFolder url="file://$MODULE_DIR$/server/module/Login/src" isTestSource="false" packagePrefix="Login\" />
+      <sourceFolder url="file://$MODULE_DIR$/server/module/Application/test" isTestSource="true" packagePrefix="ApplicationTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/server/module/WorkingTime/src" isTestSource="false" packagePrefix="WorkingTime\" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="server" />

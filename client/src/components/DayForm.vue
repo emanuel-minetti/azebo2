@@ -66,11 +66,19 @@ export default class DayForm extends Vue {
   show = true;
   timeOffOptions = timeOffsConfig;
 
-  get form() {
-    return this.$store.state.workingTime.dayToEdit as WorkingDay;
+  // get a copy of the `WorkingDay` to work on
+  form = Object.assign({}, this.$store.state.workingTime.dayToEdit);
+
+  mounted() {
+    // scroll form to top
+    let target = document.getElementById("form") as HTMLElement;
+    // `{ behaviour: "smooth" }` is not working!
+    target.scrollIntoView();
   }
 
   get title() {
+    // cast form to `WorkingDay` at runtime
+    this.form.__proto__ = WorkingDay.prototype;
     let date = this.form.date;
     let title = date.toLocaleDateString("de-DE", { weekday: "long" });
     title += ", den ";

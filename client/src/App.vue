@@ -3,7 +3,10 @@
     <header>
       <div id="logo">
         <router-link to="/">
-          <img src="./assets/Universitaet_der_Kuenste_Berlin_4c_transparenz.png" alt="Das Logo der UdK" />
+          <img
+            src="./assets/Universitaet_der_Kuenste_Berlin_4c_transparenz.png"
+            alt="Das Logo der UdK"
+          />
         </router-link>
       </div>
       <div id="site-title">
@@ -240,6 +243,7 @@ export default class App extends Vue {
 }
 </script>
 
+<!--suppress CssInvalidFunction -->
 <style lang="scss">
 // Import custom SASS variable overrides
 @import "assets/custom-vars.scss";
