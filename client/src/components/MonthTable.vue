@@ -147,7 +147,7 @@ export default class MonthTable extends Vue {
     return hasBreak ? "Ja" : "Nein";
   }
 
-  rowClickHandler(row: any) {
+  rowClickHandler(row: WorkingDay) {
     if (!this.finalized) {
       // store the date ...
       this.dateToEdit = row.date;
