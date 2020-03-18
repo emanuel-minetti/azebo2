@@ -18,9 +18,17 @@
       <nav id="nav">
         <ul>
           <li>
-            <button class="btn btn-primary">
-              <router-link to="about">Einstellungen</router-link>
-            </button>
+            <b-dropdown text="Einstellungen" variant="primary">
+              <b-dropdown-item :to="{ name: 'settings' }">
+                Arbeitszeit
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'settings' }">
+                Überträge
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'settings' }">
+                Kopfbogen
+              </b-dropdown-item>
+            </b-dropdown>
           </li>
           <li>
             <b-dropdown text="Monate" variant="primary" v-on:hide="cancelHide">
