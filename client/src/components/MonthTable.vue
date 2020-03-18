@@ -149,11 +149,19 @@ export default class MonthTable extends Vue {
 
   rowClickHandler(row: any) {
     if (!this.finalized) {
-      if (!this.formShown) {
-        this.formShown = true;
-      }
+      // store the date ...
       this.dateToEdit = row.date;
       this.$store.commit("setDayToEdit", this.dateToEdit);
+      // ... and show the form
+      if (!this.formShown) {
+        this.formShown = true;
+      } else {
+        // form was already shown for another day
+        this.formShown = false;
+        this.$nextTick(() => {
+          this.formShown = true;
+        });
+      }
     }
   }
 

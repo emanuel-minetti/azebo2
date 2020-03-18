@@ -68,14 +68,17 @@ export default class DayForm extends Vue {
 
   form = Object.assign({}, this.$store.state.workingTime.dayToEdit);
 
+  //TODO remove
   // get form() {
   //   return this.$store.state.workingTime.dayToEdit as WorkingDay;
   // }
 
   get title() {
+    //TODO comment!
     this.form.__proto__ = WorkingDay.prototype;
     let date = this.form.date;
-    console.log("Date: " + this.form.date);
+    //TODO remove
+    // console.log("Date: " + this.form.date);
     let title = date.toLocaleDateString("de-DE", { weekday: "long" });
     title += ", den ";
     title += date.toLocaleDateString("de-DE");
