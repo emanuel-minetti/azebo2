@@ -19,8 +19,8 @@ import { SettingsForm, Title } from "@/components";
     SettingsForm
   }
 })
-export default class Settings extends Vue {
-  title = "Einstellungen";
+export default class CarryOver extends Vue {
+  title = "Übertrag";
 }
 </script>
 

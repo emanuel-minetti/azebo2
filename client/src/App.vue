@@ -19,13 +19,13 @@
         <ul>
           <li>
             <b-dropdown text="Einstellungen" variant="primary">
-              <b-dropdown-item :to="{ name: 'settings' }">
+              <b-dropdown-item :to="{ name: 'rules' }">
                 Arbeitszeit
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'settings' }">
+              <b-dropdown-item :to="{ name: 'carryOver' }">
                 Überträge
               </b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'settings' }">
+              <b-dropdown-item :to="{ name: 'letterhead' }">
                 Kopfbogen
               </b-dropdown-item>
             </b-dropdown>

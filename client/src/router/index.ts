@@ -23,13 +23,25 @@ const routes = [
     component: Login
   },
   {
-    path: "/settings",
-    name: "settings",
+    path: "/settings/carry-over",
+    name: "carryOver",
     component: () =>
-      import(/* webpackChunkName: "settings"  */ "../views/Settings.vue")
+      import(/* webpackChunkName: "settings"  */ "../views/CarryOver.vue")
   },
   {
-    // route all other request to a 404 page
+    path: "/settings/rules",
+    name: "rules",
+    component: () =>
+      import(/* webpackChunkName: "settings"  */ "../views/Rules.vue")
+  },
+  {
+    path: "/settings/letterhead",
+    name: "letterhead",
+    component: () =>
+      import(/* webpackChunkName: "settings"  */ "../views/Letterhead.vue")
+  },
+  {
+    // route all other requests to a 404 page
     path: "*",
     name: "notFound",
     component: NotFound
@@ -62,7 +74,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!isPublic && !loggedIn) {
-    // to redirect after loginh
+    // to redirect after login
     next({
       path: "/login",
       query: {
