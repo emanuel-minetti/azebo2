@@ -1,10 +1,10 @@
 <template>
   <div>
     <Title v-bind:prop-title="title" />
-    <header>
-      Hier können Sie Ihre Stammdaten und Ihre Arbeitszeitseinstellungen
-      bearbeiten
-    </header>
+    <div id="intro">
+      Hier können Sie Ihre wöchentliche Arbeitszeit einstellen und
+      (optional) Sollarbeitszeiten für einzelne Wochentage festlegen
+    </div>
     <SettingsForm />
   </div>
 </template>
@@ -25,7 +25,7 @@ export default class Rules extends Vue {
 </script>
 
 <style scoped>
-header {
+#intro {
   font-size: 1.5rem;
   text-align: center;
 }

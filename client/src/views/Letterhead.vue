@@ -1,10 +1,9 @@
 <template>
   <div>
     <Title v-bind:prop-title="title" />
-    <header>
-      Hier können Sie Ihre Stammdaten und Ihre Arbeitszeitseinstellungen
-      bearbeiten
-    </header>
+    <div id="intro">
+      Hier können Sie die Daten Ihres Kopfbogens kontrollieren und ausdrucken
+    </div>
     <SettingsForm />
   </div>
 </template>
@@ -25,7 +24,7 @@ export default class Letterhead extends Vue {
 </script>
 
 <style scoped>
-header {
+#intro {
   font-size: 1.5rem;
   text-align: center;
 }
