@@ -36,8 +36,6 @@ import { Saldo } from "@/models";
 export default class SettingsForm extends Vue {
   workingTimeMode = "full";
   percentage = 100;
-  // TODO Get Saldo from server!
-  carryOver = Saldo.createFromMillis(1000000);
   fixed = Saldo.createFromMillis(1000000);
 
   workingTimeOptions = [
