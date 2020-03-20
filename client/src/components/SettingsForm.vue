@@ -1,9 +1,5 @@
 <template>
   <b-form>
-    <!--TODO Should only be shown to new users (See #30)-->
-    <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
-      <SaldoInput :prop-saldo.sync="carryOver" :prop-sign="true" />
-    </b-form-group>
     <b-form-group label="Arbeitszeit:">
       <b-form-radio-group
         :options="workingTimeOptions"

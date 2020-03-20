@@ -5,18 +5,18 @@
       Hier können Sie einen Übertrag aus einem anderen Zeiterfassungssystem
       einstellen
     </div>
-    <SettingsForm />
+    <CarryForm />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { SettingsForm, Title } from "@/components";
+import { CarryForm, Title } from "@/components";
 
 @Component({
   components: {
     Title,
-    SettingsForm
+    CarryForm
   }
 })
 export default class CarryOver extends Vue {
