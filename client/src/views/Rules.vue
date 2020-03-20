@@ -2,8 +2,8 @@
   <div>
     <Title v-bind:prop-title="title" />
     <div id="intro">
-      Hier können Sie Ihre wöchentliche Arbeitszeit einstellen und
-      (optional) Sollarbeitszeiten für einzelne Wochentage festlegen
+      Hier können Sie Ihre wöchentliche Arbeitszeit einstellen und (optional)
+      Sollarbeitszeiten für einzelne Wochentage festlegen
     </div>
     <SettingsForm />
   </div>
