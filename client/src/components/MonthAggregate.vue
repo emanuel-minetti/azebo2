@@ -45,10 +45,6 @@ export default class MonthAggregate extends Vue {
     }
   ];
 
-  // get month() {
-  //   return this.$store.state.workingTime.month;
-  // }
-
   get holidaysLeftString() {
     return this.month.monthNumber <= timesConfig.previousHolidaysValidTo
       ? this.carryResult.holidays +
