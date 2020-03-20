@@ -15,11 +15,12 @@ import {
 } from "@/services";
 
 const WorkingTimeModule: Module<any, any> = {
+  namespaced: true,
   state: {
     month: WorkingMonth,
     holidays: Array<Holiday>(),
     rules: Array<WorkingRule>(),
-    carry: Carry,
+    carryResult: Carry,
     dayToEdit: WorkingDay
   },
   getters: {
@@ -38,8 +39,8 @@ const WorkingTimeModule: Module<any, any> = {
       return "";
     },
     saldoTotal(state, getters) {
-      if (getters.saldo !== "" && state.carry.saldo) {
-        return Saldo.getSum(getters.saldo, state.carry.saldo);
+      if (getters.saldo !== "" && state.carryResult.saldo) {
+        return Saldo.getSum(getters.saldo, state.carryResult.saldo);
       }
       return "";
     }
@@ -77,8 +78,8 @@ const WorkingTimeModule: Module<any, any> = {
           })
         )
         .then(() =>
-          CarryService.getCarryByMonth(params).then(data => {
-            state.carry = new Carry(data.result);
+          CarryService.getCarryResultByMonth(params).then(data => {
+            state.carryResult = new Carry(data.result);
           })
         )
         .then(() => {
@@ -131,7 +132,7 @@ const WorkingTimeModule: Module<any, any> = {
       // getWorkingDays({ state }, params) {
       //
     },
-
+    //getCarry({ state }, yearDate: Date) {},
     setDay({ state }, day: WorkingDay) {
       return WorkingTimeService.setDay(day).then(() => {});
     }
