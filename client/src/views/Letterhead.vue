@@ -4,18 +4,16 @@
     <div id="intro">
       Hier können Sie die Daten Ihres Kopfbogens kontrollieren und ausdrucken
     </div>
-    <SettingsForm />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { SettingsForm, Title } from "@/components";
+import { Title } from "@/components";
 
 @Component({
   components: {
-    Title,
-    SettingsForm
+    Title
   }
 })
 export default class Letterhead extends Vue {

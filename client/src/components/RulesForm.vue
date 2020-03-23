@@ -33,7 +33,7 @@ import { Saldo } from "@/models";
     SaldoInput
   }
 })
-export default class SettingsForm extends Vue {
+export default class RulesForm extends Vue {
   workingTimeMode = "full";
   percentage = 100;
   fixed = Saldo.createFromMillis(1000000);

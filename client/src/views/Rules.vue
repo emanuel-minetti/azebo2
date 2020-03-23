@@ -5,18 +5,18 @@
       Hier können Sie Ihre wöchentliche Arbeitszeit einstellen und (optional)
       Sollarbeitszeiten für einzelne Wochentage festlegen
     </div>
-    <SettingsForm />
+    <RulesForm />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { SettingsForm, Title } from "@/components";
+import { RulesForm, Title } from "@/components";
 
 @Component({
   components: {
     Title,
-    SettingsForm
+    RulesForm
   }
 })
 export default class Rules extends Vue {
