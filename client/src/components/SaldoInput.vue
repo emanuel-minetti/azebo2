@@ -20,11 +20,18 @@
               max="999"
               v-model="hours"
               autofocus
+              onfocus="this.select()"
             >
             </b-form-input>
           </b-form-group>
           <b-form-group label="Minuten" label-for="hour-input">
-            <b-form-input type="number" min="0" max="999" v-model="minutes">
+            <b-form-input
+              type="number"
+              min="0"
+              max="999"
+              v-model="minutes"
+              onfocus="this.select()"
+            >
             </b-form-input>
           </b-form-group>
           <b-form-group v-if="propSign">
