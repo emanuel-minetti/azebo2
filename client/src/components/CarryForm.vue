@@ -9,8 +9,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SaldoInput from "@/components/SaldoInput.vue";
 import { Saldo } from "@/models";
+import { SaldoInput } from "@/components";
 
 @Component({
   components: {
