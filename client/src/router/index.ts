@@ -63,6 +63,7 @@ router.beforeEach((to, from, next) => {
     const now = Date.now() / 1000;
     loggedIn = expires >= now;
     // If loggedIn, but no user is in the store refresh it from localStorage
+    // @ts-ignore
     if (loggedIn && !store.state.user.fullName) {
       store.commit(
         "setUser",

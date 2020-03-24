@@ -39,6 +39,7 @@ export default class WorkingDay {
 
       this._date = FormatterService.convertToDate(data.date);
 
+      // @ts-ignore
       const holidays = store.state.workingTime.holidays;
       const year = this.date.getFullYear();
       const monthIndex = this.date.getMonth();
@@ -55,6 +56,7 @@ export default class WorkingDay {
       });
 
       // Find the working rule for this day if any.
+      // @ts-ignore
       const rules = store.state.workingTime.rules;
       for (let i = 0; i < rules.length; i++) {
         let rule: WorkingRule = rules[i];

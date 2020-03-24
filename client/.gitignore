@@ -10,6 +10,3 @@ src/configs/*.local.ts
 # Log files
 npm-debug.log*
 
-# Editor directories and files
-.idea
-
