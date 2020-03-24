@@ -2,7 +2,8 @@
   <div>
     <Title v-bind:prop-title="title" />
     <div id="intro">
-      Hier können Sie Ihre Übertrage externen Zeiterfassungssystemen einstellen:
+      Hier können Sie Ihre Überträge aus externen Zeiterfassungssystemen
+      einstellen:
     </div>
     <CarryForm />
   </div>
