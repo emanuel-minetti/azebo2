@@ -16,8 +16,8 @@ import { RulesForm, Title } from "@/components";
 @Component({
   components: {
     Title,
-    RulesForm
-  }
+    RulesForm,
+  },
 })
 export default class Rules extends Vue {
   title = "Arbeitszeit";

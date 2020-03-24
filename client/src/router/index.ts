@@ -10,48 +10,48 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: Home
+    component: Home,
   },
   {
     path: "/month/:month(\\d+)/:year(\\d+)?",
     name: "month",
-    component: Home
+    component: Home,
   },
   {
     path: "/login",
     name: "login",
-    component: Login
+    component: Login,
   },
   {
     path: "/settings/carry-over",
     name: "carryOver",
     component: () =>
-      import(/* webpackChunkName: "settings"  */ "../views/CarryOver.vue")
+      import(/* webpackChunkName: "settings"  */ "../views/CarryOver.vue"),
   },
   {
     path: "/settings/rules",
     name: "rules",
     component: () =>
-      import(/* webpackChunkName: "settings"  */ "../views/Rules.vue")
+      import(/* webpackChunkName: "settings"  */ "../views/Rules.vue"),
   },
   {
     path: "/settings/letterhead",
     name: "letterhead",
     component: () =>
-      import(/* webpackChunkName: "settings"  */ "../views/Letterhead.vue")
+      import(/* webpackChunkName: "settings"  */ "../views/Letterhead.vue"),
   },
   {
     // route all other requests to a 404 page
     path: "*",
     name: "notFound",
-    component: NotFound
-  }
+    component: NotFound,
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -78,8 +78,8 @@ router.beforeEach((to, from, next) => {
     next({
       path: "/login",
       query: {
-        redirect: to.path
-      }
+        redirect: to.path,
+      },
     });
   }
   next();

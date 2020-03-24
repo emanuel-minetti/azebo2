@@ -17,7 +17,7 @@ import { timesConfig } from "@/configs";
 import { mapState } from "vuex";
 
 @Component({
-  computed: { ...mapState("workingTime", ["carryResult", "month"]) }
+  computed: { ...mapState("workingTime", ["carryResult", "month"]) },
 })
 //@Component
 export default class MonthAggregate extends Vue {
@@ -27,20 +27,20 @@ export default class MonthAggregate extends Vue {
     {
       key: "key",
       label: "",
-      class: "first_column"
+      class: "first_column",
     },
     {
       key: "carryResult",
-      label: "Übertrag"
+      label: "Übertrag",
     },
     {
       key: "month",
-      label: "Bisher"
+      label: "Bisher",
     },
     {
       key: "total",
-      label: "Gesamt"
-    }
+      label: "Gesamt",
+    },
   ];
 
   get holidaysLeftString() {
@@ -74,14 +74,14 @@ export default class MonthAggregate extends Vue {
         key: "Saldo",
         carryResult: this.carryResult.saldo,
         month: this.$store.getters["workingTime/saldo"],
-        total: this.$store.getters["workingTime/saldoTotal"]
+        total: this.$store.getters["workingTime/saldoTotal"],
       },
       {
         key: "Urlaub",
         carryResult: this.holidaysLeftString,
         month: this.month.takenHolidays,
-        total: this.holidaysTotalString
-      }
+        total: this.holidaysTotalString,
+      },
     ];
   }
 }

@@ -10,12 +10,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Saldo } from "@/models";
-import { SaldoInput } from "@/components";
+import SaldoInput from "@/components/SaldoInput.vue";
 
 @Component({
   components: {
-    SaldoInput
-  }
+    SaldoInput,
+  },
 })
 export default class CarryForm extends Vue {
   // TODO Get Saldo from server!

@@ -12,7 +12,7 @@ const timesConfig = {
   breakRequiredFrom: 6, // in hours
   longBreakRequiredFrom: 9, // in hours
   longDayFrom: 10, // in hours
-  previousHolidaysValidTo: 9 // holidays left from last year are valid to month(1-12)
+  previousHolidaysValidTo: 9, // holidays left from last year are valid to month(1-12)
 };
 
 export default timesConfig;

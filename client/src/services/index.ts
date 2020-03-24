@@ -13,5 +13,5 @@ export {
   LoginService,
   WorkingTimeService,
   WorkingRuleService,
-  CarryService
+  CarryService,
 };

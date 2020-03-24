@@ -7,7 +7,7 @@ export default class FormatterService {
     const options = {
       year: "numeric",
       month: "numeric",
-      day: "numeric"
+      day: "numeric",
     };
     return date.toLocaleString("de-DE", options);
   }

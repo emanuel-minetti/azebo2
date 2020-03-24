@@ -30,8 +30,8 @@ import { Saldo } from "@/models";
 
 @Component({
   components: {
-    SaldoInput
-  }
+    SaldoInput,
+  },
 })
 export default class RulesForm extends Vue {
   workingTimeMode = "full";
@@ -41,7 +41,7 @@ export default class RulesForm extends Vue {
   workingTimeOptions = [
     { text: "Vollzeit", value: "full" },
     { text: "Anteilige Arbeitszeit", value: "relative" },
-    { text: "Feste Arbeitszeit", value: "fixed" }
+    { text: "Feste Arbeitszeit", value: "fixed" },
   ];
 }
 </script>

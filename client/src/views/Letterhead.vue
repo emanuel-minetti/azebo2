@@ -13,8 +13,8 @@ import { Title } from "@/components";
 
 @Component({
   components: {
-    Title
-  }
+    Title,
+  },
 })
 export default class Letterhead extends Vue {
   title = "Kopfbogen";

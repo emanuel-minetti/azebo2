@@ -7,7 +7,7 @@ export default class WorkingRuleService extends ApiService {
     headers = { ...headers, ...this.getAuthHeader() };
     const requestOptions = {
       method: "GET",
-      headers: headers
+      headers: headers,
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }

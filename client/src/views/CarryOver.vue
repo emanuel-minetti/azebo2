@@ -15,8 +15,8 @@ import { CarryForm, Title } from "@/components";
 @Component({
   components: {
     Title,
-    CarryForm
-  }
+    CarryForm,
+  },
 })
 export default class CarryOver extends Vue {
   title = "Überträge";

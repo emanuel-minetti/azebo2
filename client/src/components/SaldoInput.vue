@@ -47,11 +47,11 @@ import { Saldo } from "@/models";
 export default class SaldoInput extends Vue {
   @PropSync("propSaldo", {
     type: Saldo,
-    default: Saldo.createFromMillis(0)
+    default: Saldo.createFromMillis(0),
   })
   syncedSaldo!: Saldo;
   @Prop({
-    type: Boolean
+    type: Boolean,
   })
   propSign!: boolean;
   modalShow = false;

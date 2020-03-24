@@ -27,7 +27,9 @@ export default class WorkingMonth {
     let currentDay = firstOfMonth;
     while (currentDay <= lastOfMonth) {
       // look for current day in given `days`
-      let found = days.find(day => day.date.getDate() == currentDay.getDate());
+      let found = days.find(
+        (day) => day.date.getDate() == currentDay.getDate()
+      );
       if (found) {
         // take the given day
         this.days.push(found);
@@ -37,7 +39,7 @@ export default class WorkingMonth {
           new WorkingDay({
             date: new Date(currentDay),
             break: false,
-            afternoon: false
+            afternoon: false,
           })
         );
       }
@@ -52,7 +54,7 @@ export default class WorkingMonth {
   get monthName() {
     const options = {
       year: "numeric",
-      month: "long"
+      month: "long",
     };
     return this.monthDate.toLocaleString("de-DE", options);
   }
@@ -62,12 +64,12 @@ export default class WorkingMonth {
   }
 
   get takenHolidays() {
-    return this.days.filter(day => day.timeOff === "Urlaub").length;
+    return this.days.filter((day) => day.timeOff === "Urlaub").length;
   }
 
   getDayByDate(date: Date) {
     return this.days.filter(
-      day =>
+      (day) =>
         day.date.getMonth() === date.getMonth() &&
         day.date.getDate() === date.getDate()
     )[0];
