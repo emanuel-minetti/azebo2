@@ -21,8 +21,8 @@ import { Route } from "vue-router";
   components: {
     Title,
     MonthTable,
-    MonthAggregate
-  }
+    MonthAggregate,
+  },
 })
 export default class Home extends Vue {
   error = "";
@@ -42,12 +42,11 @@ export default class Home extends Vue {
         month.setFullYear(Number(to.params.year));
       }
     }
-    this.$store.dispatch("getMonth", month).catch(reason => {
+    this.$store.dispatch("workingTime/getMonth", month).catch((reason) => {
       this.error =
         "Es gab ein Problem beim Laden der Daten für diesen Monat:<br/>" +
         reason;
       this.$store.commit("cancelLoading");
-      //console.log("Angekommen");
     });
   }
   //noinspection JSUnusedGlobalSymbols

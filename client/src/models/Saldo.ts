@@ -4,11 +4,11 @@ export default class Saldo {
   private _positive: boolean;
 
   /**
-   * The private constructor.
+   * The constructor.
    * @param millis a time intervall in milliseconds
    * @param positive whether the intervall should be added or subtracted
    */
-  private constructor(millis?: number, positive = true) {
+  public constructor(millis?: number, positive = true) {
     if (millis === undefined) {
       this._hours = 0;
       this._minutes = 0;
@@ -114,13 +114,21 @@ export default class Saldo {
   /**
    * Returns a nicely formatted string representation of a saldo.
    */
-  toString(): string {
-    if (this._hours === 0 && this._minutes === 0) return "";
-    let result = this._positive ? "+" : "-";
+  toString(withSign = true): string {
+    if (this._hours === 0 && this._minutes === 0) return "0:00";
+    let result = withSign ? (this._positive ? "+" : "-") : "";
     result += this._hours + ":";
     result += this._minutes < 10 ? "0" : "";
     result += this._minutes;
     return result;
+  }
+
+  get hours(): number {
+    return this._hours;
+  }
+
+  get minutes(): number {
+    return this._minutes;
   }
 
   /**

@@ -10,39 +10,48 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: Home
+    component: Home,
   },
   {
     path: "/month/:month(\\d+)/:year(\\d+)?",
     name: "month",
-    component: Home
+    component: Home,
   },
   {
     path: "/login",
     name: "login",
-    component: Login
+    component: Login,
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    path: "/settings/carry-over",
+    name: "carryOver",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import(/* webpackChunkName: "settings"  */ "../views/CarryOver.vue"),
   },
   {
-    // route all other request to a 404 page
+    path: "/settings/rules",
+    name: "rules",
+    component: () =>
+      import(/* webpackChunkName: "settings"  */ "../views/Rules.vue"),
+  },
+  {
+    path: "/settings/letterhead",
+    name: "letterhead",
+    component: () =>
+      import(/* webpackChunkName: "settings"  */ "../views/Letterhead.vue"),
+  },
+  {
+    // route all other requests to a 404 page
     path: "*",
     name: "notFound",
-    component: NotFound
-  }
+    component: NotFound,
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -69,8 +78,8 @@ router.beforeEach((to, from, next) => {
     next({
       path: "/login",
       query: {
-        redirect: to.path
-      }
+        redirect: to.path,
+      },
     });
   }
   next();

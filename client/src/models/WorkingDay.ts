@@ -148,7 +148,7 @@ export default class WorkingDay {
 
   get timeOff(): string | undefined {
     let foundTimeOff = timeOffsConfig.filter(
-      entry => entry.value == this._timeOff
+      (entry) => entry.value == this._timeOff
     );
     if (foundTimeOff.length) {
       return foundTimeOff[0].text;

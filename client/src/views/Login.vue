@@ -42,12 +42,12 @@ import { Component, Vue } from "vue-property-decorator";
 import { Title } from "@/components";
 
 @Component({
-  components: { Title }
+  components: { Title },
 })
 export default class Login extends Vue {
   form = {
     username: "",
-    password: ""
+    password: "",
   };
   submitted = false;
   loginError = false;
@@ -69,7 +69,7 @@ export default class Login extends Vue {
     this.submitted = true;
     const credentials = {
       username: this.form.username,
-      password: this.form.password
+      password: this.form.password,
     };
     this.$store
       .dispatch("login", credentials)

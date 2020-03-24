@@ -36,8 +36,8 @@ import DayForm from "@/components/DayForm.vue";
 
 @Component({
   components: {
-    DayForm
-  }
+    DayForm,
+  },
 })
 export default class MonthTable extends Vue {
   formShown = false;
@@ -74,54 +74,54 @@ export default class MonthTable extends Vue {
         key: "date",
         label: "Datum",
         class: "small-column",
-        formatter: this.formatDate
+        formatter: this.formatDate,
       },
       {
         key: "begin",
         label: "Beginn",
         class: "small-column",
-        formatter: FormatterService.toGermanTime
+        formatter: FormatterService.toGermanTime,
       },
       {
         key: "end",
         label: "Ende",
         class: "small-column",
-        formatter: FormatterService.toGermanTime
+        formatter: FormatterService.toGermanTime,
       },
       {
         key: "timeOff",
-        label: "Dienstbefreiung"
+        label: "Dienstbefreiung",
       },
       {
         key: "comment",
-        label: "Kommentar"
+        label: "Kommentar",
       },
       {
         key: "break",
         label: "Pause",
         class: "small-column",
-        formatter: this.formatBreak
+        formatter: this.formatBreak,
       },
       {
         key: "totalTime",
         label: "Anwesend",
-        class: "small-column"
+        class: "small-column",
       },
       {
         key: "actualTime",
         label: "Ist",
-        class: "small-column"
+        class: "small-column",
       },
       {
         key: "targetTime",
         label: "Soll",
-        class: "small-column"
+        class: "small-column",
       },
       {
         key: "saldoTime",
         label: "Saldo",
-        class: ["small-column", "saldo"]
-      }
+        class: ["small-column", "saldo"],
+      },
     ];
   }
 

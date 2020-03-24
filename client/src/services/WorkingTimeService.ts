@@ -14,7 +14,7 @@ export default class WorkingTimeService extends ApiService {
     headers = { ...headers, ...this.getAuthHeader() };
     const requestOptions = {
       method: "GET",
-      headers: headers
+      headers: headers,
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }
@@ -26,7 +26,7 @@ export default class WorkingTimeService extends ApiService {
     const requestOptions = {
       method: "POST",
       headers: headers,
-      body: JSON.stringify(day)
+      body: JSON.stringify(day),
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }

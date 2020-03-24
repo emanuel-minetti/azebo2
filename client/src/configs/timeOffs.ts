@@ -10,7 +10,7 @@
 const timeOffsConfig = [
   { text: "Urlaub", value: "urlaub" },
   { text: "Gleitzeit-Tag", value: "gleitzeit" },
-  { text: "AZV-Tag", value: "azv" }
+  { text: "AZV-Tag", value: "azv" },
 ];
 
 export default timeOffsConfig;

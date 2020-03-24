@@ -12,50 +12,51 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry } from "@/models";
+import { Carry, WorkingMonth } from "@/models";
 import { timesConfig } from "@/configs";
+import { mapState } from "vuex";
 
-@Component
+@Component({
+  computed: { ...mapState("workingTime", ["carryResult", "month"]) },
+})
+//@Component
 export default class MonthAggregate extends Vue {
+  carryResult!: Carry;
+  month!: WorkingMonth;
   fields = [
     {
       key: "key",
       label: "",
-      class: "first_column"
+      class: "first_column",
     },
     {
-      key: "carry",
-      label: "Übertrag"
+      key: "carryResult",
+      label: "Übertrag",
     },
     {
       key: "month",
-      label: "Bisher"
+      label: "Bisher",
     },
     {
       key: "total",
-      label: "Gesamt"
-    }
+      label: "Gesamt",
+    },
   ];
-
-  get carry(): Carry {
-    return this.$store.state.workingTime.carry;
-  }
-
-  get month() {
-    return this.$store.state.workingTime.month;
-  }
 
   get holidaysLeftString() {
     return this.month.monthNumber <= timesConfig.previousHolidaysValidTo
-      ? this.carry.holidays + " (Vorjahr: " + this.carry.holidaysPrevious + ")"
-      : this.carry.holidays;
+      ? this.carryResult.holidays +
+          " (Vorjahr: " +
+          this.carryResult.holidaysPrevious +
+          ")"
+      : this.carryResult.holidays;
   }
 
   get holidaysTotalString() {
-    let holidays = this.carry.holidays;
+    let holidays = this.carryResult.holidays;
     let taken = this.month.takenHolidays;
     if (this.month.monthNumber <= timesConfig.previousHolidaysValidTo) {
-      let holidaysPrevious = this.carry.holidaysPrevious;
+      let holidaysPrevious = this.carryResult.holidaysPrevious;
       if (holidaysPrevious >= taken) {
         holidaysPrevious -= taken;
       } else {
@@ -71,16 +72,16 @@ export default class MonthAggregate extends Vue {
     return [
       {
         key: "Saldo",
-        carry: this.carry.saldo,
-        month: this.$store.getters.saldo,
-        total: this.$store.getters.saldoTotal
+        carryResult: this.carryResult.saldo,
+        month: this.$store.getters["workingTime/saldo"],
+        total: this.$store.getters["workingTime/saldoTotal"],
       },
       {
         key: "Urlaub",
-        carry: this.holidaysLeftString,
+        carryResult: this.holidaysLeftString,
         month: this.month.takenHolidays,
-        total: this.holidaysTotalString
-      }
+        total: this.holidaysTotalString,
+      },
     ];
   }
 }

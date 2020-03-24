@@ -7,16 +7,16 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-    loading: false
+    loading: false,
   },
   mutations: {
     cancelLoading(state) {
       state.loading = false;
-    }
+    },
   },
   actions: {},
   modules: {
     workingTime: WorkingTimeModule,
-    user: UserModule
-  }
+    user: UserModule,
+  },
 });

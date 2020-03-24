@@ -16,7 +16,7 @@ export default class ApiService {
     return {
       "Content-Type": "application/json", // header name contains a hyphen, so quotes are required
       Accept: "application/json",
-      "Cache-Control": "no-cache"
+      "Cache-Control": "no-cache",
     };
   }
 
@@ -28,7 +28,7 @@ export default class ApiService {
     if (jwt) {
       jwt = jwt.substring(1, jwt.length - 1);
       return {
-        Authorization: "Bearer " + jwt
+        Authorization: "Bearer " + jwt,
       };
     } else {
       return {};
@@ -42,7 +42,7 @@ export default class ApiService {
    * @param response the response to handle
    */
   protected static handleResponse(response: Response) {
-    return response.text().then(text => {
+    return response.text().then((text) => {
       const content = text && JSON.parse(text);
       if (!response.ok) {
         if (response.status == 401) {

@@ -5,22 +5,23 @@ import {
   Saldo,
   WorkingDay,
   WorkingMonth,
-  WorkingRule
+  WorkingRule,
 } from "@/models";
 import {
   CarryService,
   HolidayService,
   WorkingRuleService,
-  WorkingTimeService
+  WorkingTimeService,
 } from "@/services";
 
 const WorkingTimeModule: Module<any, any> = {
+  namespaced: true,
   state: {
     month: WorkingMonth,
     holidays: Array<Holiday>(),
     rules: Array<WorkingRule>(),
-    carry: Carry,
-    dayToEdit: WorkingDay
+    carryResult: Carry,
+    dayToEdit: WorkingDay,
   },
   getters: {
     saldo(state) {
@@ -38,16 +39,16 @@ const WorkingTimeModule: Module<any, any> = {
       return "";
     },
     saldoTotal(state, getters) {
-      if (getters.saldo !== "" && state.carry.saldo) {
-        return Saldo.getSum(getters.saldo, state.carry.saldo);
+      if (getters.saldo !== "" && state.carryResult.saldo) {
+        return Saldo.getSum(getters.saldo, state.carryResult.saldo);
       }
       return "";
-    }
+    },
   },
   mutations: {
     setDayToEdit(state, date: Date) {
       state.dayToEdit = state.month.getDayByDate(date);
-    }
+    },
   },
   actions: {
     getMonth({ commit, dispatch, state, rootState }, monthDate: Date) {
@@ -60,16 +61,16 @@ const WorkingTimeModule: Module<any, any> = {
 
       // TODO review (see Issue #28)
       return HolidayService.getHolidays(year)
-        .then(data => {
+        .then((data) => {
           state.holidays = data.result.map((day: any) => new Holiday(day));
         })
         .then(() =>
-          WorkingRuleService.getByMonth(params).then(data => {
+          WorkingRuleService.getByMonth(params).then((data) => {
             state.rules = data.result.map((rule: any) => new WorkingRule(rule));
           })
         )
         .then(() =>
-          WorkingTimeService.getMonth(params).then(data => {
+          WorkingTimeService.getMonth(params).then((data) => {
             let workingDays = data.result.map(
               (day: any) => new WorkingDay(day)
             );
@@ -77,8 +78,8 @@ const WorkingTimeModule: Module<any, any> = {
           })
         )
         .then(() =>
-          CarryService.getCarryByMonth(params).then(data => {
-            state.carry = new Carry(data.result);
+          CarryService.getCarryResultByMonth(params).then((data) => {
+            state.carryResult = new Carry(data.result);
           })
         )
         .then(() => {
@@ -131,11 +132,11 @@ const WorkingTimeModule: Module<any, any> = {
       // getWorkingDays({ state }, params) {
       //
     },
-
+    //getCarry({ state }, yearDate: Date) {},
     setDay({ state }, day: WorkingDay) {
       return WorkingTimeService.setDay(day).then(() => {});
-    }
-  }
+    },
+  },
 };
 
 export default WorkingTimeModule;

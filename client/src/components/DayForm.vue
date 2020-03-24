@@ -91,7 +91,7 @@ export default class DayForm extends Vue {
     if (this.form.begin)
       return this.form.begin.toLocaleTimeString("de-DE", {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
       });
     return "";
   }
@@ -100,7 +100,7 @@ export default class DayForm extends Vue {
     if (this.form.end)
       return this.form.end.toLocaleTimeString("de-DE", {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
       });
     return "";
   }
@@ -122,7 +122,7 @@ export default class DayForm extends Vue {
         " Minuten Pause ab: " +
         shortBreak.toLocaleTimeString("de-DE", {
           hour: "2-digit",
-          minute: "2-digit"
+          minute: "2-digit",
         }) +
         "<br />";
       result +=
@@ -130,14 +130,14 @@ export default class DayForm extends Vue {
         " Minuten Pause ab: " +
         longBreak.toLocaleTimeString("de-DE", {
           hour: "2-digit",
-          minute: "2-digit"
+          minute: "2-digit",
         }) +
         "<br /> ";
       result +=
         "10 Stunden erreicht ab: " +
         longDay.toLocaleTimeString("de-DE", {
           hour: "2-digit",
-          minute: "2-digit"
+          minute: "2-digit",
         });
       return result;
     }

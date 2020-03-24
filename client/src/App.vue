@@ -18,9 +18,17 @@
       <nav id="nav">
         <ul>
           <li>
-            <button class="btn btn-primary">
-              <router-link to="about">Einstellungen</router-link>
-            </button>
+            <b-dropdown text="Einstellungen" variant="primary">
+              <b-dropdown-item :to="{ name: 'carryOver' }">
+                Überträge
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'rules' }">
+                Arbeitszeit
+              </b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'letterhead' }">
+                Kopfbogen
+              </b-dropdown-item>
+            </b-dropdown>
           </li>
           <li>
             <b-dropdown text="Monate" variant="primary" v-on:hide="cancelHide">
@@ -68,7 +76,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 1, year: this.lastYearString }
+                  params: { month: 1, year: this.lastYearString },
                 }"
               >
                 Januar {{ this.lastYearString }}
@@ -77,7 +85,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 2, year: this.lastYearString }
+                  params: { month: 2, year: this.lastYearString },
                 }"
               >
                 Februar {{ this.lastYearString }}
@@ -86,7 +94,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 3, year: this.lastYearString }
+                  params: { month: 3, year: this.lastYearString },
                 }"
               >
                 März {{ this.lastYearString }}
@@ -95,7 +103,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 4, year: this.lastYearString }
+                  params: { month: 4, year: this.lastYearString },
                 }"
               >
                 April {{ this.lastYearString }}
@@ -104,7 +112,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 5, year: this.lastYearString }
+                  params: { month: 5, year: this.lastYearString },
                 }"
               >
                 Mai {{ this.lastYearString }}
@@ -113,7 +121,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 6, year: this.lastYearString }
+                  params: { month: 6, year: this.lastYearString },
                 }"
               >
                 Juni {{ this.lastYearString }}
@@ -122,7 +130,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 7, year: this.lastYearString }
+                  params: { month: 7, year: this.lastYearString },
                 }"
               >
                 Juli {{ this.lastYearString }}
@@ -131,7 +139,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 8, year: this.lastYearString }
+                  params: { month: 8, year: this.lastYearString },
                 }"
               >
                 August {{ this.lastYearString }}
@@ -140,7 +148,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 9, year: this.lastYearString }
+                  params: { month: 9, year: this.lastYearString },
                 }"
               >
                 September {{ this.lastYearString }}
@@ -149,7 +157,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 10, year: this.lastYearString }
+                  params: { month: 10, year: this.lastYearString },
                 }"
               >
                 Oktober {{ this.lastYearString }}
@@ -158,7 +166,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 11, year: this.lastYearString }
+                  params: { month: 11, year: this.lastYearString },
                 }"
               >
                 November {{ this.lastYearString }}
@@ -167,7 +175,7 @@
                 v-if="this.lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 12, year: this.lastYearString }
+                  params: { month: 12, year: this.lastYearString },
                 }"
               >
                 Dezember {{ this.lastYearString }}

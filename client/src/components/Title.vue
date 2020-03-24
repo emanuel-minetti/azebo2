@@ -9,8 +9,8 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   props: {
-    propTitle: String
-  }
+    propTitle: String,
+  },
 })
 export default class Title extends Vue {}
 </script>
