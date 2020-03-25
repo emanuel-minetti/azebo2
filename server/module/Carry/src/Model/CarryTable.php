@@ -11,6 +11,7 @@
 namespace Carry\Model;
 
 use DateTime;
+use Exception;
 use Laminas\Db\Sql\Literal;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
@@ -51,6 +52,29 @@ class CarryTable
         $carry->exchangeArray($data);
         $carry->year = new DateTime();
         $this->tableGateway->insert($carry->getArrayCopy());
+    }
+
+    /**
+     * Returns the carry over for given user and the current year
+     *
+     * @param $userId
+     * @return Carry
+     */
+    public function getByUserId($userId)
+    {
+        $year = null;
+        try {
+            $year = new DateTime();
+        } catch (Exception $e) {
+        }
+        $select = $this->sql->select();
+        $where = new Where();
+        $where->equalTo('user_id', $userId)
+            ->and
+            ->equalTo(new Literal('YEAR(year)'), $year->format('Y'));
+        $select->where($where);
+        $resultSet = $this->tableGateway->selectWith($select);
+        return $resultSet->current();
     }
 
 }

@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
 /**
  * azebo2 is an application to print working time tables
  *
@@ -30,7 +31,6 @@ class CarryController extends ApiController
         $this->carryTable = $carryTable;
     }
 
-    /** @noinspection PhpUnused */
     public function carryResultAction()
     {
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
@@ -67,12 +67,25 @@ class CarryController extends ApiController
             }
 
             $resultArray = [
-                'saldo_hours' => $saldo->getHours(),
-                'saldo_minutes' => $saldo->getMinutes(),
-                'saldo_positive' => $saldo->isPositive(),
+                'saldo_hours' => $saldo ? $saldo->getHours() : '0',
+                'saldo_minutes' => $saldo ? $saldo->getMinutes() : '0',
+                'saldo_positive' => $saldo ? $saldo->isPositive() : '0',
                 'holidays_previous_year' => $holidaysPrevious,
                 'holidays' => $holidaysLeft,
                 'finalized' => $finalized,
+            ];
+            return $this->processResult($resultArray, $userId);
+        } else {
+            return $this->response;
+        }
+    }
+
+    public function carryAction() {
+        if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+            $userId = $this->request->getQuery()->user_id;
+            $carry = $this->carryTable->getByUserId($userId);
+            $resultArray = [
+                'carry' => $carry ? $carry->getArrayCopy() : null,
             ];
             return $this->processResult($resultArray, $userId);
         } else {
