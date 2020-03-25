@@ -11,4 +11,15 @@ export default class CarryService extends ApiService {
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }
+
+  static getCarry() {
+    const url = this.getBaseUrl() + "carry";
+    let headers = this.getHeaders();
+    headers = { ...headers, ...this.getAuthHeader() };
+    const requestOptions = {
+      method: "GET",
+      headers: headers,
+    };
+    return fetch(url, requestOptions).then(this.handleResponse);
+  }
 }

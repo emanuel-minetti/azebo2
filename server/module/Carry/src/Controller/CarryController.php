@@ -84,9 +84,7 @@ class CarryController extends ApiController
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
             $userId = $this->request->getQuery()->user_id;
             $carry = $this->carryTable->getByUserId($userId);
-            $resultArray = [
-                'carry' => $carry ? $carry->getArrayCopy() : null,
-            ];
+            $resultArray = $carry ? $carry->getArrayCopy() : null;
             return $this->processResult($resultArray, $userId);
         } else {
             return $this->response;

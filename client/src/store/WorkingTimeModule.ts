@@ -22,6 +22,7 @@ const WorkingTimeModule: Module<any, any> = {
     rules: Array<WorkingRule>(),
     carryResult: Carry,
     dayToEdit: WorkingDay,
+    carry: Carry,
   },
   getters: {
     saldo(state) {
@@ -132,7 +133,17 @@ const WorkingTimeModule: Module<any, any> = {
       // getWorkingDays({ state }, params) {
       //
     },
-    //getCarry({ state }, yearDate: Date) {},
+    getCarry({ state, rootState }) {
+      rootState.loading = true;
+      return CarryService.getCarry()
+        .then((data) => {
+          state.carry = new Carry(data.result);
+        })
+        .then(() => {
+          rootState.loading = false;
+          return this;
+        });
+    },
     setDay({ state }, day: WorkingDay) {
       return WorkingTimeService.setDay(day).then(() => {});
     },
