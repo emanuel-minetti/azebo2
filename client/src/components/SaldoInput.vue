@@ -2,7 +2,7 @@
   <div>
     <b-form-input
       type="text"
-      :value="syncedSaldo.toString(propSign)"
+      :value="propSaldo.toString(propSign)"
       v-on:focus="onfocus"
     />
     <b-modal
@@ -47,38 +47,38 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, PropSync, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { Saldo } from "@/models";
 
 @Component({})
 export default class SaldoInput extends Vue {
-  @PropSync("propSaldo", {
-    type: Saldo,
-    default: Saldo.createFromMillis(0),
-  })
-  syncedSaldo!: Saldo;
   @Prop({
-    type: Boolean,
+    default: () => new Saldo(),
   })
-  propSign!: boolean;
+  readonly propSaldo!: Saldo;
+  @Prop({
+    default: false,
+  })
+  readonly propSign!: boolean;
   modalShow = false;
   hours = "";
   minutes = "";
   positive = true;
 
   onfocus(evt: Event) {
-    this.hours = String(this.syncedSaldo.hours);
-    this.minutes = String(this.syncedSaldo.minutes);
+    this.hours = String(this.propSaldo.hours);
+    this.minutes = String(this.propSaldo.minutes);
     this.modalShow = true;
     let blur = evt.target as HTMLElement;
     blur.blur();
   }
 
   handleOk() {
-    this.syncedSaldo = Saldo.createFromMillis(
+    let saldoCopy = Saldo.createFromMillis(
       (Number(this.hours) * 60 + Number(this.minutes)) * 60 * 1000,
       this.positive
     );
+    this.$emit("update-saldo", saldoCopy);
   }
 }
 </script>
