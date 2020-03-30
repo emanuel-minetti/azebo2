@@ -9,6 +9,18 @@
         :prop-sign="true"
       />
     </b-form-group>
+    <b-form-group
+      label="Resturlaub für dieses Jahr:"
+      label-for="holidays-input"
+    >
+      <b-form-input
+        type="number"
+        min="0"
+        max="99"
+        :value="getFormHolidays()"
+        v-on:blur="setFormHolidays"
+      />
+    </b-form-group>
   </b-form>
 </template>
 
@@ -26,8 +38,9 @@ import { mapState } from "vuex";
 })
 export default class CarryForm extends Vue {
   carry!: Carry;
-  _formSaldo: Saldo | undefined;
   showSaldoInput = true;
+  private _formSaldo: Saldo | undefined;
+  private _formHolidays: number | undefined;
 
   getFormSaldo() {
     if (!this._formSaldo && this.carry.saldo) {
@@ -38,6 +51,17 @@ export default class CarryForm extends Vue {
   setFormSaldo(saldo: Saldo | undefined) {
     this._formSaldo = saldo;
     this.showSaldoInput = false;
+    this.$nextTick().then(() => (this.showSaldoInput = true));
+  }
+  getFormHolidays() {
+    if (!this._formHolidays && this.carry.holidays) {
+      this._formHolidays = this.carry.holidays;
+    }
+    return this._formHolidays;
+  }
+  setFormHolidays(evt: Event) {
+    let target = evt.target as HTMLInputElement;
+    this._formHolidays = Number(target.value);
     this.$nextTick().then(() => (this.showSaldoInput = true));
   }
 }
