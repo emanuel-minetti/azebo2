@@ -54,9 +54,13 @@ const WorkingTimeModule: Module<any, any> = {
   actions: {
     getMonth({ commit, dispatch, state, rootState }, monthDate: Date) {
       rootState.loading = true;
-      // make sure holidays are loaded before creating the working days
+      // TODO There's a problem showing false months on the 31st!!
+      monthDate.setDate(1);
+      console.log("MonthDate:" + monthDate);
+      // make sure holidays are loaded before creating the working day
       const year = monthDate.getFullYear().toString();
       const month = monthDate.getMonth() + 1;
+      console.log("Month: " + month);
       const monthString = month < 10 ? "0" + month : "" + month;
       const params = year + "/" + monthString;
 
