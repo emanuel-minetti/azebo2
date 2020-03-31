@@ -68,6 +68,7 @@ export default class SaldoInput extends Vue {
   onfocus(evt: Event) {
     this.hours = String(this.propSaldo.hours);
     this.minutes = String(this.propSaldo.minutes);
+    this.positive = Boolean(this.propSaldo.positive);
     this.modalShow = true;
     let blur = evt.target as HTMLElement;
     blur.blur();

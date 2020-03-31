@@ -131,6 +131,10 @@ export default class Saldo {
     return this._minutes;
   }
 
+  get positive(): boolean {
+    return this._positive;
+  }
+
   /**
    * Inverts the positiveness of this Saldo.
    */
