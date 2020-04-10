@@ -151,7 +151,7 @@ export default class MonthTable extends Vue {
     if (!this.finalized) {
       // store the date ...
       this.dateToEdit = row.date;
-      this.$store.commit("setDayToEdit", this.dateToEdit);
+      this.$store.commit("workingTime/setDayToEdit", this.dateToEdit);
       // ... and show the form
       if (!this.formShown) {
         this.formShown = true;
