@@ -38,8 +38,8 @@ export default class Home extends Vue {
   @Watch("$route")
   routeChanged(to: Route) {
     this.error = "";
-    // TODO remove debugging
-    let month = new Date("2020-03-31");
+    let month = new Date();
+    month.setDate(1);
     if (to.name === "month") {
       month.setMonth(Number(to.params.month) - 1);
       if (to.params.year) {

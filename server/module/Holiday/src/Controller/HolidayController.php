@@ -86,6 +86,9 @@ class HolidayController extends ApiController
                 [
                     'date' => $this->formatDate(new DateTime("$year/3/8")),
                     'name' => "Internationaler Frauentag",
+                ],[
+                    'date' => $this->formatDate(new DateTime("$year/5/1")),
+                    'name' => "Tag der Arbeit",
                 ],
                 [
                     'date' => $this->formatDate(new DateTime("$year/10/3")),
