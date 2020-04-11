@@ -62,7 +62,8 @@ class WorkingTimeController extends ApiController
                 $day = new WorkingDay();
                 $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
                 $day->date->add($oneHour);
-                $day->userId = $userId;
+                $day->userId = $userId; $this->prepare();
+            $post = json_decode($this->httpRequest->getContent());
                 $day->id = 0;
             }
             if (isset($post->_begin)) {

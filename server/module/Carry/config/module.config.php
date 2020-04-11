@@ -49,6 +49,15 @@ return array(
                             ]
                         ],
                     ],
+                    'post' => [
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'post',
+                            'defaults' => [
+                                'action' => 'setCarry',
+                            ]
+                        ],
+                    ],
                 ],
             ],
         ],

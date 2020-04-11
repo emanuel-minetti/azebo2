@@ -90,4 +90,15 @@ class CarryController extends ApiController
             return $this->response;
         }
     }
+
+    public function getCarryAction() {
+        $this->prepare();
+        $post = json_decode($this->httpRequest->getContent());
+
+        if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
+            $userId = $this->httpRequest->getQuery()->user_id;
+        } else {
+            return $this->response;
+        }
+    }
 }

@@ -1,5 +1,5 @@
 <template>
-  <b-form>
+  <b-form @submit="onSubmit" @reset="onReset" v-if="show">
     <!--TODO Should only be shown to new users (See #30)-->
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
       <SaldoInput
@@ -9,10 +9,7 @@
         :prop-sign="true"
       />
     </b-form-group>
-    <b-form-group
-      label="Resturlaub für dieses Jahr:"
-      label-for="holidays-input"
-    >
+    <b-form-group label="Resturlaub für dieses Jahr:">
       <b-form-input
         type="number"
         min="0"
@@ -21,6 +18,27 @@
         v-on:blur="setFormHolidays"
       />
     </b-form-group>
+    <b-form-group label="Resturlaub des vergangenen Jahres:">
+      <b-form-input
+        type="number"
+        min="0"
+        max="99"
+        :value="getFormHolidaysPrevious()"
+        v-on:blur="setFormHolidaysPrevious"
+      />
+    </b-form-group>
+    <b-button type="submit" variant="primary">Absenden</b-button>
+    <b-button type="reset" variant="secondary" class="ml-2">
+      Zurücksetzen
+    </b-button>
+    <b-button
+      type="button"
+      variant="secondary"
+      class="ml-2"
+      v-on:click="onCancel"
+    >
+      Abbrechen
+    </b-button>
   </b-form>
 </template>
 
@@ -37,10 +55,12 @@ import { mapState } from "vuex";
   computed: { ...mapState("workingTime", ["carry"]) },
 })
 export default class CarryForm extends Vue {
+  show = true;
   carry!: Carry;
   showSaldoInput = true;
   private _formSaldo: Saldo | undefined;
   private _formHolidays: number | undefined;
+  private e_formHolidaysPrevious: number | undefined;
 
   getFormSaldo() {
     if (!this._formSaldo && this.carry.saldo) {
@@ -64,6 +84,23 @@ export default class CarryForm extends Vue {
     this._formHolidays = Number(target.value);
     this.$nextTick().then(() => (this.showSaldoInput = true));
   }
+
+  getFormHolidaysPrevious() {
+    if (!this.e_formHolidaysPrevious && this.carry.holidaysPrevious) {
+      this.e_formHolidaysPrevious = this.carry.holidaysPrevious;
+    }
+    return this.e_formHolidaysPrevious;
+  }
+  setFormHolidaysPrevious(evt: Event) {
+    let target = evt.target as HTMLInputElement;
+    this.e_formHolidaysPrevious = Number(target.value);
+    this.$nextTick().then(() => (this.showSaldoInput = true));
+  }
+  onSubmit(evt: Event) {
+    evt.preventDefault();
+  }
+  onReset() {}
+  onCancel() {}
 }
 </script>
 
