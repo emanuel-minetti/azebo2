@@ -16,7 +16,7 @@ Please see also the documentation for
 Installation of azebo2 is described for a fresh CentOS 7.4 Installation.
 It should be easy to transfer these instructions to other Linux distributions.
 This installation guide assumes that azebo2 will be the only application running
-on this server. It should not be a problem to deploy more applications. Adapt as needed.
+on this server. Adapt as needed.
 
 * Install Apache2 and MariaDB:
 
