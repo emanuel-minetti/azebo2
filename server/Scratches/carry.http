@@ -1,0 +1,23 @@
+### This is just an example
+
+### Authorization by token, part 1. Retrieve and save token.
+POST http://localhost:7000/api/login
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
+
+> {% client.global.set("auth_token", response.body.data.jwt); %}
+
+### Authorization by token, part 2. Use token to authorize.
+POST http://localhost:7000/api/carry
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "versuch": "nanu"
+}
+
+###
