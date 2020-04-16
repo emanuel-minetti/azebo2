@@ -17,6 +17,7 @@ use Carry\Model\Carry;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
+use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use WorkingRule\Model\WorkingRule;
 
@@ -34,6 +35,7 @@ class CarryController extends ApiController
     public function carryResultAction()
     {
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
             $userId = $this->request->getQuery()->user_id;
             $yearId = $this->params('year');
             $monthId = $this->params('month');
@@ -82,6 +84,7 @@ class CarryController extends ApiController
 
     public function carryAction() {
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
             $userId = $this->request->getQuery()->user_id;
             $carry = $this->carryTable->getByUserId($userId);
             $resultArray = $carry ? $carry->getArrayCopy() : null;
@@ -91,12 +94,17 @@ class CarryController extends ApiController
         }
     }
 
-    public function getCarryAction() {
+    public function setCarryAction() {
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
 
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
+            return new JsonModel([
+                'test' => "hallo",
+                'post' =>  $post,
+                'userId' => $userId,
+            ]);
         } else {
             return $this->response;
         }
