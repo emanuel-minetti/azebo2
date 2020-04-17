@@ -29,8 +29,8 @@ class ApiController extends AbstractActionController
 
     protected function prepare()
     {
-        $this->httpRequest = Request::fromString($this->request);
-        $this->httpResponse = Response::fromString($this->response);
+        $this->httpRequest = $this->request;
+        $this->httpResponse = $this->response;
     }
 
     protected function processResult($result, $userId) {

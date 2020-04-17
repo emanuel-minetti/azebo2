@@ -34,9 +34,9 @@ class CarryController extends ApiController
 
     public function carryResultAction()
     {
+        $this->prepare();
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
-            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-            $userId = $this->request->getQuery()->user_id;
+            $userId = $this->httpRequest->getQuery()->user_id;
             $yearId = $this->params('year');
             $monthId = $this->params('month');
             $month = DateTime::createFromFormat(WorkingRule::DATE_FORMAT, "$yearId-$monthId-01");
@@ -83,9 +83,9 @@ class CarryController extends ApiController
     }
 
     public function carryAction() {
+        $this->prepare();
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
-            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-            $userId = $this->request->getQuery()->user_id;
+            $userId = $this->httpRequest->getQuery()->user_id;
             $carry = $this->carryTable->getByUserId($userId);
             $resultArray = $carry ? $carry->getArrayCopy() : null;
             return $this->processResult($resultArray, $userId);
@@ -97,7 +97,6 @@ class CarryController extends ApiController
     public function setCarryAction() {
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
-
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
             return new JsonModel([
