@@ -99,6 +99,7 @@ class CarryController extends ApiController
         $post = json_decode($this->httpRequest->getContent());
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
+            //$post
             return new JsonModel([
                 'test' => "hallo",
                 'post' =>  $post,
