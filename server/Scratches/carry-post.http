@@ -17,7 +17,14 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "versuch": "nanu"
+  "id": 0,
+  "user_id": 15,
+  "year": "2020-01-01",
+  "saldo_hours": 15,
+  "saldo_minutes": 27,
+  "saldo_positive": true,
+  "holidays": 30,
+  "holidays_previous": 14
 }
 
 ###

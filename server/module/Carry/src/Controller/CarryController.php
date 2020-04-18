@@ -99,10 +99,12 @@ class CarryController extends ApiController
         $post = json_decode($this->httpRequest->getContent());
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
-            //$post
+            $post->user_id = $userId;
+            $carry = new Carry();
+            $carry->exchangeArray((array)$post);
             return new JsonModel([
                 'test' => "hallo",
-                'post' =>  $post,
+                'post' =>  $carry->getArrayCopy(),
                 'userId' => $userId,
             ]);
         } else {
