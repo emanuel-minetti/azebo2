@@ -50,6 +50,37 @@
       <path value="$PROJECT_DIR$/server/vendor/psr/container" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/phpunit-mock-objects" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/server/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/server/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/server/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/server/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-http" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-modulemanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-console" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-eventmanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-escaper" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-loader" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-router" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-config" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-servicemanager" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-mvc" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-json" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-stdlib" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-view" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-validator" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-uri" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-component-installer" />
+      <path value="$PROJECT_DIR$/server/vendor/zfcampus/zf-development-mode" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-dom" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-test" />
+      <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-db" />
+      <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-log" />
+      <path value="$PROJECT_DIR$/server/vendor/psr/log" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

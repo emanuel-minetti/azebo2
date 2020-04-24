@@ -17,8 +17,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id": 0,
-  "user_id": 15,
+  "id": 1,
+  "user_id": 1,
   "year": "2020-01-01",
   "saldo_hours": 15,
   "saldo_minutes": 27,

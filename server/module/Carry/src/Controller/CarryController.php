@@ -99,12 +99,19 @@ class CarryController extends ApiController
         $post = json_decode($this->httpRequest->getContent());
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
-            $post->user_id = $userId;
             $carry = new Carry();
             $carry->exchangeArray((array)$post);
+            // check whether requested resource belongs to user
+            $toUpdate = $this->carryTable->getByUserIdAndYear($userId, $carry->year);
+            if (!is_null($toUpdate) && $toUpdate->id == $carry->id) {
+                $updated = $this->carryTable->update($carry);
+            } else {
+                // TODO log security event
+                $updated = 'erwischt!';
+            }
             return new JsonModel([
                 'test' => "hallo",
-                'post' =>  $carry->getArrayCopy(),
+                'post' =>  $updated,
                 'userId' => $userId,
             ]);
         } else {

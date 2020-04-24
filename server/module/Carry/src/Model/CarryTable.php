@@ -54,6 +54,13 @@ class CarryTable
         $this->tableGateway->insert($carry->getArrayCopy());
     }
 
+    public function update(Carry $carry) {
+        $where = new Where();
+        $where->equalTo('id', $carry->id);
+        //TODO surround with try/catch
+        return $this->tableGateway->update($carry->getArrayCopy(), $where);
+    }
+
     /**
      * Returns the carry over for given user and the current year
      *
