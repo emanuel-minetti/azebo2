@@ -17,17 +17,20 @@ use Carry\Model\Carry;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
+use Laminas\Log\Logger;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use WorkingRule\Model\WorkingRule;
 
 class CarryController extends ApiController
 {
+    private $log;
     private $monthTable;
     private $carryTable;
 
-    public function __construct(WorkingMonthTable $monthTable, CarryTable $carryTable)
+    public function __construct(Logger $log, WorkingMonthTable $monthTable, CarryTable $carryTable)
     {
+        $this->log = $log;
         $this->monthTable = $monthTable;
         $this->carryTable = $carryTable;
     }
@@ -83,6 +86,7 @@ class CarryController extends ApiController
     }
 
     public function carryAction() {
+        $this->log->info("Hallo");
         $this->prepare();
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
@@ -107,6 +111,7 @@ class CarryController extends ApiController
                 $updated = $this->carryTable->update($carry);
             } else {
                 // TODO log security event
+                $this->log->notice('hier hat jemand was versucht!');
                 $updated = 'erwischt!';
             }
             return new JsonModel([

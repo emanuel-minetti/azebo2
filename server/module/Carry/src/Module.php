@@ -10,18 +10,19 @@
 
 namespace Carry;
 
+use Carry\Controller\CarryController;
+use Carry\Model\Carry;
+use Carry\Model\CarryTable;
+use Carry\Model\WorkingMonth;
+use Carry\Model\WorkingMonthTable;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\ServiceManager\ServiceManager;
+use Service\log\AzeboLog;
 
-use Carry\Model\WorkingMonth;
-use Carry\Model\WorkingMonthTable;
-use Carry\Controller\CarryController;
-use Carry\Model\Carry;
-use Carry\Model\CarryTable;
-
-class Module {
+class Module
+{
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
@@ -44,6 +45,9 @@ class Module {
                     $resultSetPrototype->setArrayObjectPrototype(new Carry());
                     $tableGateway = new TableGateway('carry', $dbAdapter, null, $resultSetPrototype);
                     return new CarryTable($tableGateway);
+                },
+                AzeboLog::class => function() {
+                    return new AzeboLog();
                 }
             ],
         ];
@@ -54,7 +58,11 @@ class Module {
         return [
             'factories' => [
                 CarryController::class => function (ServiceManager $container) {
-                    return new CarryController($container->get(WorkingMonthTable::class), $container->get(CarryTable::class));
+                    return new CarryController(
+                        $container->get(AzeboLog::class),
+                        $container->get(WorkingMonthTable::class),
+                        $container->get(CarryTable::class)
+                    );
                 }
             ],
         ];
