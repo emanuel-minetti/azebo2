@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Service\log;
-
 
 use Laminas\Log\Writer\Stream;
 

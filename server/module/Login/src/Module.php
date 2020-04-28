@@ -1,4 +1,5 @@
 <?php /** @noinspection PhpUnused */
+
 /**
  * azebo2 is an application to print working time tables
  *
@@ -15,9 +16,11 @@ use Carry\Model\CarryTable;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Login\Controller\LoginController;
 use Login\Model\UserTable;
+use Service\log\AzeboLog;
 
 class Module
 {
@@ -30,20 +33,21 @@ class Module
     {
         return [
             'factories' => [
-                UserTable::class => function(ServiceManager $container) {
+                UserTable::class => function (ServiceManager $container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Model\User());
                     $tableGateway = new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
                     return new UserTable($tableGateway);
                 },
-                CarryTable::class => function(ServiceManager $container) {
+                CarryTable::class => function (ServiceManager $container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Carry());
                     $tableGateway = new TableGateway('carry', $dbAdapter, null, $resultSetPrototype);
                     return new CarryTable($tableGateway);
                 },
+                AzeboLog::class => InvokableFactory::class,
             ],
         ];
     }
@@ -52,10 +56,11 @@ class Module
     {
         return [
             'factories' => [
-                LoginController::class => function(ServiceManager $container) {
-                    return new LoginController(
-                        $container->get(UserTable::class), $container->get(CarryTable::class)
-                    );
+                LoginController::class => function (ServiceManager $sm) {
+                    $logger = $sm->get(AzeboLog::class);
+                    $userTable = $sm->get(UserTable::class);
+                    $carryTable = $sm->get(CarryTable::class);
+                    return new LoginController($logger, $userTable, $carryTable);
                 }
             ],
         ];

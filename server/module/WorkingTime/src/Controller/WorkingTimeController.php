@@ -15,6 +15,7 @@ use AzeboLib\ApiController;
 use DateInterval;
 use DateTime;
 use Service\AuthorizationService;
+use Service\log\AzeboLog;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
 
@@ -22,8 +23,9 @@ class WorkingTimeController extends ApiController
 {
     private $table;
 
-    public function __construct(WorkingDayTable $table)
+    public function __construct(AzeboLog $logger, WorkingDayTable $table)
     {
+        parent::__construct($logger);
         $this->table = $table;
     }
 

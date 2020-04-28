@@ -10,11 +10,36 @@
 
 namespace Holiday;
 
+use Holiday\Controller\HolidayController;
+use Laminas\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\ServiceManager;
+use Service\log\AzeboLog;
+
 class Module
 {
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
     }
-}
 
+    public function getServiceConfig()
+    {
+        return [
+            'factories' => [
+                AzeboLog::class => InvokableFactory::class,
+            ]
+        ];
+    }
+
+    public function getControllerConfig()
+    {
+        return [
+            'factories' => [
+                HolidayController::class => function(ServiceManager $sm) {
+                    return new HolidayController($sm->get(AzeboLog::class));
+                }
+            ]
+        ];
+    }
+
+}

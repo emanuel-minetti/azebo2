@@ -15,17 +15,21 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
+use Service\log\AzeboLog;
 
 class ApiController extends AbstractActionController
 {
-    /**
-     * @var Request
-     */
+    /** @var Request */
     protected $httpRequest;
-    /**
-     * @var Response
-     */
+    /** @var Response */
     protected $httpResponse;
+    /** @var AzeboLog */
+    protected $logger;
+
+    public function __construct(AzeboLog $logger)
+    {
+        $this->logger = $logger;
+    }
 
     protected function prepare()
     {

@@ -19,11 +19,17 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 
 use AzeboLib\ApiController;
+use Service\log\AzeboLog;
 use WorkingTime\Model\WorkingDay;
 use Service\AuthorizationService;
 
 class HolidayController extends ApiController
 {
+    public function __construct(AzeboLog $logger)
+    {
+        parent::__construct($logger);
+    }
+
     /** @noinspection PhpUnused */
     public function getAction()
     {

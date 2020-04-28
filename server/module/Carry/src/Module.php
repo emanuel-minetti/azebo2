@@ -18,6 +18,7 @@ use Carry\Model\WorkingMonthTable;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Service\log\AzeboLog;
 
@@ -46,9 +47,7 @@ class Module
                     $tableGateway = new TableGateway('carry', $dbAdapter, null, $resultSetPrototype);
                     return new CarryTable($tableGateway);
                 },
-                AzeboLog::class => function() {
-                    return new AzeboLog();
-                }
+                AzeboLog::class => InvokableFactory::class,
             ],
         ];
     }

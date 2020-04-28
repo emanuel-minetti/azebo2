@@ -11,7 +11,6 @@
 namespace Holiday;
 
 use Laminas\Router\Http\Segment;
-use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return array(
     'router' => [
@@ -29,11 +28,6 @@ return array(
                     ],
                 ],
             ],
-        ],
-    ],
-    'controllers' => [
-        'factories' => [
-            Controller\HolidayController::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [

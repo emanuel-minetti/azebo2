@@ -14,6 +14,7 @@ use DateTime;
 
 use AzeboLib\ApiController;
 use Service\AuthorizationService;
+use Service\log\AzeboLog;
 use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
 
@@ -21,8 +22,9 @@ class WorkingRuleController extends ApiController
 {
     private $table;
 
-    public function __construct(WorkingRuleTable $table)
+    public function __construct(AzeboLog $logger, WorkingRuleTable $table)
     {
+        parent::__construct($logger);
         $this->table = $table;
     }
 
