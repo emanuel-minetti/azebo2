@@ -99,6 +99,8 @@ class CarryController extends ApiController
     }
 
     public function setCarryAction() {
+        // TODO remove debugging
+        $this->logger->info("Hallo aus POST");
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
