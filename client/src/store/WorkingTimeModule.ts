@@ -148,9 +148,9 @@ const WorkingTimeModule: Module<any, any> = {
     setDay({ state }, day: WorkingDay) {
       return WorkingTimeService.setDay(day).then(() => {});
     },
-    // setCarry({ state }, carry: Carry) {
-    //
-    // }
+    setCarry({ state }, carry: Carry) {
+      return CarryService.setCarry(carry).then(() => {});
+    },
   },
 };
 
