@@ -1,22 +1,25 @@
 import { Saldo } from "@/models/index";
 
 export default class Carry {
+  private readonly _id: number;
   private readonly _year: Date;
-  private readonly _saldo: Saldo;
-  private readonly _holidaysPrevious: number;
-  private readonly _holidays: number;
+  private _saldo: Saldo;
+  private _holidaysPrevious: number;
+  private _holidays: number;
   private readonly _finalized: boolean;
 
   constructor(data?: any) {
     if (data) {
-      //TODO initialize 'id' and 'year' and format output
-      this._year = new Date();
+      //TODO format output
+      this._id = data.id;
+      this._year = new Date(data.year);
       let millis = (data.saldo_hours * 3600 + data.saldo_minutes * 60) * 1000;
       this._saldo = Saldo.createFromMillis(millis, data.saldo_positive);
       this._holidaysPrevious = data.holidays_previous_year;
       this._holidays = data.holidays;
       this._finalized = data.finalized;
     } else {
+      this._id = 0;
       this._year = new Date();
       this._saldo = Saldo.createFromMillis(0);
       this._holidaysPrevious = 0;
@@ -39,5 +42,17 @@ export default class Carry {
 
   get finalized(): boolean {
     return this._finalized;
+  }
+
+  set holidays(value: number) {
+    this._holidays = value;
+  }
+
+  set holidaysPrevious(value: number) {
+    this._holidaysPrevious = value;
+  }
+
+  set saldo(value: Saldo) {
+    this._saldo = value;
   }
 }

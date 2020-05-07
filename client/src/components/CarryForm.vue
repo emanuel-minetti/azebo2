@@ -99,9 +99,14 @@ export default class CarryForm extends Vue {
   onSubmit(evt: Event) {
     evt.preventDefault();
     //TODO create form form
-    let carry = new Carry();
+    this.carry.holidays = this._formHolidays
+      ? this._formHolidays
+      : this.carry.holidays;
+    this.carry.holidaysPrevious = this._formHolidaysPrevious
+      ? this._formHolidaysPrevious
+      : this.carry.holidaysPrevious;
     this.$store
-      .dispatch("workingTime/setCarry", carry)
+      .dispatch("workingTime/setCarry", this.carry)
       .then(() => this.$store.dispatch("workingTime/getCarry"))
       .then(() => this.$emit("submitted"));
   }
