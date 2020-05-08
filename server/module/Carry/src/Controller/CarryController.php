@@ -85,8 +85,6 @@ class CarryController extends ApiController
     }
 
     public function carryAction() {
-        // TODO remove debugging
-        $this->logger->info("Hallo");
         $this->prepare();
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
@@ -99,8 +97,6 @@ class CarryController extends ApiController
     }
 
     public function setCarryAction() {
-        // TODO remove debugging
-        $this->logger->info("Hallo aus POST");
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
@@ -116,6 +112,7 @@ class CarryController extends ApiController
                 $this->logger->notice('hier hat jemand was versucht!');
                 $updated = 'erwischt!';
             }
+            // TODO respond with updated entity
             return new JsonModel([
                 'test' => "hallo",
                 'post' =>  $updated,
