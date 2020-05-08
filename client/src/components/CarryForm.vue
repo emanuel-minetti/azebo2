@@ -98,7 +98,7 @@ export default class CarryForm extends Vue {
   }
   onSubmit(evt: Event) {
     evt.preventDefault();
-    //TODO create form form
+    this.carry.saldo = this._formSaldo ? this._formSaldo : this.carry.saldo;
     this.carry.holidays = this._formHolidays
       ? this._formHolidays
       : this.carry.holidays;

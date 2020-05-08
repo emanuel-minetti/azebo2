@@ -28,10 +28,32 @@ export default class CarryService extends ApiService {
     const url = this.getBaseUrl() + "carry";
     let headers = this.getHeaders();
     headers = { ...headers, ...this.getAuthHeader() };
+    let day =
+      "" +
+      (carry.year.getDate() <= 9
+        ? "0" + carry.year.getDate()
+        : carry.year.getDate());
+    let month =
+      "" +
+      (carry.year.getMonth() <= 9
+        ? "0" + (carry.year.getMonth() + 1)
+        : carry.year.getMonth() + 1);
+    let year = carry.year.getFullYear();
+    let yearString = [year, month, day].join("-");
+    let carryObject = {
+      id: carry.id,
+      user_id: carry.user_id,
+      year: yearString,
+      saldo_hours: carry.saldo.hours,
+      saldo_minutes: carry.saldo.minutes,
+      saldo_positive: carry.saldo.positive,
+      holidays: carry.holidays,
+      holidays_previous_year: carry.holidaysPrevious,
+    };
     const requestOptions = {
       method: "POST",
       headers: headers,
-      body: JSON.stringify(carry),
+      body: JSON.stringify(carryObject),
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }
