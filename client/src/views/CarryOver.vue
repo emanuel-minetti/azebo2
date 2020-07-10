@@ -4,8 +4,7 @@
     <Title v-bind:prop-title="title" />
     <div id="intro">
       <div v-if="editing">
-        Hier können Sie Ihre Überträge aus externen Zeiterfassungssystemen
-        übernehmen:
+        Hier können Sie Ihre Überträge bearbeiten:
         <CarryForm />
       </div>
       <div v-else>
@@ -35,6 +34,7 @@ export default class CarryOver extends Vue {
   title = "Überträge";
   error = "";
   editing = false;
+  // noinspection JSUnusedGlobalSymbols
   mounted() {
     this.$store.dispatch("workingTime/getCarry").catch((reason) => {
       this.error = "Es gab ein Problem beim Laden des Übertrags:<br/>" + reason;
