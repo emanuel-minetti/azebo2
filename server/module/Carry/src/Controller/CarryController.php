@@ -17,7 +17,6 @@ use Carry\Model\Carry;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
-use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
 use WorkingRule\Model\WorkingRule;
@@ -99,27 +98,23 @@ class CarryController extends ApiController
     public function setCarryAction() {
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
-        if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
             $carry = new Carry();
             $carry->exchangeArray((array)$post);
             // check whether requested resource belongs to user
             $toUpdate = $this->carryTable->getByUserIdAndYear($userId, $carry->year);
             if (!is_null($toUpdate) && $toUpdate->id == $carry->id) {
-                $updated = $this->carryTable->update($carry);
+                $this->carryTable->update($carry);
+                $updated = $this->carryTable->find($carry->id)->getArrayCopy();
             } else {
                 // TODO log security event
                 $this->logger->notice('hier hat jemand was versucht!');
                 $updated = 'erwischt!';
             }
-            // TODO respond with updated entity
-            return new JsonModel([
-                'test' => "hallo",
-                'post' =>  $updated,
-                'userId' => $userId,
-            ]);
+            return $this->processResult($updated, $userId);
         } else {
-            return $this->response;
+            return $this->httpResponse;
         }
     }
 }

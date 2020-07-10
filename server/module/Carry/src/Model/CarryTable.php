@@ -84,4 +84,10 @@ class CarryTable
         return $resultSet->current();
     }
 
+    public function find(int $id)
+    {
+        $rowSet = $this->tableGateway->select(['id' => $id]);
+        return $rowSet->current();
+    }
+
 }

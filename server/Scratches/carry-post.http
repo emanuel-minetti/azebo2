@@ -20,11 +20,11 @@ Accept: application/json
   "id": 1,
   "user_id": 1,
   "year": "2020-01-01",
-  "saldo_hours": 15,
-  "saldo_minutes": 29,
-  "saldo_positive": true,
-  "holidays": 30,
-  "holidays_previous_year": 33
+  "saldo_hours": 25,
+  "saldo_minutes": 33,
+  "saldo_positive": false,
+  "holidays": 3,
+  "holidays_previous_year": 2
 }
 
 ###
