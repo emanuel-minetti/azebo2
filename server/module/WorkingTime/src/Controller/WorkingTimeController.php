@@ -79,6 +79,7 @@ class WorkingTimeController extends ApiController
             $day->timeOff = isset($post->_timeOff) ? $post->_timeOff : null;
             $day->comment = isset($post->_comment) ? $post->_comment : null;
             $this->table->upsert($day);
+            //TODO fetch updated WorkingDay from DB
             return $this->processResult($day->getArrayCopy(), $userId);
         } else {
             // `httpResponse` was set in the call to `AuthorizationService::authorize`
