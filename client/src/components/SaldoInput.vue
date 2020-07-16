@@ -2,6 +2,7 @@
   <div>
     <b-form-input
       type="text"
+      :disabled="propDisabled"
       :value="propSaldo.toString(propSign)"
       v-on:focus="onfocus"
     />
@@ -60,6 +61,10 @@ export default class SaldoInput extends Vue {
     default: false,
   })
   readonly propSign!: boolean;
+  @Prop({
+    default: false,
+  })
+  readonly propDisabled!: boolean;
   modalShow = false;
   hours = "";
   minutes = "";

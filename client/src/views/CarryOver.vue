@@ -5,11 +5,14 @@
     <div id="intro">
       <div v-if="editing">
         Hier können Sie Ihre Überträge bearbeiten:
-        <CarryForm />
+        <CarryForm :prop-disabled="false" />
       </div>
       <div v-else>
         Ihre aktuellen Überträge lauten:
-        <!-- TODO Hier gehts weiter: Trennen von Anzeige und Bearbeitung! -->
+        <CarryForm :prop-disabled="true" />
+        <b-button variant="primary" v-on:click="setEditing">
+          Bearbeiten
+        </b-button>
       </div>
     </div>
   </div>
@@ -34,6 +37,10 @@ export default class CarryOver extends Vue {
   title = "Überträge";
   error = "";
   editing = false;
+
+  setEditing() {
+    this.editing = true;
+  }
   // noinspection JSUnusedGlobalSymbols
   mounted() {
     this.$store.dispatch("workingTime/getCarry").catch((reason) => {

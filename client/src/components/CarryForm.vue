@@ -3,6 +3,7 @@
     <!--TODO Should only be shown to new users (See #30)-->
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
       <SaldoInput
+        :prop-disabled="propDisabled"
         v-if="showSaldoInput"
         :prop-saldo="getFormSaldo()"
         v-on:update-saldo="setFormSaldo"
@@ -14,6 +15,7 @@
         type="number"
         min="0"
         max="99"
+        :disabled="propDisabled"
         :value="getFormHolidays()"
         v-on:blur="setFormHolidays"
       />
@@ -24,21 +26,24 @@
         min="0"
         max="99"
         :value="getFormHolidaysPrevious()"
+        :disabled="propDisabled"
         v-on:blur="setFormHolidaysPrevious"
       />
     </b-form-group>
-    <b-button type="submit" variant="primary">Absenden</b-button>
-    <b-button type="reset" variant="secondary" class="ml-2">
-      Zurücksetzen
-    </b-button>
-    <b-button
-      type="button"
-      variant="secondary"
-      class="ml-2"
-      v-on:click="onCancel"
-    >
-      Abbrechen
-    </b-button>
+    <div v-if="!propDisabled">
+      <b-button type="submit" variant="primary">Absenden</b-button>
+      <b-button type="reset" variant="secondary" class="ml-2">
+        Zurücksetzen
+      </b-button>
+      <b-button
+        type="button"
+        variant="secondary"
+        class="ml-2"
+        v-on:click="onCancel"
+      >
+        Abbrechen
+      </b-button>
+    </div>
   </b-form>
 </template>
 
@@ -49,6 +54,9 @@ import SaldoInput from "@/components/SaldoInput.vue";
 import { mapState } from "vuex";
 
 @Component({
+  props: {
+    propDisabled: Boolean,
+  },
   components: {
     SaldoInput,
   },
