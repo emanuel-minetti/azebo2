@@ -5,7 +5,7 @@
     <div id="intro">
       <div v-if="editing">
         Hier können Sie Ihre Überträge bearbeiten:
-        <CarryForm :prop-disabled="false" />
+        <CarryForm :prop-disabled="false" v-on:submitted="submitted" />
       </div>
       <div v-else>
         Ihre aktuellen Überträge lauten:
@@ -40,6 +40,9 @@ export default class CarryOver extends Vue {
 
   setEditing() {
     this.editing = true;
+  }
+  submitted() {
+    this.editing = false;
   }
   // noinspection JSUnusedGlobalSymbols
   mounted() {
