@@ -17,10 +17,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id": 1,
+  "id": 7,
   "user_id": 1,
   "year": "2020-01-01",
-  "saldo_hours": 25,
+  "saldo_hours": 11,
   "saldo_minutes": 33,
   "saldo_positive": false,
   "holidays": 3,

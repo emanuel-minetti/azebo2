@@ -30,4 +30,9 @@ return [
         'password' => '<yourPassword>',
     ],
     'hostname' => '<yourHostname>',
+
+    'pathToLogFile' => '../server/data/log/azebo.log',
+    'securityEventPrefix' => 'SecEvent',
+
+
 ];

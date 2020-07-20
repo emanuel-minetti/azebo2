@@ -2,13 +2,15 @@
 
 namespace Service\log;
 
+use Laminas\Config\Factory;
 use Laminas\Log\Writer\Stream;
 
 class AzeboLogWriter extends Stream
 {
     public function __construct()
     {
-        //TODO make file name configurable
-        parent::__construct('../server/data/log/azebo.log');
+        $config = Factory::fromFile(__DIR__ . '/../../config/autoload/local.php');
+        $path = $config['log']['pathToLogFile'];
+        parent::__construct($path);
     }
 }

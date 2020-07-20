@@ -17,6 +17,8 @@ use Carry\Model\Carry;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
+use Laminas\Config\Factory;
+use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
 use WorkingRule\Model\WorkingRule;
@@ -83,7 +85,8 @@ class CarryController extends ApiController
         }
     }
 
-    public function carryAction() {
+    public function carryAction()
+    {
         $this->prepare();
         if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
@@ -95,22 +98,31 @@ class CarryController extends ApiController
         }
     }
 
-    public function setCarryAction() {
+    public function setCarryAction()
+    {
+        $config = Factory::fromFile(__DIR__ . '/../../../../config/autoload/local.php');
+        $secEvent = $config['log']['securityEventPrefix'];
+
         $this->prepare();
         $post = json_decode($this->httpRequest->getContent());
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST',])) {
             $userId = $this->httpRequest->getQuery()->user_id;
             $carry = new Carry();
             $carry->exchangeArray((array)$post);
-            // check whether requested resource belongs to user
+            // check whether requested resource belongs to user and requested userId is actual userId
             $toUpdate = $this->carryTable->getByUserIdAndYear($userId, $carry->year);
-            if (!is_null($toUpdate) && $toUpdate->id == $carry->id) {
+            if (!is_null($toUpdate) && $toUpdate->id == $carry->id && $carry->userId == $userId) {
                 $this->carryTable->update($carry);
                 $updated = $this->carryTable->find($carry->id)->getArrayCopy();
             } else {
-                // TODO log security event
-                $this->logger->notice('hier hat jemand was versucht!');
-                $updated = 'erwischt!';
+                $function = __METHOD__;
+                //$prefix = SEC_EVENT;
+                $message = "$secEvent in $function: UserId=$userId hat versucht carryId=$carry->id mit" .
+                    " userId=$carry->userId zu ändern";
+                $this->logger->warn($message);
+                return new JsonModel([
+                   'success' => false,
+                ]);
             }
             return $this->processResult($updated, $userId);
         } else {
