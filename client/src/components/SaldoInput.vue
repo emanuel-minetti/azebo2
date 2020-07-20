@@ -80,11 +80,11 @@ export default class SaldoInput extends Vue {
   }
 
   handleOk() {
-    let saldoCopy = Saldo.createFromMillis(
+    let saldo = Saldo.createFromMillis(
       (Number(this.hours) * 60 + Number(this.minutes)) * 60 * 1000,
       this.positive
     );
-    this.$emit("update-saldo", saldoCopy);
+    this.$emit("update-saldo", saldo);
   }
 }
 </script>
