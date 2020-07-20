@@ -1,6 +1,6 @@
 <template>
   <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-    <!--TODO Should only be shown to new users (See #30)-->
+    <!--TODO Should be shown to non new users with a warning (See #30)-->
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
       <SaldoInput
         :prop-disabled="propDisabled"
