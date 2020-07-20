@@ -63,12 +63,14 @@ import { mapState } from "vuex";
   computed: { ...mapState("workingTime", ["carry"]) },
 })
 export default class CarryForm extends Vue {
-  show = true;
   carry!: Carry;
-  showSaldoInput = true;
   private _formSaldo: Saldo | undefined;
   private _formHolidays: number | undefined;
   private _formHolidaysPrevious: number | undefined;
+
+  //Fields to support updating the view
+  private show = true;
+  private showSaldoInput = true;
 
   getFormSaldo() {
     if (!this._formSaldo && this.carry.saldo) {
