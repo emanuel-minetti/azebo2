@@ -1,9 +1,6 @@
 import { Saldo } from "@/models/index";
 
 export default class Carry {
-  get user_id(): number {
-    return this._user_id;
-  }
   private readonly _id: number;
   private readonly _user_id: number;
   private readonly _year: Date;
@@ -67,5 +64,9 @@ export default class Carry {
 
   get year() {
     return this._year;
+  }
+
+  get user_id(): number {
+    return this._user_id;
   }
 }
