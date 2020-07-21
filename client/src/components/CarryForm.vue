@@ -120,7 +120,9 @@ export default class CarryForm extends Vue {
       .then(() => this.$store.dispatch("workingTime/getCarry"))
       .then(() => this.$emit("submitted"));
   }
+  // TODO implement!
   onReset() {}
+  // TODO implement!
   onCancel() {}
 }
 </script>
