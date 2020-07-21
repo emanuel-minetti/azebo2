@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div v-if="loading"></div>
+    <div v-if="loading" class="d-flex justify-content-center mb-3">
+      <b-spinner id="spinner" label="Loading..."></b-spinner>
+    </div>
     <Title v-bind:prop-title="title" />
     <div id="intro">
       <div v-if="editing">
