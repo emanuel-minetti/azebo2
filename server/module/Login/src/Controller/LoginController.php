@@ -35,10 +35,9 @@ class LoginController extends ApiController
     /** @noinspection PhpUnused */
     public function loginAction()
     {
-        // TODO review
-        //$this->prepare();
+        $this->prepare();
         $request = $this->getRequest();
-        $content = $request->getContent();
+        $content = $this->httpRequest->getContent();
         $requestData = json_decode($content);
         $declineRequest = new JsonModel([
             'success' => false
@@ -134,9 +133,9 @@ class LoginController extends ApiController
                 return $declineRequest;
             }
             unset($user->password_hash);
+            $this->logger->info("Logged in: username: $user->username");
         }
         // return response
-        $this->logger->info("Logged in: username: $user->username");
         return $this->processResult($user->getArrayCopy(), $user->id);
     }
 }
