@@ -83,6 +83,12 @@ class CarryTable
         return $resultSet->current();
     }
 
+    /**
+     * Finds a `Carry` by its `id`.
+     *
+     * @param int $id
+     * @return Carry
+     */
     public function find(int $id)
     {
         $rowSet = $this->tableGateway->select(['id' => $id]);
