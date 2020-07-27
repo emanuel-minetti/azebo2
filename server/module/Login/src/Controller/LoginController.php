@@ -36,14 +36,13 @@ class LoginController extends ApiController
     public function loginAction()
     {
         $this->prepare();
-        $request = $this->getRequest();
         $content = $this->httpRequest->getContent();
         $requestData = json_decode($content);
         $declineRequest = new JsonModel([
             'success' => false
         ]);
         // validate request method
-        if ($request->getMethod() !== 'POST') {
+        if ($this->httpRequest->getMethod() !== 'POST') {
             return $declineRequest;
         }
 
