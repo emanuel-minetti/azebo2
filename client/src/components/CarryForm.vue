@@ -92,7 +92,6 @@ export default class CarryForm extends Vue {
   setFormHolidays(evt: Event) {
     let target = evt.target as HTMLInputElement;
     this._formHolidays = Number(target.value);
-    this.$nextTick().then(() => (this.showSaldoInput = true));
   }
 
   getFormHolidaysPrevious() {
@@ -104,7 +103,6 @@ export default class CarryForm extends Vue {
   setFormHolidaysPrevious(evt: Event) {
     let target = evt.target as HTMLInputElement;
     this._formHolidaysPrevious = Number(target.value);
-    this.$nextTick().then(() => (this.showSaldoInput = true));
   }
   onSubmit(evt: Event) {
     evt.preventDefault();
@@ -120,10 +118,18 @@ export default class CarryForm extends Vue {
       .then(() => this.$store.dispatch("workingTime/getCarry"))
       .then(() => this.$emit("submitted"));
   }
-  // TODO implement!
-  onReset() {}
-  // TODO implement!
-  onCancel() {}
+  onReset(evt: Event) {
+    evt.preventDefault();
+    this._formSaldo = this.carry.saldo;
+    this._formHolidays = this.carry.holidays;
+    this._formHolidaysPrevious = this.carry.holidaysPrevious;
+    this.show = false;
+    this.$nextTick().then(() => (this.show = true));
+  }
+  onCancel(evt: Event) {
+    this.onReset(evt);
+    this.$emit("submitted");
+  }
 }
 </script>
 
