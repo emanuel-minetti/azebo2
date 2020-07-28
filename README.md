@@ -150,11 +150,12 @@ and adjust it to your needs.
 * Install LDAP
 
 If you plan to use LDAP authentication you must install openldap and
-openldap-clients (for ldapsearch)
+openldap-clients (for ldapsearch) run
 
 ```
 yum install openldap openldap-clients
 ```
+and adjust `server/config/autoload/Ldap/config.php`
 
 * Create and serve JavaScript modules for deployment:
 
