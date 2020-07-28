@@ -16,6 +16,7 @@
 import { Title, MonthTable, MonthAggregate } from "@/components";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route } from "vue-router";
+import { mapState } from "vuex";
 
 @Component({
   components: {
@@ -23,19 +24,22 @@ import { Route } from "vue-router";
     MonthTable,
     MonthAggregate,
   },
+  computed: {
+    ...mapState(["loading"]),
+  },
 })
 export default class Home extends Vue {
+  loading!: boolean;
   error = "";
   get monthName() {
     return this.$store.state.workingTime.month.monthName;
   }
-  get loading() {
-    return this.$store.state.loading;
-  }
+
   @Watch("$route")
   routeChanged(to: Route) {
     this.error = "";
     let month = new Date();
+    month.setDate(1);
     if (to.name === "month") {
       month.setMonth(Number(to.params.month) - 1);
       if (to.params.year) {

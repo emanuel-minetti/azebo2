@@ -18,14 +18,16 @@ use Laminas\View\Model\JsonModel;
 use Login\Model\User;
 use Login\Model\UserTable;
 use RuntimeException;
+use Service\log\AzeboLog;
 
 class LoginController extends ApiController
 {
     private $userTable;
     private $carryTable;
 
-    public function __construct(UserTable $userTable, CarryTable $carryTable)
+    public function __construct(AzeboLog $logger, UserTable $userTable, CarryTable $carryTable)
     {
+        parent::__construct($logger);
         $this->userTable = $userTable;
         $this->carryTable = $carryTable;
     }
@@ -33,15 +35,14 @@ class LoginController extends ApiController
     /** @noinspection PhpUnused */
     public function loginAction()
     {
-        //$this->prepare();
-        $request = $this->getRequest();
-        $content = $request->getContent();
+        $this->prepare();
+        $content = $this->httpRequest->getContent();
         $requestData = json_decode($content);
         $declineRequest = new JsonModel([
             'success' => false
         ]);
         // validate request method
-        if ($request->getMethod() !== 'POST') {
+        if ($this->httpRequest->getMethod() !== 'POST') {
             return $declineRequest;
         }
 
@@ -131,6 +132,7 @@ class LoginController extends ApiController
                 return $declineRequest;
             }
             unset($user->password_hash);
+            $this->logger->info("Logged in: username: $user->username");
         }
         // return response
         return $this->processResult($user->getArrayCopy(), $user->id);

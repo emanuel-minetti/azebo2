@@ -15,6 +15,7 @@ use AzeboLib\ApiController;
 use DateInterval;
 use DateTime;
 use Service\AuthorizationService;
+use Service\log\AzeboLog;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
 
@@ -22,8 +23,9 @@ class WorkingTimeController extends ApiController
 {
     private $table;
 
-    public function __construct(WorkingDayTable $table)
+    public function __construct(AzeboLog $logger, WorkingDayTable $table)
     {
+        parent::__construct($logger);
         $this->table = $table;
     }
 
@@ -62,7 +64,8 @@ class WorkingTimeController extends ApiController
                 $day = new WorkingDay();
                 $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
                 $day->date->add($oneHour);
-                $day->userId = $userId;
+                $day->userId = $userId; $this->prepare();
+            $post = json_decode($this->httpRequest->getContent());
                 $day->id = 0;
             }
             if (isset($post->_begin)) {
