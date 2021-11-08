@@ -169,8 +169,9 @@ export default class DayForm extends Vue {
   onSubmit(evt: Event) {
     evt.preventDefault();
     this.$store
-      .dispatch("setDay", this.form)
-      .then(() => this.$store.dispatch("getMonth", this.form.date))
+      // TODO repair summer time!
+      .dispatch("workingTime/setDay", this.form)
+      .then(() => this.$store.dispatch("workingTime/getMonth", this.form.date))
       .then(() => {
         this.$emit("submitted");
       });

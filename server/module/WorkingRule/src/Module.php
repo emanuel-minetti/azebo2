@@ -13,8 +13,10 @@ namespace WorkingRule;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 
+use Service\log\AzeboLog;
 use WorkingRule\Controller\WorkingRuleController;
 use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
@@ -29,13 +31,14 @@ class Module {
     {
         return [
             'factories' => [
-                WorkingRuleTable::class => function (ServiceManager $container) {
-                    $dbAdapter = $container->get(AdapterInterface::class);
+                WorkingRuleTable::class => function (ServiceManager $sm) {
+                    $dbAdapter = $sm->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new WorkingRule([]));
                     $tableGateway = new TableGateway('working_rule', $dbAdapter, null, $resultSetPrototype);
                     return new WorkingRuleTable($tableGateway);
                 },
+                AzeboLog::class => InvokableFactory::class,
             ],
         ];
     }
@@ -44,10 +47,10 @@ class Module {
     {
         return [
             'factories' => [
-                WorkingRuleController::class => function (ServiceManager $container) {
-                    return new WorkingRuleController(
-                        $container->get(WorkingRuleTable::class)
-                    );
+                WorkingRuleController::class => function (ServiceManager $sm) {
+                    $logger = $sm->get(AzeboLog::class);
+                    $table = $sm->get(WorkingRuleTable::class);
+                    return new WorkingRuleController($logger, $table);
                 }
             ],
         ];

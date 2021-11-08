@@ -1,0 +1,30 @@
+### Authorization by token, part 1. Retrieve and save token.
+POST http://localhost:7000/api/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
+
+> {% client.global.set("auth_token", response.body.data.jwt); %}
+
+### Authorization by token, part 2. Use token to authorize.
+POST http://localhost:7000/api/carry
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 1,
+  "user_id": 1,
+  "year": "2020-01-01",
+  "saldo_hours": 55,
+  "saldo_minutes": 33,
+  "saldo_positive": true,
+  "holidays": 3,
+  "holidays_previous_year": 2
+}
+
+###
