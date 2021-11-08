@@ -28,7 +28,6 @@
       <path value="$PROJECT_DIR$/server/vendor/phpunit/php-text-template" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/phpunit" />
-      <path value="$PROJECT_DIR$/server/vendor/phpunit/php-token-stream" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/php-file-iterator" />
       <path value="$PROJECT_DIR$/server/vendor/phpunit/php-timer" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-zendframework-bridge" />
@@ -48,8 +47,6 @@
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-eventmanager" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-escaper" />
       <path value="$PROJECT_DIR$/server/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/server/vendor/phpunit/phpunit-mock-objects" />
-      <path value="$PROJECT_DIR$/server/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/object-enumerator" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/object-reflector" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/type" />
@@ -81,6 +78,14 @@
       <path value="$PROJECT_DIR$/server/vendor/zendframework/zend-db" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-log" />
       <path value="$PROJECT_DIR$/server/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/server/vendor/webimpress/safe-writer" />
+      <path value="$PROJECT_DIR$/server/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/server/vendor/brick/varexporter" />
+      <path value="$PROJECT_DIR$/server/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/server/vendor/sebastian/code-unit" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

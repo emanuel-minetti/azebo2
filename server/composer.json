@@ -48,6 +48,5 @@
         "test": "phpunit"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8"
     }
 }
