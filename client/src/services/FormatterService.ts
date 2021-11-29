@@ -6,9 +6,9 @@ export default class FormatterService {
   public static toGermanDate(date: Date) {
     const options = {
       year: "numeric",
-      month: "numeric",
+      month: "2-digit",
       day: "numeric",
-    };
+    } as const;
     return date.toLocaleString("de-DE", options);
   }
 
@@ -17,7 +17,7 @@ export default class FormatterService {
    * @param date the date to convert
    */
   public static toLongGermanDate(date: Date) {
-    const options = { weekday: "long" };
+    const options = { weekday: "long" } as const;
     const weekday = date.toLocaleString("de-DE", options);
     return weekday + ", " + FormatterService.toGermanDate(date);
   }
@@ -28,7 +28,7 @@ export default class FormatterService {
    */
   public static toGermanTime(date?: Date) {
     if (date) {
-      const options = { hour: "numeric", minute: "numeric" };
+      const options = { hour: "numeric", minute: "numeric" } as const;
       return date.toLocaleString("de-DE", options);
     } else {
       return "";

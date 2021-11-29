@@ -24,10 +24,10 @@ export default class WorkingMonth {
       0
     );
     // iterate over the days of the month to setup an array of working days
-    let currentDay = firstOfMonth;
+    const currentDay = firstOfMonth;
     while (currentDay <= lastOfMonth) {
       // look for current day in given `days`
-      let found = days.find(
+      const found = days.find(
         (day) => day.date.getDate() == currentDay.getDate()
       );
       if (found) {
@@ -54,8 +54,8 @@ export default class WorkingMonth {
   get monthName() {
     const options = {
       year: "numeric",
-      month: "long",
-    };
+      month: "2-digit",
+    } as const;
     return this.monthDate.toLocaleString("de-DE", options);
   }
 

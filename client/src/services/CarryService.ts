@@ -28,19 +28,19 @@ export default class CarryService extends ApiService {
     const url = this.getBaseUrl() + "carry";
     let headers = this.getHeaders();
     headers = { ...headers, ...this.getAuthHeader() };
-    let day =
+    const day =
       "" +
       (carry.year.getDate() <= 9
         ? "0" + carry.year.getDate()
         : carry.year.getDate());
-    let month =
+    const month =
       "" +
       (carry.year.getMonth() <= 9
         ? "0" + (carry.year.getMonth() + 1)
         : carry.year.getMonth() + 1);
-    let year = carry.year.getFullYear();
-    let yearString = [year, month, day].join("-");
-    let carryObject = {
+    const year = carry.year.getFullYear();
+    const yearString = [year, month, day].join("-");
+    const carryObject = {
       id: carry.id,
       user_id: carry.user_id,
       year: yearString,
