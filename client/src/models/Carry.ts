@@ -14,7 +14,7 @@ export default class Carry {
       this._id = data.id;
       this._user_id = data.user_id;
       this._year = new Date(data.year);
-      let millis = (data.saldo_hours * 3600 + data.saldo_minutes * 60) * 1000;
+      const millis = (data.saldo_hours * 3600 + data.saldo_minutes * 60) * 1000;
       this._saldo = Saldo.createFromMillis(millis, data.saldo_positive);
       this._holidaysPrevious = data.holidays_previous_year;
       this._holidays = data.holidays;

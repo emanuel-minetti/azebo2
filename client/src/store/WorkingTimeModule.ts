@@ -73,7 +73,7 @@ const WorkingTimeModule: Module<any, any> = {
         )
         .then(() =>
           WorkingTimeService.getMonth(params).then((data) => {
-            let workingDays = data.result.map(
+            const workingDays = data.result.map(
               (day: any) => new WorkingDay(day)
             );
             state.month = new WorkingMonth(monthDate, workingDays);

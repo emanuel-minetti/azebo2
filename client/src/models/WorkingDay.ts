@@ -59,7 +59,7 @@ export default class WorkingDay {
       // @ts-ignore
       const rules = store.state.workingTime.rules;
       for (let i = 0; i < rules.length; i++) {
-        let rule: WorkingRule = rules[i];
+        const rule: WorkingRule = rules[i];
         if (
           // If this rule has the same weekday and ...
           rule.weekday == this._date.getDay() &&
@@ -149,7 +149,7 @@ export default class WorkingDay {
   }
 
   get timeOff(): string | undefined {
-    let foundTimeOff = timeOffsConfig.filter(
+    const foundTimeOff = timeOffsConfig.filter(
       (entry) => entry.value == this._timeOff
     );
     if (foundTimeOff.length) {
@@ -273,7 +273,7 @@ export default class WorkingDay {
   get saldoTime(): Saldo | undefined {
     if (this.hasWorkingTime) {
       if (this._rule) {
-        let targetSaldo = this.targetTime!.clone();
+        const targetSaldo = this.targetTime!.clone();
         targetSaldo.invert();
         return Saldo.getSum(this.actualTime!, targetSaldo);
       } else {
