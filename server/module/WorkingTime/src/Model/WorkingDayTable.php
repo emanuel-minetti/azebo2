@@ -17,7 +17,7 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class WorkingDayTable
 {
-    private $tableGateway;
+    private TableGateway $tableGateway;
 
     public function __construct(TableGateway $tableGateway)
     {
@@ -29,7 +29,8 @@ class WorkingDayTable
         return $rowSet->current();
     }
 
-    public function getByUserIdAndMonth($userId, DateTime $month) {
+    public function getByUserIdAndMonth($userId, DateTime $month): array
+    {
         $cloneOfMonth = clone $month;
         $first = $cloneOfMonth->modify('first day of this month');
         $cloneOfMonth = clone $month;

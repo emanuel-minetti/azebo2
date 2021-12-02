@@ -9,7 +9,8 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "build-dev": "vue-cli-service --mode=development build",
-    "build-watch": "vue-cli-service build-watch"
+    "build-watch": "vue-cli-service build-watch",
+    "inspect": "vue-cli-service inspect"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -37,6 +38,7 @@
     "node-sass": "^6.0.1",
     "portal-vue": "^2.1.7",
     "prettier": "^2.5.0",
+    "sass": "^1.44.0",
     "sass-loader": "^10",
     "typescript": "^4.5.2",
     "vue-class-component": "^7.2.6",

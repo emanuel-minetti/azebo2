@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-lg-3">
     <b-table
       bordered
       striped
@@ -99,6 +99,11 @@ export default class MonthTable extends Vue {
         label: "Kommentar",
       },
       {
+        key: "test",
+        label: "Mobiles Arbeiten",
+        thStyle: { width: "31px" },
+      },
+      {
         key: "break",
         label: "Pause",
         class: "small-column",
@@ -183,7 +188,6 @@ export default class MonthTable extends Vue {
 div {
   text-align: center;
   width: 90%;
-  margin-left: 5%;
 }
 
 /deep/ table td {

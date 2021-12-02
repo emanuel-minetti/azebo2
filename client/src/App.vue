@@ -253,12 +253,6 @@ export default class App extends Vue {
 
 <!--suppress CssInvalidFunction -->
 <style lang="scss">
-// Import custom SASS variable overrides
-@import "assets/custom-vars.scss";
-
-// Import Bootstrap source SCSS file
-@import "node_modules/bootstrap-vue/node_modules/bootstrap/scss/bootstrap.scss";
-
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
