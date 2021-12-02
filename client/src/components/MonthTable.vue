@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-lg-3">
+  <div class="mx-lg-auto" style="width: 1003px">
     <b-table
       bordered
       striped

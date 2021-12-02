@@ -291,8 +291,12 @@ export default class App extends Vue {
     list-style-type: none;
 
     li {
-      padding: 0 20px;
+      padding: 20px;
       display: inline;
+
+      button {
+        margin-top: 10px;
+      }
     }
   }
 

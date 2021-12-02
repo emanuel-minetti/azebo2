@@ -203,7 +203,7 @@ export default class DayForm extends Vue {
 
 <style scoped>
 form {
-  width: 30%;
+  width: 50%;
 }
 
 >>> label {
@@ -215,10 +215,6 @@ form {
 }
 
 input {
-  width: 30%;
-}
-
-select {
   width: 30%;
 }
 </style>
