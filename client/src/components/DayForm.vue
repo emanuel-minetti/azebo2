@@ -23,13 +23,13 @@
       <b-form-group
         label="Dienstbefreiung:"
         label-for="time-off-input"
-        id="select"
+        size="lg"
+        class="left"
       >
         <b-form-select
-          id="time-off-input"
+          id="select"
           v-model="form.timeOff"
           :options="timeOffOptions"
-          class="left"
         ></b-form-select>
       </b-form-group>
       <b-form-group label="Bemerkung:" label-for="comment-input">
@@ -61,13 +61,21 @@ import { timesConfig, timeOffsConfig } from "@/configs";
 import { Component, Vue } from "vue-property-decorator";
 import { WorkingDay } from "@/models";
 
+const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
+  hour: "2-digit",
+  minute: "2-digit",
+};
+
 @Component
 export default class DayForm extends Vue {
   show = true;
   timeOffOptions = timeOffsConfig;
 
   // get a copy of the `WorkingDay` to work on
-  form = Object.assign({}, this.$store.state.workingTime.dayToEdit);
+  form = Object.assign(
+    new WorkingDay(),
+    this.$store.state.workingTime.dayToEdit
+  ) as WorkingDay;
 
   mounted() {
     // scroll form to top
@@ -77,8 +85,6 @@ export default class DayForm extends Vue {
   }
 
   get title() {
-    // cast form to `WorkingDay` at runtime
-    this.form.__proto__ = WorkingDay.prototype;
     let date = this.form.date;
     let title = date.toLocaleDateString("de-DE", { weekday: "long" });
     title += ", den ";
@@ -89,19 +95,16 @@ export default class DayForm extends Vue {
 
   get begin() {
     if (this.form.begin)
-      return this.form.begin.toLocaleTimeString("de-DE", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      return this.form.begin.toLocaleTimeString(
+        "de-DE",
+        localTimeFormatOptions
+      );
     return "";
   }
 
   get end() {
     if (this.form.end)
-      return this.form.end.toLocaleTimeString("de-DE", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      return this.form.end.toLocaleTimeString("de-DE", localTimeFormatOptions);
     return "";
   }
 
@@ -211,11 +214,11 @@ form {
   text-align: left;
 }
 
-input[type="time"] {
+input {
   width: 30%;
 }
 
->>> #select {
+select {
   width: 30%;
 }
 </style>

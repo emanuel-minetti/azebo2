@@ -1,5 +1,5 @@
 import { Holiday, Saldo, WorkingRule } from "@/models";
-import { timeOffsConfig, timesConfig } from "@/configs";
+import { timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
 
@@ -149,13 +149,7 @@ export default class WorkingDay {
   }
 
   get timeOff(): string | undefined {
-    const foundTimeOff = timeOffsConfig.filter(
-      (entry) => entry.value == this._timeOff
-    );
-    if (foundTimeOff.length) {
-      return foundTimeOff[0].text;
-    }
-    return "";
+    return this._timeOff;
   }
 
   set timeOff(value: string | undefined) {

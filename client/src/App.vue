@@ -257,7 +257,7 @@ export default class App extends Vue {
 @import "assets/custom-vars.scss";
 
 // Import Bootstrap source SCSS file
-@import "~bootstrap/scss/bootstrap.scss";
+@import "node_modules/bootstrap-vue/node_modules/bootstrap/scss/bootstrap.scss";
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;

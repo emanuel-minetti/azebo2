@@ -32,6 +32,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { FormatterService } from "@/services";
 import { WorkingDay } from "@/models";
+import { timeOffsConfig } from "@/configs";
 import DayForm from "@/components/DayForm.vue";
 
 @Component({
@@ -91,6 +92,7 @@ export default class MonthTable extends Vue {
       {
         key: "timeOff",
         label: "Dienstbefreiung",
+        formatter: this.formatTimeOff,
       },
       {
         key: "comment",
@@ -139,6 +141,11 @@ export default class MonthTable extends Vue {
   formatDate(date: Date, key: string, day: WorkingDay) {
     const dateString = FormatterService.toLongGermanDate(date);
     return day.isHoliday ? dateString + " " + day.holidayName : dateString;
+  }
+
+  formatTimeOff(timeOff: string): string {
+    const element = timeOffsConfig.find((element) => element.value == timeOff);
+    return element ? element.text : "";
   }
 
   // formats the break column
