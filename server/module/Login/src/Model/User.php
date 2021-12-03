@@ -22,13 +22,13 @@ class User extends ArrayObject
     public $name;
     public $given_name;
 
-    public function exchangeArray($data)
+    public function exchangeArray($array)
     {
-        $this->id = !empty($data['id']) ? $data['id'] : null;
-        $this->username = !empty($data['username']) ? $data['username'] : null;
-        $this->password_hash = !empty($data['password_hash']) ? $data['password_hash'] : null;
-        $this->name = !empty($data['name']) ? $data['name'] : null;
-        $this->given_name = !empty($data['given_name']) ? $data['given_name'] : null;
+        $this->id = !empty($array['id']) ? $array['id'] : null;
+        $this->username = !empty($array['username']) ? $array['username'] : null;
+        $this->password_hash = !empty($array['password_hash']) ? $array['password_hash'] : null;
+        $this->name = !empty($array['name']) ? $array['name'] : null;
+        $this->given_name = !empty($array['given_name']) ? $array['given_name'] : null;
     }
 
     public function getArrayCopy()

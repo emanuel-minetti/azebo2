@@ -75,26 +75,26 @@ class WorkingRule extends ArrayObject
      */
     public $validTo;
 
-    public function exchangeArray($data)
+    public function exchangeArray($array)
     {
-        $this->id = $data['id'] ?? 0;
-        $this->userId = $data['user_id'] ?? 0;
-        $this->weekday = $data['weekday'] ?? 0;
-        $this->calendarWeek = $data['calendar_week'] ?? 'all';
-        $this->flexTimeBegin = !empty($data['flex_time_begin']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $data['flex_time_begin']) : null;
-        $this->flexTimeEnd = !empty($data['flex_time_end']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $data['flex_time_end']) : null;
-        $this->coreTimeBegin = !empty($data['core_time_begin']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $data['core_time_begin']) : null;
-        $this->coreTimeEnd = !empty($data['core_time_end']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $data['core_time_end']) : null;
-        $this->target = !empty($data['target']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $data['target']) : null;
-        $this->validFrom = !empty($data['valid_from']) ?
-            DateTime::createFromFormat(self::DATE_FORMAT, $data['valid_from']) : null;
-        $this->validTo = !empty($data['valid_to']) ?
-            DateTime::createFromFormat(self::DATE_FORMAT, $data['valid_to']) : null;
+        $this->id = $array['id'] ?? 0;
+        $this->userId = $array['user_id'] ?? 0;
+        $this->weekday = $array['weekday'] ?? 0;
+        $this->calendarWeek = $array['calendar_week'] ?? 'all';
+        $this->flexTimeBegin = !empty($array['flex_time_begin']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $array['flex_time_begin']) : null;
+        $this->flexTimeEnd = !empty($array['flex_time_end']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $array['flex_time_end']) : null;
+        $this->coreTimeBegin = !empty($array['core_time_begin']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $array['core_time_begin']) : null;
+        $this->coreTimeEnd = !empty($array['core_time_end']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $array['core_time_end']) : null;
+        $this->target = !empty($array['target']) ?
+            DateTime::createFromFormat(self::TIME_FORMAT, $array['target']) : null;
+        $this->validFrom = !empty($array['valid_from']) ?
+            DateTime::createFromFormat(self::DATE_FORMAT, $array['valid_from']) : null;
+        $this->validTo = !empty($array['valid_to']) ?
+            DateTime::createFromFormat(self::DATE_FORMAT, $array['valid_to']) : null;
     }
 
     public function getArrayCopy()
