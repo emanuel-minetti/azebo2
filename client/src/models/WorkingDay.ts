@@ -20,7 +20,7 @@ export default class WorkingDay {
   private _end?: Date;
   private _timeOff?: string;
   private _comment?: string;
-  private _break: boolean;
+  private _mobile_working: boolean;
   private _afternoon: boolean;
   private _afternoonBegin?: Date;
   private _afternoonEnd?: Date;
@@ -32,7 +32,7 @@ export default class WorkingDay {
     if (
       data &&
       data.date &&
-      data.break != undefined &&
+      data.mobile_working != undefined &&
       data.afternoon != undefined
     ) {
       this._id = data.id ? data.id : 0;
@@ -77,7 +77,7 @@ export default class WorkingDay {
         }
       }
 
-      this._break = Boolean(data.break);
+      this._mobile_working = Boolean(data.mobile_working);
       this._afternoon = Boolean(data.afternoon);
 
       this._begin = FormatterService.convertToTime(
@@ -110,7 +110,7 @@ export default class WorkingDay {
     } else {
       this._id = 0;
       this._date = new Date();
-      this._break = false;
+      this._mobile_working = false;
       this._afternoon = false;
     }
     this._edited = false;
@@ -174,12 +174,12 @@ export default class WorkingDay {
     this._edited = true;
   }
 
-  get break(): boolean {
-    return this._break;
+  get mobile_working(): boolean {
+    return this._mobile_working;
   }
 
-  set break(value: boolean) {
-    this._break = value;
+  set mobile_working(value: boolean) {
+    this._mobile_working = value;
     this._edited = true;
   }
 
@@ -250,12 +250,13 @@ export default class WorkingDay {
     return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
   }
 
+  // TODO adjust!
   /**
    * Returns the total working time minus possible break times.
    */
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return this.break
+    return this.mobile_working
       ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
       : this.totalTime;
   }

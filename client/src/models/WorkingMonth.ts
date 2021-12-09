@@ -38,7 +38,7 @@ export default class WorkingMonth {
         this.days.push(
           new WorkingDay({
             date: new Date(currentDay),
-            break: false,
+            mobile_working: false,
             afternoon: false,
           })
         );

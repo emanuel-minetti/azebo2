@@ -10,7 +10,15 @@
       :tbody-tr-class="rowClass"
       thead-class="sticky"
       @row-clicked="rowClickHandler"
-    />
+    >
+      <template #cell(mobile_working)="data">
+        <b-icon-circle-fill
+          v-if="data.item.hasWorkingTime && data.item.mobile_working"
+        ></b-icon-circle-fill>
+        <b-icon-circle v-else-if="data.item.hasWorkingTime"></b-icon-circle>
+        <div v-else></div>
+      </template>
+    </b-table>
     <div v-if="formShown" id="lower">
       <DayForm id="form" v-on:submitted="onSubmitted" />
       <b-table
@@ -23,7 +31,15 @@
         :tbody-tr-class="rowClass"
         thead-class="sticky"
         @row-clicked="rowClickHandler"
-      />
+      >
+        <template #cell(mobile_working)="data">
+          <b-icon-circle-fill
+            v-if="data.item.hasWorkingTime && data.item.mobile_working"
+          ></b-icon-circle-fill>
+          <b-icon-circle v-else-if="data.item.hasWorkingTime"></b-icon-circle>
+          <div v-else></div>
+        </template>
+      </b-table>
     </div>
   </div>
 </template>
@@ -99,7 +115,7 @@ export default class MonthTable extends Vue {
         label: "Kommentar",
       },
       {
-        key: "test",
+        key: "mobile_working",
         label: "Mobiles Arbeiten",
         thStyle: { width: "31px" },
       },
@@ -136,7 +152,7 @@ export default class MonthTable extends Vue {
     return this.$store.state.workingTime.carry.finalized;
   }
 
-  // adds a class for non working days
+  // adds a class for non-working days
   rowClass(day: WorkingDay, type: string) {
     if (!day || type !== "row") return;
     if (!day.isWorkingDay) return "not-a-working-day";
