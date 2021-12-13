@@ -79,6 +79,7 @@ class WorkingTimeController extends ApiController
             $day->timeOff = $post->_timeOff ?? "";
             $day->comment = $post->_comment ?? "";
             $day->mobile_working = $post->_mobile_working ?? false;
+            $day->afternoon = $post->_afternoon ?? false;
             $this->table->upsert($day);
             return $this->processResult($day->getArrayCopy(), $userId);
         } else {

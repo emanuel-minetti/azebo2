@@ -72,7 +72,7 @@ class WorkingDay extends ArrayObject
             'time_off' => $this->timeOff == "" ? null : $this->timeOff,
             'comment' => $this->comment == "" ? null: $this->comment,
             'mobile_working' => $this->mobile_working ? 1 : 0,
-            'afternoon' => (int)$this->afternoon,
+            'afternoon' => $this->afternoon ? 1 : 0,
             'afternoon_begin' => isset($this->afternoonBegin) ? $this->afternoonBegin->format(self::TIME_FORMAT) : null,
             'afternoon_end' => isset($this->afternoonEnd) ? $this->afternoonEnd->format(self::TIME_FORMAT) : null,
         ];
