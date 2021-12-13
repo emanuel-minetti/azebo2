@@ -64,7 +64,7 @@ export default class WorkingMonth {
   }
 
   get takenHolidays() {
-    return this.days.filter((day) => day.timeOff === "Urlaub").length;
+    return this.days.filter((day) => day.timeOff === "urlaub").length;
   }
 
   getDayByDate(date: Date) {
