@@ -42,7 +42,7 @@ const WorkingTimeModule: Module<any, any> = {
     saldoMobile(state) {
       if (state.month.days) {
         return state.month.days
-          .filter((day: WorkingDay) => day.mobile_working)
+          .filter((day: WorkingDay) => day.mobileWorking)
           .map((day: WorkingDay) => day.saldoTime)
           .reduce(
             (previousValue: Saldo, currentValue: Saldo | undefined) =>

@@ -39,7 +39,7 @@
       <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
         <b-form-checkbox
           id="mobile-working-input-input"
-          v-model="form.mobile_working"
+          v-model="form.mobileWorking"
           class="left"
         >
         </b-form-checkbox>
@@ -191,7 +191,7 @@ export default class DayForm extends Vue {
     this.form.end = undefined;
     this.form.timeOff = undefined;
     this.form.comment = undefined;
-    this.form.mobile_working = false;
+    this.form.mobileWorking = false;
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {

@@ -21,7 +21,7 @@ export default class WorkingDay {
   private _end?: Date;
   private _timeOff?: string;
   private _comment?: string;
-  private _mobile_working: boolean;
+  private _mobileWorking: boolean;
   private _afternoon: boolean;
   private _afternoonBegin?: Date;
   private _afternoonEnd?: Date;
@@ -78,7 +78,7 @@ export default class WorkingDay {
         }
       }
 
-      this._mobile_working = Boolean(data.mobile_working);
+      this._mobileWorking = Boolean(data.mobile_working);
       this._afternoon = Boolean(data.afternoon);
 
       this._begin = FormatterService.convertToTime(
@@ -111,7 +111,7 @@ export default class WorkingDay {
     } else {
       this._id = 0;
       this._date = new Date();
-      this._mobile_working = false;
+      this._mobileWorking = false;
       this._afternoon = false;
     }
     this._edited = false;
@@ -175,12 +175,12 @@ export default class WorkingDay {
     this._edited = true;
   }
 
-  get mobile_working(): boolean {
-    return this._mobile_working;
+  get mobileWorking(): boolean {
+    return this._mobileWorking;
   }
 
-  set mobile_working(value: boolean) {
-    this._mobile_working = value;
+  set mobileWorking(value: boolean) {
+    this._mobileWorking = value;
     this._edited = true;
   }
 
@@ -257,7 +257,7 @@ export default class WorkingDay {
    */
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return this.mobile_working
+    return this.mobileWorking
       ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
       : this.totalTime;
   }
@@ -298,5 +298,20 @@ export default class WorkingDay {
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
+  }
+
+  public toJSON() {
+    return {
+      _id: this.id,
+      _afternoon: this.afternoon,
+      _begin: this.begin,
+      _end: this.end,
+      _timeOff: this.timeOff,
+      _comment: this.comment,
+      _mobile_working: this.mobileWorking,
+      _afternoonBegin: this.afternoonBegin,
+      _afternoonEnd: this.afternoonEnd,
+      _edited: this.edited,
+    };
   }
 }

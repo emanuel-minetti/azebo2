@@ -13,7 +13,7 @@
     >
       <template #cell(mobile_working)="data">
         <b-icon-circle-fill
-          v-if="data.item.hasWorkingTime && data.item.mobile_working"
+          v-if="data.item.hasWorkingTime && data.item.mobileWorking"
         ></b-icon-circle-fill>
         <b-icon-circle v-else-if="data.item.hasWorkingTime"></b-icon-circle>
         <div v-else></div>
