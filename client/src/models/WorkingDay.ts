@@ -3,6 +3,7 @@ import { timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
 
+// noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
   /**
    * The time intervall to subtract for total working time if a break was taken
@@ -63,7 +64,7 @@ export default class WorkingDay {
         if (
           // If this rule has the same weekday and ...
           rule.weekday == this._date.getDay() &&
-          // is in the right week and ..
+          // is in the right week and ...
           rule.isCalendarWeek(this.calendarWeek) &&
           // is valid and ...
           rule.validFrom.valueOf() <= this._date.valueOf() &&

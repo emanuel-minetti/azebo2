@@ -36,10 +36,10 @@
         <b-form-textarea id="comment-input" size="sm" v-model="form.comment">
         </b-form-textarea>
       </b-form-group>
-      <b-form-group label="Ohne Pause:" label-for="break-input">
+      <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
         <b-form-checkbox
-          id="break-input"
-          v-model="form.mobileWorking"
+          id="mobile-working-input-input"
+          v-model="form.mobile_working"
           class="left"
         >
         </b-form-checkbox>
