@@ -80,6 +80,10 @@ export default class Saldo {
     return clone;
   }
 
+  getMillis(): number {
+    return this.minutes * 60_000 + this.hours * 60 * 60_000;
+  }
+
   /**
    * Returns a new saldo by giving the time intervall by an amount of
    * milliseconds.
@@ -109,6 +113,10 @@ export default class Saldo {
   static getSum(first: Saldo, second: Saldo): Saldo {
     const result = first.clone();
     return result.add(second);
+  }
+
+  static getPercentage(base: Saldo, percentage: Saldo): number {
+    return (percentage.getMillis() / base.getMillis()) * 100;
   }
 
   /**

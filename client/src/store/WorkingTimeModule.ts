@@ -39,6 +39,21 @@ const WorkingTimeModule: Module<any, any> = {
       }
       return "";
     },
+    saldoMobile(state) {
+      if (state.month.days) {
+        return state.month.days
+          .filter((day: WorkingDay) => day.mobile_working)
+          .map((day: WorkingDay) => day.saldoTime)
+          .reduce(
+            (previousValue: Saldo, currentValue: Saldo | undefined) =>
+              currentValue
+                ? Saldo.getSum(previousValue, currentValue)
+                : previousValue,
+            Saldo.createFromMillis(0)
+          );
+      }
+      return "";
+    },
     saldoTotal(state, getters) {
       if (getters.saldo !== "" && state.carryResult.saldo) {
         return Saldo.getSum(getters.saldo, state.carryResult.saldo);

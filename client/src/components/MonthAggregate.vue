@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry, WorkingMonth } from "@/models";
+import { Carry, Saldo, WorkingMonth } from "@/models";
 import { timesConfig } from "@/configs";
 import { mapState } from "vuex";
 
@@ -68,12 +68,37 @@ export default class MonthAggregate extends Vue {
     return holidays - taken;
   }
 
+  get monthSaldoString() {
+    if (
+      this.$store.getters["workingTime/saldoMobile"] === "" ||
+      this.$store.getters["workingTime/saldo"].getMillis() === 0 ||
+      this.$store.getters["workingTime/saldoMobile"].getMillis() === 0
+    ) {
+      return this.$store.getters["workingTime/saldo"];
+    } else {
+      return (
+        this.$store.getters["workingTime/saldo"] +
+        " (davon " +
+        this.$store.getters["workingTime/saldoMobile"] +
+        " = " +
+        Saldo.getPercentage(
+          this.$store.getters["workingTime/saldo"],
+          this.$store.getters["workingTime/saldoMobile"]
+        ).toLocaleString("de-DE", {
+          maximumFractionDigits: 1,
+          minimumFractionDigits: 1,
+        }) +
+        "% Mobil)"
+      );
+    }
+  }
+
   get items() {
     return [
       {
         key: "Saldo",
         carryResult: this.carryResult.saldo,
-        month: this.$store.getters["workingTime/saldo"],
+        month: this.monthSaldoString,
         total: this.$store.getters["workingTime/saldoTotal"],
       },
       {
