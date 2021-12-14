@@ -252,7 +252,6 @@ export default class WorkingDay {
     return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
   }
 
-  // TODO adjust!
   /**
    * Returns the total working time minus possible break times.
    */
