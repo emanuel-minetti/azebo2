@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { timesConfig, timeOffsConfig } from "@/configs";
+import { timeOffsConfig, timesConfig } from "@/configs";
 import { Component, Vue } from "vue-property-decorator";
 import { WorkingDay } from "@/models";
 

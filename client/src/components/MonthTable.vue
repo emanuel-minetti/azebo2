@@ -106,6 +106,12 @@ export default class MonthTable extends Vue {
         formatter: FormatterService.toGermanTime,
       },
       {
+        key: "break",
+        label: "Pause",
+        class: "small-column",
+        formatter: this.formatBreak,
+      },
+      {
         key: "timeOff",
         label: "Dienstbefreiung",
         formatter: this.formatTimeOff,
@@ -118,12 +124,6 @@ export default class MonthTable extends Vue {
         key: "mobile_working",
         label: "Mobiles Arbeiten",
         thStyle: { width: "31px" },
-      },
-      {
-        key: "break",
-        label: "Pause",
-        class: "small-column",
-        formatter: this.formatBreak,
       },
       {
         key: "totalTime",
@@ -170,9 +170,9 @@ export default class MonthTable extends Vue {
   }
 
   // formats the break column
-  formatBreak(hasBreak: boolean, key: string, day: WorkingDay): string {
+  formatBreak(break_date: number, key: string, day: WorkingDay): string {
     if (day && !day.hasWorkingTime) return "";
-    return hasBreak ? "Ja" : "Nein";
+    return break_date ? "00:" + break_date : "00:00";
   }
 
   rowClickHandler(row: WorkingDay) {
