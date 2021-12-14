@@ -1,21 +1,13 @@
 import { Holiday, Saldo, WorkingRule } from "@/models";
-import { timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
 
 // noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
-  /**
-   * The time intervall to subtract for total working time if a break was taken
-   */
-  private static readonly BREAK_DURATION = Saldo.createFromMillis(
-    timesConfig.breakDuration * 60 * 1000,
-    false
-  );
-
   private readonly _id: number;
   private readonly _date: Date;
   private readonly _rule?: WorkingRule;
+  private readonly _break?: Date;
 
   private _begin?: Date;
   private _end?: Date;
@@ -93,7 +85,12 @@ export default class WorkingDay {
         date,
         data.end
       );
-
+      this._break = FormatterService.convertToTime(
+        year,
+        monthIndex,
+        date,
+        data.break
+      );
       this._timeOff = data.time_off;
       this._comment = data.comment;
       this._afternoonBegin = FormatterService.convertToTime(
@@ -147,6 +144,10 @@ export default class WorkingDay {
       this._end = undefined;
     }
     this._edited = true;
+  }
+
+  get break(): Date | undefined {
+    return this._break;
   }
 
   get timeOff(): string | undefined {
@@ -251,14 +252,16 @@ export default class WorkingDay {
     return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
   }
 
-  // TODO adjust!
   /**
    * Returns the total working time minus possible break times.
    */
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return this.mobileWorking
-      ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
+    return this.break
+      ? Saldo.getSum(
+          <Saldo>this.totalTime,
+          Saldo.createFromMillis(this.break.getMinutes() * 60 * 1000, false)
+        )
       : this.totalTime;
   }
 

@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpUnused */
 
 /**
- * azebo2 is an application to print working time tables
+ * azebo2 is an application to print working timetables
  *
  * @author Emanuel Minetti <e.minetti@posteo.de>
  * @link     https://github.com/emanuel-minetti/azebo2
@@ -14,6 +14,8 @@ namespace WorkingTime\Controller;
 use AzeboLib\ApiController;
 use DateInterval;
 use DateTime;
+use Exception;
+use Laminas\Config\Factory;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
 use WorkingTime\Model\WorkingDay;
@@ -65,7 +67,7 @@ class WorkingTimeController extends ApiController
                 $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
                 $day->date->add($oneHour);
                 $day->userId = $userId; $this->prepare();
-            $post = json_decode($this->httpRequest->getContent());
+                $post = json_decode($this->httpRequest->getContent());
                 $day->id = 0;
             }
             if (isset($post->_begin)) {
@@ -75,6 +77,23 @@ class WorkingTimeController extends ApiController
             if (isset($post->_end)) {
                 $day->end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
                 $day->end->add($oneHour);
+            }
+            if (isset($post->_begin) && isset($post->_end)) {
+                $config = Factory::fromFile('./../server/config/times.config.php', true);
+                try {
+                    $breakRequiredFrom = new DateInterval('PT' . $config->get('breakRequiredFrom') . 'H');
+                    $longBreakRequiredFrom = new DateInterval('PT' . $config->get('longBreakRequiredFrom') . 'H');
+                    $totalTime = $day->end->diff($day->begin, true);
+                    $now = new DateTime();
+                    if ((clone $now)->add($totalTime) > (clone $now)->add($longBreakRequiredFrom)) {
+                        $day->break = new DateInterval("PT" . $config->get('longBreakDuration') . "M");
+                    } elseif ((clone $now)->add($totalTime) > (clone $now)->add($breakRequiredFrom)) {
+                        $day->break = new DateInterval("PT" . $config->get('breakDuration') . "M");
+                    } else {
+                        $day->break = new DateInterval("PT0M");
+                    }
+                } catch (Exception $ignored) {
+                }
             }
             $day->timeOff = $post->_timeOff ?? "";
             $day->comment = $post->_comment ?? "";

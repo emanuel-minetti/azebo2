@@ -11,12 +11,15 @@
 namespace WorkingTime\Model;
 
 use ArrayObject;
+use DateInterval;
 use DateTime;
+use Exception;
 
 class WorkingDay extends ArrayObject
 {
     public const TIME_FORMAT = 'H:i:s';
     public const DATE_FORMAT = 'Y-m-d';
+    public const INTERVAL_FORMAT = '%H:%I:%S';
 
     /** @var int the primary key of `WorkingDay` */
     public int $id;
@@ -28,6 +31,8 @@ class WorkingDay extends ArrayObject
     public ?DateTime $begin;
     /** @var ?DateTime end of working time */
     public ?DateTime $end;
+    /** @var DateInterval the break to subtract */
+    public DateInterval $break;
     /** @var string an enumerated value */
     public string $timeOff;
     /** @var string a free text field */
@@ -51,6 +56,14 @@ class WorkingDay extends ArrayObject
             DateTime::createFromFormat(self::TIME_FORMAT, $array['begin']) : null;
         $this->end = !empty($array['end']) ?
             DateTime::createFromFormat(self::TIME_FORMAT, $array['end']) : null;
+        try {
+            if (!empty($array['break'])) {
+                list($hours, $minutes, $seconds) = sscanf($array['break'], '%d:%d:%d');
+                $this->break = new DateInterval(sprintf('PT%dH%dM%dS', $hours, $minutes, $seconds));
+            } else {
+                $this->break = new DateInterval('PT0S');
+            }
+        } catch (Exception $ignored) {}
         $this->timeOff = $array['time_off'] ?? "";
         $this->comment = $array['comment'] ?? "";
         $this->mobile_working = (bool)$array['mobile_working'];
@@ -69,6 +82,7 @@ class WorkingDay extends ArrayObject
             'date' => $this->date->format(self::DATE_FORMAT),
             'begin' => isset($this->begin) ? $this->begin->format(self::TIME_FORMAT) : null,
             'end' => isset($this->end) ? $this->end->format(self::TIME_FORMAT) : null,
+            'break' => isset($this->break) ? $this->break->format(self::INTERVAL_FORMAT) : '00:00:00',
             'time_off' => $this->timeOff == "" ? null : $this->timeOff,
             'comment' => $this->comment == "" ? null: $this->comment,
             'mobile_working' => $this->mobile_working ? 1 : 0,
