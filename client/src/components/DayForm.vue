@@ -118,12 +118,15 @@ export default class DayForm extends Vue {
       shortBreak.setHours(
         shortBreak.getHours() + timesConfig.breakRequiredFrom
       );
+      shortBreak.setMinutes(shortBreak.getMinutes() + 1);
       let longBreak = new Date(this.form.begin!.valueOf());
       longBreak.setHours(
         longBreak.getHours() + timesConfig.longBreakRequiredFrom
       );
+      longBreak.setMinutes(longBreak.getMinutes() + 1);
       let longDay = new Date(this.form.begin!.valueOf());
       longDay.setHours(longDay.getHours() + timesConfig.longDayFrom);
+      longDay.setMinutes(longDay.getMinutes() + timesConfig.longBreakDuration);
       let result =
         timesConfig.breakDuration +
         " Minuten Pause ab: " +
