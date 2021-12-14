@@ -53,17 +53,17 @@ class Carry extends ArrayObject
      */
     public $holidaysPreviousYear;
 
-    public function exchangeArray($data)
+    public function exchangeArray($array)
     {
-        $this->id = (int)$data['id'] ?? 0;
-        $this->userId = (int)$data['user_id'] ?? 0;
-        $this->year = !empty($data['year'])
-            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $data['year']) : null;
-        $this->saldo = !(empty($data['saldo_hours']) && empty($data['saldo_minutes']) && empty($data['saldo_positive']))
-            ? Saldo::createFromHoursAndMinutes($data['saldo_hours'], $data['saldo_minutes'], $data['saldo_positive']) :
+        $this->id = (int)$array['id'] ?? 0;
+        $this->userId = (int)$array['user_id'] ?? 0;
+        $this->year = !empty($array['year'])
+            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $array['year']) : null;
+        $this->saldo = !(empty($array['saldo_hours']) && empty($array['saldo_minutes']) && empty($array['saldo_positive']))
+            ? Saldo::createFromHoursAndMinutes($array['saldo_hours'], $array['saldo_minutes'], $array['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();
-        $this->holidays = (int)$data['holidays'] ?? 0;
-        $this->holidaysPreviousYear = (int)$data['holidays_previous_year'] ?? 0;
+        $this->holidays = (int)$array['holidays'] ?? 0;
+        $this->holidaysPreviousYear = (int)$array['holidays_previous_year'] ?? 0;
     }
 
     public function getArrayCopy()

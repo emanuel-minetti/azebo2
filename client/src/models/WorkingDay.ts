@@ -3,6 +3,7 @@ import { timesConfig } from "@/configs";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
 
+// noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
   /**
    * The time intervall to subtract for total working time if a break was taken
@@ -20,7 +21,7 @@ export default class WorkingDay {
   private _end?: Date;
   private _timeOff?: string;
   private _comment?: string;
-  private _break: boolean;
+  private _mobileWorking: boolean;
   private _afternoon: boolean;
   private _afternoonBegin?: Date;
   private _afternoonEnd?: Date;
@@ -32,7 +33,7 @@ export default class WorkingDay {
     if (
       data &&
       data.date &&
-      data.break != undefined &&
+      data.mobile_working != undefined &&
       data.afternoon != undefined
     ) {
       this._id = data.id ? data.id : 0;
@@ -63,7 +64,7 @@ export default class WorkingDay {
         if (
           // If this rule has the same weekday and ...
           rule.weekday == this._date.getDay() &&
-          // is in the right week and ..
+          // is in the right week and ...
           rule.isCalendarWeek(this.calendarWeek) &&
           // is valid and ...
           rule.validFrom.valueOf() <= this._date.valueOf() &&
@@ -77,7 +78,7 @@ export default class WorkingDay {
         }
       }
 
-      this._break = Boolean(data.break);
+      this._mobileWorking = Boolean(data.mobile_working);
       this._afternoon = Boolean(data.afternoon);
 
       this._begin = FormatterService.convertToTime(
@@ -110,7 +111,7 @@ export default class WorkingDay {
     } else {
       this._id = 0;
       this._date = new Date();
-      this._break = false;
+      this._mobileWorking = false;
       this._afternoon = false;
     }
     this._edited = false;
@@ -174,12 +175,12 @@ export default class WorkingDay {
     this._edited = true;
   }
 
-  get break(): boolean {
-    return this._break;
+  get mobileWorking(): boolean {
+    return this._mobileWorking;
   }
 
-  set break(value: boolean) {
-    this._break = value;
+  set mobileWorking(value: boolean) {
+    this._mobileWorking = value;
     this._edited = true;
   }
 
@@ -250,12 +251,13 @@ export default class WorkingDay {
     return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
   }
 
+  // TODO adjust!
   /**
    * Returns the total working time minus possible break times.
    */
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return this.break
+    return this.mobileWorking
       ? Saldo.getSum(<Saldo>this.totalTime, WorkingDay.BREAK_DURATION)
       : this.totalTime;
   }
@@ -296,5 +298,20 @@ export default class WorkingDay {
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
+  }
+
+  public toJSON() {
+    return {
+      _id: this.id,
+      _afternoon: this.afternoon,
+      _begin: this.begin,
+      _end: this.end,
+      _timeOff: this.timeOff,
+      _comment: this.comment,
+      _mobile_working: this.mobileWorking,
+      _afternoonBegin: this.afternoonBegin,
+      _afternoonEnd: this.afternoonEnd,
+      _edited: this.edited,
+    };
   }
 }

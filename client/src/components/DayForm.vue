@@ -36,8 +36,12 @@
         <b-form-textarea id="comment-input" size="sm" v-model="form.comment">
         </b-form-textarea>
       </b-form-group>
-      <b-form-group label="Ohne Pause:" label-for="break-input">
-        <b-form-checkbox id="break-input" v-model="form.break" class="left">
+      <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
+        <b-form-checkbox
+          id="mobile-working-input-input"
+          v-model="form.mobileWorking"
+          class="left"
+        >
         </b-form-checkbox>
       </b-form-group>
       <b-button type="submit" variant="primary">Absenden</b-button>
@@ -187,7 +191,7 @@ export default class DayForm extends Vue {
     this.form.end = undefined;
     this.form.timeOff = undefined;
     this.form.comment = undefined;
-    this.form.break = false;
+    this.form.mobileWorking = false;
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {
@@ -203,7 +207,7 @@ export default class DayForm extends Vue {
 
 <style scoped>
 form {
-  width: 30%;
+  width: 50%;
 }
 
 >>> label {
@@ -215,10 +219,6 @@ form {
 }
 
 input {
-  width: 30%;
-}
-
-select {
   width: 30%;
 }
 </style>

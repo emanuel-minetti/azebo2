@@ -8,3 +8,4 @@ data/cache/*
 phpunit.xml
 /config/ldap.config.php
 /data/log/azebo.log
+Scratches

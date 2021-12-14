@@ -1,7 +1,15 @@
 import Vue from "vue";
 
-import BootstrapVue from "bootstrap-vue";
-import "bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+import {
+  BootstrapVue,
+  BIcon,
+  BIconCircleFill,
+  BIconCircle,
+} from "bootstrap-vue";
+
+import "./custom-vars.scss";
 
 Vue.use(BootstrapVue);
+Vue.component("BIcon", BIcon);
+Vue.component("BIconCircleFill", BIconCircleFill);
+Vue.component("BIconCircle", BIconCircle);

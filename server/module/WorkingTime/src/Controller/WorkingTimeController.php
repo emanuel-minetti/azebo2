@@ -21,7 +21,7 @@ use WorkingTime\Model\WorkingDayTable;
 
 class WorkingTimeController extends ApiController
 {
-    private $table;
+    private WorkingDayTable $table;
 
     public function __construct(AzeboLog $logger, WorkingDayTable $table)
     {
@@ -76,8 +76,10 @@ class WorkingTimeController extends ApiController
                 $day->end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
                 $day->end->add($oneHour);
             }
-            $day->timeOff = isset($post->_timeOff) ? $post->_timeOff : null;
-            $day->comment = isset($post->_comment) ? $post->_comment : null;
+            $day->timeOff = $post->_timeOff ?? "";
+            $day->comment = $post->_comment ?? "";
+            $day->mobile_working = $post->_mobile_working ?? false;
+            $day->afternoon = $post->_afternoon ?? false;
             $this->table->upsert($day);
             return $this->processResult($day->getArrayCopy(), $userId);
         } else {
