@@ -7,7 +7,7 @@ export default class WorkingDay {
   private readonly _id: number;
   private readonly _date: Date;
   private readonly _rule?: WorkingRule;
-  private readonly _break: number;
+  private readonly _break?: Date;
 
   private _begin?: Date;
   private _end?: Date;
@@ -85,8 +85,12 @@ export default class WorkingDay {
         date,
         data.end
       );
-
-      this._break = data.break ? Number(data.break.replace(" minutes", "")) : 0;
+      this._break = FormatterService.convertToTime(
+        year,
+        monthIndex,
+        date,
+        data.break
+      );
       this._timeOff = data.time_off;
       this._comment = data.comment;
       this._afternoonBegin = FormatterService.convertToTime(
@@ -106,7 +110,6 @@ export default class WorkingDay {
       this._date = new Date();
       this._mobileWorking = false;
       this._afternoon = false;
-      this._break = 0;
     }
     this._edited = false;
   }
@@ -143,7 +146,7 @@ export default class WorkingDay {
     this._edited = true;
   }
 
-  get break(): number {
+  get break(): Date | undefined {
     return this._break;
   }
 
@@ -258,7 +261,7 @@ export default class WorkingDay {
     return this.break
       ? Saldo.getSum(
           <Saldo>this.totalTime,
-          Saldo.createFromMillis(this.break * 60 * 1000, false)
+          Saldo.createFromMillis(this.break.getMinutes() * 60 * 1000, false)
         )
       : this.totalTime;
   }

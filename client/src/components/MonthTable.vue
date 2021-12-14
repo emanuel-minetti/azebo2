@@ -170,9 +170,9 @@ export default class MonthTable extends Vue {
   }
 
   // formats the break column
-  formatBreak(break_date: number, key: string, day: WorkingDay): string {
+  formatBreak(break_date: Date, key: string, day: WorkingDay): string {
     if (day && !day.hasWorkingTime) return "";
-    return break_date ? "00:" + break_date : "00:00";
+    return FormatterService.toGermanTime(break_date);
   }
 
   rowClickHandler(row: WorkingDay) {

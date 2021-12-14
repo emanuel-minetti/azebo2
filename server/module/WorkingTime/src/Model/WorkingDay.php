@@ -19,7 +19,7 @@ class WorkingDay extends ArrayObject
 {
     public const TIME_FORMAT = 'H:i:s';
     public const DATE_FORMAT = 'Y-m-d';
-    public const INTERVAL_FORMAT = '%i minutes';
+    public const INTERVAL_FORMAT = '%H:%I:%S';
 
     /** @var int the primary key of `WorkingDay` */
     public int $id;
@@ -82,7 +82,7 @@ class WorkingDay extends ArrayObject
             'date' => $this->date->format(self::DATE_FORMAT),
             'begin' => isset($this->begin) ? $this->begin->format(self::TIME_FORMAT) : null,
             'end' => isset($this->end) ? $this->end->format(self::TIME_FORMAT) : null,
-            'break' => isset($this->break) ? $this->break->format(self::INTERVAL_FORMAT) : '0 minutes',
+            'break' => isset($this->break) ? $this->break->format(self::INTERVAL_FORMAT) : '00:00:00',
             'time_off' => $this->timeOff == "" ? null : $this->timeOff,
             'comment' => $this->comment == "" ? null: $this->comment,
             'mobile_working' => $this->mobile_working ? 1 : 0,
