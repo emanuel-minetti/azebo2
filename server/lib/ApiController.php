@@ -19,6 +19,8 @@ use Service\log\AzeboLog;
 
 class ApiController extends AbstractActionController
 {
+    /** @var JsonModel */
+    protected JsonModel $invalidRequest;
     /** @var Request */
     protected $httpRequest;
     /** @var Response */
@@ -29,6 +31,10 @@ class ApiController extends AbstractActionController
     public function __construct(AzeboLog $logger)
     {
         $this->logger = $logger;
+        $this->invalidRequest = new JsonModel([
+            'success' => false,
+            'message' => "Invalid request",
+        ]);
     }
 
     protected function prepare()

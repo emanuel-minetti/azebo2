@@ -24,7 +24,7 @@ class WorkingDayTable
         $this->tableGateway = $tableGateway;
     }
 
-    public function find($id): WorkingDay {
+    public function find($id): ?WorkingDay {
         $rowSet = $this->tableGateway->select(['id' => $id]);
         return $rowSet->current();
     }
