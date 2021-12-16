@@ -265,8 +265,33 @@ export default class WorkingDay {
       : this.totalTime;
   }
 
+  /**
+   * Returns the target time for this day.
+   */
   get targetTime(): Saldo | undefined {
-    return this._rule ? this._rule.target : undefined;
+    if (this._rule && this._timeOff == "gruenhalb") {
+      return Saldo.createFromMillis(
+        Math.floor(this._rule.target.getMillis() / 2)
+      );
+    } else if (
+      this._rule &&
+      !(
+        this._timeOff == "urlaub" ||
+        this._timeOff == "azv" ||
+        this._timeOff == "gruen" ||
+        this._timeOff == "krank" ||
+        this._timeOff == "kind" ||
+        this._timeOff == "reise" ||
+        this._timeOff == "befr" ||
+        this._timeOff == "sonder" ||
+        this._timeOff == "bildung_url" ||
+        this._timeOff == "bildung"
+      )
+    ) {
+      return this._rule.target;
+    } else {
+      return undefined;
+    }
   }
 
   get saldoTime(): Saldo | undefined {
@@ -278,8 +303,15 @@ export default class WorkingDay {
       } else {
         return this.actualTime;
       }
+    } else {
+      if (this._rule && this._timeOff == "gleitzeit") {
+        const targetSaldo = this._rule.target.clone();
+        targetSaldo.invert();
+        return targetSaldo;
+      } else {
+        return undefined;
+      }
     }
-    return undefined;
   }
 
   get id(): number {
@@ -306,6 +338,7 @@ export default class WorkingDay {
   public toJSON() {
     return {
       _id: this.id,
+      _date: this.date,
       _afternoon: this.afternoon,
       _begin: this.begin,
       _end: this.end,
