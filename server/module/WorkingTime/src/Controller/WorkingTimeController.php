@@ -18,6 +18,7 @@ use Exception;
 use Laminas\Config\Factory;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
+use Validation\BeginBeforeEndValidator;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
 
@@ -62,23 +63,37 @@ class WorkingTimeController extends ApiController
             $oneHour = new DateInterval('PT1H');
             if ($id != 0) {
                 $day = $this->table->find($id);
+                if (!$day) return $this->invalidRequest;
             } else {
                 $day = new WorkingDay();
-                $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
+                $date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
+                if (!$date) return $this->invalidRequest;
+                $day->date = $date;
                 $day->date->add($oneHour);
-                $day->userId = $userId; $this->prepare();
+                $day->userId = $userId;
                 $post = json_decode($this->httpRequest->getContent());
                 $day->id = 0;
             }
             if (isset($post->_begin)) {
-                $day->begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_begin);
+                $begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_begin);
+                if (!$begin) return $this->invalidRequest;
+                $day->begin = $begin;
                 $day->begin->add($oneHour);
             }
             if (isset($post->_end)) {
-                $day->end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
+                $end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
+                if (!$end) return $this->invalidRequest;
+                $day->end = $end;
                 $day->end->add($oneHour);
             }
             if (isset($post->_begin) && isset($post->_end)) {
+                // validate
+                $bbeValidator = new BeginBeforeEndValidator();
+                $value = [
+                    'begin' => $day->begin,
+                    'end' => $day->end
+                ];
+                if (!$bbeValidator->isValid($value)) return $this->invalidRequest;
                 $config = Factory::fromFile('./../server/config/times.config.php', true);
                 try {
                     $breakRequiredFrom = new DateInterval('PT' . $config->get('breakRequiredFrom') . 'H');
