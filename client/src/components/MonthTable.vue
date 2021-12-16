@@ -113,12 +113,12 @@ export default class MonthTable extends Vue {
       },
       {
         key: "timeOff",
-        label: "Dienstbefreiung",
+        label: "Bemerkung",
         formatter: this.formatTimeOff,
       },
       {
         key: "comment",
-        label: "Kommentar",
+        label: "Anmerkung",
       },
       {
         key: "mobile_working",
