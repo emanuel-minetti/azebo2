@@ -16,9 +16,11 @@ use DateInterval;
 use DateTime;
 use Exception;
 use Laminas\Config\Factory;
+use Laminas\Validator\StringLength;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
 use Validation\BeginBeforeEndValidator;
+use Validation\TimeOffValidator;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
 
@@ -59,19 +61,20 @@ class WorkingTimeController extends ApiController
 
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
             $userId = $this->httpRequest->getQuery()->user_id;
+            if (!isset($post->_id) || !is_numeric($post->_id)) return $this->invalidRequest;
             $id = $post->_id;
             $oneHour = new DateInterval('PT1H');
             if ($id != 0) {
                 $day = $this->table->find($id);
                 if (!$day) return $this->invalidRequest;
             } else {
-                $day = new WorkingDay();
+                if (!isset($post->_date)) return $this->invalidRequest;
                 $date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
                 if (!$date) return $this->invalidRequest;
+                $day = new WorkingDay();
                 $day->date = $date;
                 $day->date->add($oneHour);
                 $day->userId = $userId;
-                $post = json_decode($this->httpRequest->getContent());
                 $day->id = 0;
             }
             if (isset($post->_begin)) {
@@ -110,8 +113,20 @@ class WorkingTimeController extends ApiController
                 } catch (Exception $ignored) {
                 }
             }
-            $day->timeOff = $post->_timeOff ?? "";
-            $day->comment = $post->_comment ?? "";
+            if (isset($post->_timeOff)) {
+                $toValidator = new TimeOffValidator();
+                if (!$toValidator->isValid($post->_timeOff)) return $this->invalidRequest;
+                $day->timeOff = $post->_timeOff;
+            } else {
+                $day->timeOff = "";
+            }
+            if (isset($post->_comment)) {
+                $slValidator = new StringLength(['max' => 120]);
+                if (!$slValidator->isValid($post->_comment)) return $this->invalidRequest;
+                $day->comment = $post->_comment;
+            } else {
+                $day->comment = "";
+            }
             $day->mobile_working = $post->_mobile_working ?? false;
             $day->afternoon = $post->_afternoon ?? false;
             $this->table->upsert($day);
