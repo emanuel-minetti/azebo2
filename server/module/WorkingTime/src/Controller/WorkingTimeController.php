@@ -82,12 +82,16 @@ class WorkingTimeController extends ApiController
                 if (!$begin) return $this->invalidRequest;
                 $day->begin = $begin;
                 $day->begin->add($oneHour);
+            } else {
+                $day->begin = null;
             }
             if (isset($post->_end)) {
                 $end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
                 if (!$end) return $this->invalidRequest;
                 $day->end = $end;
                 $day->end->add($oneHour);
+            } else {
+                $day->end = null;
             }
             if (isset($post->_begin) && isset($post->_end)) {
                 // validate
@@ -115,7 +119,12 @@ class WorkingTimeController extends ApiController
             }
             if (isset($post->_timeOff)) {
                 $toValidator = new TimeOffValidator();
-                if (!$toValidator->isValid($post->_timeOff)) return $this->invalidRequest;
+                $value = [
+                    'begin' => $day->begin,
+                    'end' => $day->end,
+                    'timeOff' => $post->_timeOff,
+                ];
+                if (!$toValidator->isValid($value)) return $this->invalidRequest;
                 $day->timeOff = $post->_timeOff;
             } else {
                 $day->timeOff = "";
