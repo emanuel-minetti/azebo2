@@ -247,6 +247,11 @@ export default class DayForm extends Vue {
         }" darf kein Arbeitsbeginn und -ende angegeben werden!`
       );
     }
+    if (!this.form.validateMoreThanTenHours()) {
+      this.errors.push(
+        'Arbeitstage mit mehr als zehn Stunden Arbeitszeit müssen die Bemerkung "überlanger Arbeitstag" erhalten'
+      );
+    }
     return this.errors.length === 0;
   }
 }
