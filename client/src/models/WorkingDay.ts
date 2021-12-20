@@ -277,6 +277,7 @@ export default class WorkingDay {
       this._rule &&
       !(
         this._timeOff == "urlaub" ||
+        this._timeOff == "gleitzeit" ||
         this._timeOff == "azv" ||
         this._timeOff == "gruen" ||
         this._timeOff == "krank" ||
@@ -343,6 +344,13 @@ export default class WorkingDay {
       );
     }
     return true;
+  }
+
+  public validateTimeOffWithBeginEnd(): boolean {
+    return (
+      this.targetTime !== undefined ||
+      (this.begin === undefined && this.end === undefined)
+    );
   }
 
   public toJSON() {

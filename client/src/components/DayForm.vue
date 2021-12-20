@@ -23,7 +23,7 @@
         ></b-form-input>
       </b-form-group>
       <b-form-group
-        label="Dienstbefreiung:"
+        label="Bemerkung:"
         label-for="time-off-input"
         size="lg"
         class="left"
@@ -32,10 +32,10 @@
           id="select"
           v-model="form.timeOff"
           :options="timeOffOptions"
-          @blur="checkForm"
+          @change="checkForm"
         ></b-form-select>
       </b-form-group>
-      <b-form-group label="Bemerkung:" label-for="comment-input">
+      <b-form-group label="Anmerkung:" label-for="comment-input">
         <b-form-textarea
           id="comment-input"
           size="sm"
@@ -194,6 +194,8 @@ export default class DayForm extends Vue {
         Number(value.substring(0, 2)),
         Number(value.substring(3, 5))
       );
+    } else {
+      this.form.end = undefined;
     }
   }
 
@@ -235,6 +237,15 @@ export default class DayForm extends Vue {
     this.errors = [];
     if (!this.form.validateEndAfterBegin()) {
       this.errors.push("Das Ende der Arbeitszeit muss nach dem Beginn liegen!");
+    }
+    if (!this.form.validateTimeOffWithBeginEnd()) {
+      this.errors.push(
+        `Bei Verwendung der Bemerkung "${
+          this.timeOffOptions.find(
+            (value) => value.value === this.form.timeOff
+          )!.text
+        }" darf kein Arbeitsbeginn und -ende angegeben werden!`
+      );
     }
     return this.errors.length === 0;
   }

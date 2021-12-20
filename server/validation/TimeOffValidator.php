@@ -26,6 +26,7 @@ class TimeOffValidator extends AbstractValidator
         $timeOff = $value['timeOff'];
         if (!in_array($timeOff, $timeOffs)) return false;
         if ($timeOff == "urlaub" ||
+            $timeOff == "gleitzeit" ||
             $timeOff == "azv" ||
             $timeOff == "gruen" ||
             $timeOff == "krank" ||
