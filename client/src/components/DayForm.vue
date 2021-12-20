@@ -49,8 +49,7 @@
           v-model="form.mobileWorking"
           class="left"
           @blur="checkForm"
-        >
-        </b-form-checkbox>
+        ></b-form-checkbox>
         <div v-if="errors.length">
           <div v-if="errors.length === 1">
             Bitte korrigieren Sie den folgenden Fehler:
