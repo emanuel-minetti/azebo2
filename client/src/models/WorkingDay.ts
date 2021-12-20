@@ -335,6 +335,16 @@ export default class WorkingDay {
     return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
   }
 
+  public validateEndAfterBegin(): boolean {
+    if (this.begin && this.end) {
+      return (
+        FormatterService.toGermanTime(this.begin) <
+        FormatterService.toGermanTime(this.end)
+      );
+    }
+    return true;
+  }
+
   public toJSON() {
     return {
       _id: this.id,

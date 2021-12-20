@@ -9,6 +9,7 @@
           v-model="begin"
           placeholder="Arbeitsbeginn"
           autofocus
+          @blur="checkForm"
         ></b-form-input>
         <div v-html="compareTimes"></div>
       </b-form-group>
@@ -18,6 +19,7 @@
           type="time"
           v-model="end"
           placeholder="Arbeitsende"
+          @blur="checkForm"
         ></b-form-input>
       </b-form-group>
       <b-form-group
@@ -30,21 +32,40 @@
           id="select"
           v-model="form.timeOff"
           :options="timeOffOptions"
+          @blur="checkForm"
         ></b-form-select>
       </b-form-group>
       <b-form-group label="Bemerkung:" label-for="comment-input">
-        <b-form-textarea id="comment-input" size="sm" v-model="form.comment">
-        </b-form-textarea>
+        <b-form-textarea
+          id="comment-input"
+          size="sm"
+          v-model="form.comment"
+          @blur="checkForm"
+        ></b-form-textarea>
       </b-form-group>
       <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
         <b-form-checkbox
           id="mobile-working-input-input"
           v-model="form.mobileWorking"
           class="left"
+          @blur="checkForm"
         >
         </b-form-checkbox>
+        <div v-if="errors.length">
+          <div v-if="errors.length === 1">
+            Bitte korrigieren Sie den folgenden Fehler:
+          </div>
+          <div v-else>Bitte korrigieren Sie die folgenden Fehler:</div>
+          <div v-for="(error, index) in errors" :key="index">
+            <b-alert show variant="primary">
+              {{ error }}
+            </b-alert>
+          </div>
+        </div>
       </b-form-group>
-      <b-button type="submit" variant="primary">Absenden</b-button>
+      <b-button type="submit" variant="primary" :disabled="errors.length !== 0">
+        Absenden
+      </b-button>
       <b-button type="reset" variant="secondary" class="ml-2">
         Zurücksetzen
       </b-button>
@@ -74,6 +95,7 @@ const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
 export default class DayForm extends Vue {
   show = true;
   timeOffOptions = timeOffsConfig;
+  errors: string[] = [];
 
   // get a copy of the `WorkingDay` to work on
   form = Object.assign(
@@ -178,13 +200,17 @@ export default class DayForm extends Vue {
 
   onSubmit(evt: Event) {
     evt.preventDefault();
-    this.$store
-      // TODO repair summer time!
-      .dispatch("workingTime/setDay", this.form)
-      .then(() => this.$store.dispatch("workingTime/getMonth", this.form.date))
-      .then(() => {
-        this.$emit("submitted");
-      });
+    if (this.errors.length === 0) {
+      this.$store
+        // TODO repair summer time!
+        .dispatch("workingTime/setDay", this.form)
+        .then(() =>
+          this.$store.dispatch("workingTime/getMonth", this.form.date)
+        )
+        .then(() => {
+          this.$emit("submitted");
+        });
+    }
   }
 
   onReset(evt: Event) {
@@ -204,6 +230,14 @@ export default class DayForm extends Vue {
 
   onCancel() {
     this.$emit("submitted");
+  }
+
+  private checkForm() {
+    this.errors = [];
+    if (!this.form.validateEndAfterBegin()) {
+      this.errors.push("Das Ende der Arbeitszeit muss nach dem Beginn liegen!");
+    }
+    return this.errors.length === 0;
   }
 }
 </script>
