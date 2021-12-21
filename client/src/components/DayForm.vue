@@ -9,7 +9,7 @@
           v-model="begin"
           placeholder="Arbeitsbeginn"
           autofocus
-          @blur="checkForm"
+          @blur="validate"
         ></b-form-input>
         <div v-html="compareTimes"></div>
       </b-form-group>
@@ -19,7 +19,7 @@
           type="time"
           v-model="end"
           placeholder="Arbeitsende"
-          @blur="checkForm"
+          @blur="validate"
         ></b-form-input>
       </b-form-group>
       <b-form-group
@@ -32,7 +32,7 @@
           id="select"
           v-model="form.timeOff"
           :options="timeOffOptions"
-          @change="checkForm"
+          @change="validate"
         ></b-form-select>
       </b-form-group>
       <b-form-group label="Anmerkung:" label-for="comment-input">
@@ -40,7 +40,7 @@
           id="comment-input"
           size="sm"
           v-model="form.comment"
-          @blur="checkForm"
+          @blur="validate"
         ></b-form-textarea>
       </b-form-group>
       <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
@@ -48,7 +48,7 @@
           id="mobile-working-input-input"
           v-model="form.mobileWorking"
           class="left"
-          @blur="checkForm"
+          @blur="validate"
         ></b-form-checkbox>
         <div v-if="errors.length">
           <div v-if="errors.length === 1">
@@ -84,6 +84,7 @@
 import { timesConfig, timeOffsConfig } from "@/configs";
 import { Component, Vue } from "vue-property-decorator";
 import { WorkingDay } from "@/models";
+import DayFormValidator from "@/validators/DayFormValidator";
 
 const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
   hour: "2-digit",
@@ -233,11 +234,10 @@ export default class DayForm extends Vue {
     this.$emit("submitted");
   }
 
-  private checkForm() {
+  private validate() {
     this.errors = [];
-    if (!this.form.validateEndAfterBegin()) {
-      this.errors.push("Das Ende der Arbeitszeit muss nach dem Beginn liegen!");
-    }
+    const dfv = new DayFormValidator(this.form);
+    this.errors.push(...dfv.beginAfterEnd().flat());
     if (!this.form.validateTimeOffWithBeginEnd()) {
       this.errors.push(
         `Bei Verwendung der Bemerkung "${
