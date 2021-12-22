@@ -237,21 +237,9 @@ export default class DayForm extends Vue {
   private validate() {
     this.errors = [];
     const dfv = new DayFormValidator(this.form);
-    this.errors.push(...dfv.beginAfterEnd().flat());
-    if (!this.form.validateTimeOffWithBeginEnd()) {
-      this.errors.push(
-        `Bei Verwendung der Bemerkung "${
-          this.timeOffOptions.find(
-            (value) => value.value === this.form.timeOff
-          )!.text
-        }" darf kein Arbeitsbeginn und -ende angegeben werden!`
-      );
-    }
-    if (!this.form.validateMoreThanTenHours()) {
-      this.errors.push(
-        'Arbeitstage mit mehr als zehn Stunden Arbeitszeit müssen die Bemerkung "überlanger Arbeitstag" erhalten'
-      );
-    }
+    this.errors.push(...dfv.beginAfterEnd());
+    this.errors.push(...dfv.timeOffWithBeginAndEnd());
+    this.errors.push(...dfv.moreThanTenHours());
     return this.errors.length === 0;
   }
 }

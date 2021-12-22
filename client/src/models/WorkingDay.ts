@@ -353,13 +353,12 @@ export default class WorkingDay {
     );
   }
 
-  public validateMoreThanTenHours(): boolean {
+  public isMoreThanTenHours(): boolean {
     if (this.actualTime !== undefined) {
       const tenHours = Saldo.createFromMillis(1000 * 60 * 60 * 10);
-      const moreThanTenHours = this.actualTime.biggerThan(tenHours);
-      return !moreThanTenHours || this.timeOff === "lang";
+      return this.actualTime.biggerThan(tenHours);
     }
-    return true;
+    return false;
   }
 
   public toJSON() {
