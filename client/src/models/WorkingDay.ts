@@ -1,6 +1,7 @@
 import { Holiday, Saldo, WorkingRule } from "@/models";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
+import { timesConfig } from "@/configs";
 
 // noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
@@ -147,7 +148,19 @@ export default class WorkingDay {
   }
 
   get break(): Date | undefined {
-    return this._break;
+    if (!this._edited) return this._break;
+    if (!this.hasWorkingTime) return undefined;
+    const breakRequiredFrom = new Saldo(
+      timesConfig.breakRequiredFrom * 60 * 1000
+    );
+    const longBreakRequiredFrom = new Saldo(
+      timesConfig.longBreakRequiredFrom * 60 * 1000
+    );
+    if (this.totalTime!.biggerThan(longBreakRequiredFrom))
+      return new Date(timesConfig.longBreakDuration * 60 * 1000);
+    else if (this.totalTime!.biggerThan(breakRequiredFrom))
+      return new Date(timesConfig.breakRequiredFrom * 60 * 1000);
+    else return undefined;
   }
 
   get timeOff(): string | undefined {
