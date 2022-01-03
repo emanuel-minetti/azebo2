@@ -389,4 +389,9 @@ export default class WorkingDay {
       _edited: this.edited,
     };
   }
+
+  isInCoreTime() {
+    // TODO implement!
+    return false;
+  }
 }

@@ -46,4 +46,10 @@ export default class DayFormValidator {
     }
     return [];
   }
+
+  inCoreTime(): string[] {
+    if (this.day.isInCoreTime()) {
+    }
+    return [];
+  }
 }
