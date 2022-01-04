@@ -70,6 +70,25 @@ export default class DayFormValidator {
           ' bzw. "Dienstabbruch" angegeben werden.'
       );
     }
+    if (
+      this.day.timeOff === "ausgleich" &&
+      !(this.day.isBeginAfterCore() || this.day.isEndAfterCore(holidays))
+    ) {
+      errors.push(
+        'Die Bemerkung "Zeitausgleich" ist nur zulässig, falls Arbeitsbeginn' +
+          " oder -ende außerhalb der Kernarbeitszeit liegt."
+      );
+    }
+    if (
+      (this.day.timeOff === "da_krank" || this.day.timeOff === "da_befr") &&
+      !this.day.isEndAfterCore(holidays)
+    ) {
+      errors.push(
+        'Die Bemerkungen "Dienstabbruch (krank)" und' +
+          '"Dienstabbruch (Dienstbefr.)" sind nur zulässig, falls das' +
+          " Arbeitsende außerhalb der Kernarbeitszeit liegt."
+      );
+    }
     return errors;
   }
 }
