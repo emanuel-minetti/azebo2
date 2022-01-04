@@ -128,6 +128,7 @@ export default class WorkingDay {
   set begin(value: Date | undefined) {
     if (value) {
       this._begin = value;
+      this._begin.setUTCSeconds(0);
     } else {
       this._begin = undefined;
     }
@@ -141,6 +142,7 @@ export default class WorkingDay {
   set end(value: Date | undefined) {
     if (value) {
       this._end = value;
+      this._end.setUTCSeconds(0);
     } else {
       this._end = undefined;
     }
@@ -349,7 +351,7 @@ export default class WorkingDay {
     return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
   }
 
-  public validateEndAfterBegin(): boolean {
+  public isEndAfterBegin(): boolean {
     if (this.begin && this.end) {
       return (
         FormatterService.toGermanTime(this.begin) <
@@ -374,6 +376,31 @@ export default class WorkingDay {
     return false;
   }
 
+  isBeginAfterCore() {
+    if (!this.hasWorkingTime) return false;
+    return (
+      FormatterService.toGermanTime(this.begin) > timesConfig.coreTimeBegin
+    );
+  }
+
+  isEndAfterCore(holidays: Holiday[]) {
+    if (!this.hasWorkingTime) return false;
+    let coreTimeEndString = timesConfig.coreTimeEndShort;
+    if (this.date.getDay() !== 5) {
+      let nextDayIsHoliday = false;
+      const nextDay = new Date(this.date.getTime());
+      nextDay.setDate(this.date.getDate() + 1);
+      for (const holiday of holidays) {
+        if (holiday.date.getTime() == nextDay.getTime()) {
+          nextDayIsHoliday = true;
+          break;
+        }
+      }
+      if (!nextDayIsHoliday) coreTimeEndString = timesConfig.coreTimeEnd;
+    }
+    return FormatterService.toGermanTime(this.end) < coreTimeEndString;
+  }
+
   public toJSON() {
     return {
       _id: this.id,
@@ -388,10 +415,5 @@ export default class WorkingDay {
       _afternoonEnd: this.afternoonEnd,
       _edited: this.edited,
     };
-  }
-
-  isInCoreTime() {
-    // TODO implement!
-    return false;
   }
 }

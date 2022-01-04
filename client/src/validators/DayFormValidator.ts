@@ -1,4 +1,4 @@
-import { WorkingDay } from "@/models";
+import { Holiday, WorkingDay } from "@/models";
 import { timeOffsConfig } from "@/configs";
 
 export default class DayFormValidator {
@@ -10,7 +10,7 @@ export default class DayFormValidator {
   }
 
   beginAfterEnd(): string[] {
-    if (!this.day.validateEndAfterBegin()) {
+    if (!this.day.isEndAfterBegin()) {
       return ["Das Ende der Arbeitszeit muss nach dem Beginn liegen!"];
     }
     return [];
@@ -47,9 +47,29 @@ export default class DayFormValidator {
     return [];
   }
 
-  inCoreTime(): string[] {
-    if (this.day.isInCoreTime()) {
+  inCoreTime(holidays: Holiday[]): string[] {
+    const errors = [];
+    if (this.day.isBeginAfterCore() && this.day.timeOff !== "ausgleich") {
+      errors.push(
+        "Der Beginn der Arbeitszeit darf nicht nach dem Beginn der" +
+          ' Kernarbeitszeit liegen, oder es muss die Bemerkung "Zeitausgleich"' +
+          " angegeben werden."
+      );
     }
-    return [];
+    if (
+      this.day.isEndAfterCore(holidays) &&
+      !(
+        this.day.timeOff === "ausgleich" ||
+        this.day.timeOff === "da_krank" ||
+        this.day.timeOff === "da_befr"
+      )
+    ) {
+      errors.push(
+        "Das Ende der Arbeitszeit darf nicht vor dem Ende der" +
+          ' Kernarbeitszeit liegen, oder es muss die Bemerkung "Zeitausgleich"' +
+          ' bzw. "Dienstabbruch" angegeben werden.'
+      );
+    }
+    return errors;
   }
 }
