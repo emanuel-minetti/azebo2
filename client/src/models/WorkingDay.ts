@@ -363,6 +363,8 @@ export default class WorkingDay {
 
   public validateTimeOffWithBeginEnd(): boolean {
     return (
+      this.timeOff === undefined ||
+      this.timeOff === "zusatz" ||
       this.targetTime !== undefined ||
       (this.begin === undefined && this.end === undefined)
     );
@@ -415,5 +417,9 @@ export default class WorkingDay {
       _afternoonEnd: this.afternoonEnd,
       _edited: this.edited,
     };
+  }
+
+  get hasRule() {
+    return this._rule !== undefined;
   }
 }

@@ -19,7 +19,7 @@ export default class DayFormValidator {
   timeOffWithBeginAndEnd(): string[] {
     if (!this.day.validateTimeOffWithBeginEnd()) {
       return [
-        `Bei Verwendung der Bemerkung "${
+        `Bei Verwendung der Bemerkung \u201E${
           timeOffsConfig.find((value) => value.value === this.day.timeOff)!.text
         }" darf kein Arbeitsbeginn und -ende angegeben werden!`,
       ];
@@ -32,14 +32,14 @@ export default class DayFormValidator {
       if (this.day.timeOff !== "lang") {
         return [
           "Arbeitstage mit mehr als zehn Stunden Arbeitszeit müssen die " +
-            'Bemerkung "überlanger Arbeitstag" erhalten',
+            'Bemerkung \u201Eüberlanger Arbeitstag" erhalten',
         ];
       }
     } else {
       if (this.day.timeOff === "lang") {
         return [
-          'Die Bemerkung "überlanger Arbeitstag" kann nur vergeben werden,' +
-            ' falls "Anfang" und "Ende" gesetzt sind und die Ist-Zeit mehr ' +
+          'Die Bemerkung \u201Eüberlanger Arbeitstag" kann nur vergeben werden,' +
+            ' falls \u201EAnfang" und \u201EEnde" gesetzt sind und die Ist-Zeit mehr ' +
             "als zehn Stunden beträgt",
         ];
       }
@@ -49,10 +49,13 @@ export default class DayFormValidator {
 
   inCoreTime(holidays: Holiday[]): string[] {
     const errors = [];
-    if (this.day.isBeginAfterCore() && this.day.timeOff !== "ausgleich") {
+    if (
+      this.day.isBeginAfterCore() &&
+      !(this.day.timeOff === "ausgleich" || this.day.timeOff === "zusatz")
+    ) {
       errors.push(
         "Der Beginn der Arbeitszeit darf nicht nach dem Beginn der" +
-          ' Kernarbeitszeit liegen, oder es muss die Bemerkung "Zeitausgleich"' +
+          ' Kernarbeitszeit liegen, oder es muss die Bemerkung \u201EZeitausgleich"' +
           " angegeben werden."
       );
     }
@@ -61,13 +64,14 @@ export default class DayFormValidator {
       !(
         this.day.timeOff === "ausgleich" ||
         this.day.timeOff === "da_krank" ||
-        this.day.timeOff === "da_befr"
+        this.day.timeOff === "da_befr" ||
+        this.day.timeOff === "zusatz"
       )
     ) {
       errors.push(
         "Das Ende der Arbeitszeit darf nicht vor dem Ende der" +
-          ' Kernarbeitszeit liegen, oder es muss die Bemerkung "Zeitausgleich"' +
-          ' bzw. "Dienstabbruch" angegeben werden.'
+          ' Kernarbeitszeit liegen, oder es muss die Bemerkung \u201EZeitausgleich"' +
+          ' bzw. \u201EDienstabbruch" angegeben werden.'
       );
     }
     if (
@@ -75,7 +79,7 @@ export default class DayFormValidator {
       !(this.day.isBeginAfterCore() || this.day.isEndAfterCore(holidays))
     ) {
       errors.push(
-        'Die Bemerkung "Zeitausgleich" ist nur zulässig, falls Arbeitsbeginn' +
+        'Die Bemerkung \u201EZeitausgleich" ist nur zulässig, falls Arbeitsbeginn' +
           " oder -ende außerhalb der Kernarbeitszeit liegt."
       );
     }
@@ -85,10 +89,40 @@ export default class DayFormValidator {
     ) {
       errors.push(
         'Die Bemerkungen "Dienstabbruch (krank)" und' +
-          '"Dienstabbruch (Dienstbefr.)" sind nur zulässig, falls das' +
+          '\u201EDienstabbruch (Dienstbefr.)" sind nur zulässig, falls das' +
           " Arbeitsende außerhalb der Kernarbeitszeit liegt."
       );
     }
     return errors;
+  }
+
+  isWorkingDay(): string[] {
+    console.log(!this.day.isWorkingDay);
+    console.log(!this.day.hasRule);
+    console.log(this.day.hasWorkingTime);
+    // TODO comment!
+    if (
+      this.day.hasWorkingTime &&
+      (!this.day.isWorkingDay ||
+        (this.day.isWorkingDay && !this.day.hasRule)) &&
+      this.day.timeOff !== "zusatz"
+    ) {
+      return [
+        "An diesem Tag haben Sie keinen Arbeitstag. Falls Sie trotzdem" +
+          " Arbeitszeiten eintragen, müssen Sie die Bemerkung" +
+          ' \u201Ezusätzlicher Arbeitstag" hinzufügen.',
+      ];
+    }
+    if (
+      this.day.isWorkingDay &&
+      this.day.hasRule &&
+      this.day.timeOff === "zusatz"
+    ) {
+      return [
+        "An einem regulären Arbeitstag darf die Bemerkung" +
+          ' \u201Ezusätzlicher Arbeitstag" nicht angegeben werden',
+      ];
+    }
+    return [];
   }
 }
