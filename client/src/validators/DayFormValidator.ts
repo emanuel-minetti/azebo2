@@ -1,5 +1,5 @@
 import { Carry, Holiday, WorkingDay, WorkingMonth } from "@/models";
-import { timeOffsConfig } from "@/configs";
+import { timeOffsConfig, timesConfig } from "@/configs";
 
 export default class DayFormValidator {
   private day: WorkingDay;
@@ -126,6 +126,21 @@ export default class DayFormValidator {
   negativeRestOfTakenHolidays(carryResult: Carry, month: WorkingMonth) {
     console.log(carryResult.holidays);
     console.log(month.takenHolidays);
+    const remainingHolidays =
+      month.monthNumber <= timesConfig.previousHolidaysValidTo
+        ? carryResult.holidaysPrevious + carryResult.holidays
+        : carryResult.holidays;
+    if (
+      // TODO review!
+      remainingHolidays <= month.takenHolidays &&
+      this.day.timeOff === "urlaub"
+    ) {
+      return [
+        'Sie können die Bemerkung \u201EUrlaub" nur eintragen,' +
+          " wenn Sie noch über Urlaubstage verfügen.",
+      ];
+    }
+    // TODO test for `isWorkingDay` and `hasRule`
     return [];
   }
 }
