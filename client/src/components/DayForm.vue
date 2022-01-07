@@ -242,6 +242,12 @@ export default class DayForm extends Vue {
     this.errors.push(...dfv.moreThanTenHours());
     this.errors.push(...dfv.inCoreTime(this.$store.state.workingTime.holidays));
     this.errors.push(...dfv.isWorkingDay());
+    this.errors.push(
+      ...dfv.negativeRestOfTakenHolidays(
+        this.$store.state.workingTime.carryResult,
+        this.$store.state.workingTime.month
+      )
+    );
     return this.errors.length === 0;
   }
 }

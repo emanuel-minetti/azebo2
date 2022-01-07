@@ -1,4 +1,4 @@
-import { Holiday, WorkingDay } from "@/models";
+import { Carry, Holiday, WorkingDay, WorkingMonth } from "@/models";
 import { timeOffsConfig } from "@/configs";
 
 export default class DayFormValidator {
@@ -97,9 +97,6 @@ export default class DayFormValidator {
   }
 
   isWorkingDay(): string[] {
-    console.log(!this.day.isWorkingDay);
-    console.log(!this.day.hasRule);
-    console.log(this.day.hasWorkingTime);
     // TODO comment!
     if (
       this.day.hasWorkingTime &&
@@ -123,6 +120,12 @@ export default class DayFormValidator {
           ' \u201Ezusätzlicher Arbeitstag" nicht angegeben werden',
       ];
     }
+    return [];
+  }
+
+  negativeRestOfTakenHolidays(carryResult: Carry, month: WorkingMonth) {
+    console.log(carryResult.holidays);
+    console.log(month.takenHolidays);
     return [];
   }
 }
