@@ -3,64 +3,82 @@ import { timeOffsConfig, timesConfig } from "@/configs";
 
 export default class DayFormValidator {
   private day: WorkingDay;
+  private readonly holidays: Holiday[];
+  private readonly carryResult: Carry;
+  private readonly month: WorkingMonth;
   public errors: string[] = [];
 
-  constructor(day: WorkingDay) {
+  constructor(
+    day: WorkingDay,
+    holidays: Holiday[],
+    carryResult: Carry,
+    month: WorkingMonth
+  ) {
     this.day = day;
+    this.holidays = holidays;
+    this.carryResult = carryResult;
+    this.month = month;
   }
 
-  beginAfterEnd(): string[] {
+  validate(): string[] {
+    this.errors = [];
+    this.beginAfterEnd();
+    this.timeOffWithBeginAndEnd();
+    this.moreThanTenHours();
+    this.inCoreTime();
+    this.isWorkingDay();
+    this.negativeRestOfTakenHolidays();
+    return this.errors;
+  }
+
+  beginAfterEnd() {
     if (!this.day.isEndAfterBegin()) {
-      return ["Das Ende der Arbeitszeit muss nach dem Beginn liegen!"];
+      this.errors.push("Das Ende der Arbeitszeit muss nach dem Beginn liegen!");
     }
-    return [];
   }
 
-  timeOffWithBeginAndEnd(): string[] {
+  timeOffWithBeginAndEnd() {
     if (!this.day.validateTimeOffWithBeginEnd()) {
-      return [
+      this.errors.push(
         `Bei Verwendung der Bemerkung \u201E${
           timeOffsConfig.find((value) => value.value === this.day.timeOff)!.text
-        }" darf kein Arbeitsbeginn und -ende angegeben werden!`,
-      ];
+        }" darf kein Arbeitsbeginn und -ende angegeben werden!`
+      );
     }
-    return [];
   }
 
-  moreThanTenHours(): string[] {
+  moreThanTenHours() {
     if (this.day.isMoreThanTenHours()) {
       if (this.day.timeOff !== "lang") {
-        return [
+        this.errors.push(
           "Arbeitstage mit mehr als zehn Stunden Arbeitszeit müssen die " +
-            'Bemerkung \u201Eüberlanger Arbeitstag" erhalten',
-        ];
+            'Bemerkung \u201Eüberlanger Arbeitstag" erhalten'
+        );
       }
     } else {
       if (this.day.timeOff === "lang") {
-        return [
+        this.errors.push(
           'Die Bemerkung \u201Eüberlanger Arbeitstag" kann nur vergeben werden,' +
             ' falls \u201EAnfang" und \u201EEnde" gesetzt sind und die Ist-Zeit mehr ' +
-            "als zehn Stunden beträgt",
-        ];
+            "als zehn Stunden beträgt"
+        );
       }
     }
-    return [];
   }
 
-  inCoreTime(holidays: Holiday[]): string[] {
-    const errors = [];
+  inCoreTime() {
     if (
       this.day.isBeginAfterCore() &&
       !(this.day.timeOff === "ausgleich" || this.day.timeOff === "zusatz")
     ) {
-      errors.push(
+      this.errors.push(
         "Der Beginn der Arbeitszeit darf nicht nach dem Beginn der" +
           ' Kernarbeitszeit liegen, oder es muss die Bemerkung \u201EZeitausgleich"' +
           " angegeben werden."
       );
     }
     if (
-      this.day.isEndAfterCore(holidays) &&
+      this.day.isEndAfterCore(this.holidays) &&
       !(
         this.day.timeOff === "ausgleich" ||
         this.day.timeOff === "da_krank" ||
@@ -68,7 +86,7 @@ export default class DayFormValidator {
         this.day.timeOff === "zusatz"
       )
     ) {
-      errors.push(
+      this.errors.push(
         "Das Ende der Arbeitszeit darf nicht vor dem Ende der" +
           ' Kernarbeitszeit liegen, oder es muss die Bemerkung \u201EZeitausgleich"' +
           ' bzw. \u201EDienstabbruch" angegeben werden.'
@@ -76,27 +94,26 @@ export default class DayFormValidator {
     }
     if (
       this.day.timeOff === "ausgleich" &&
-      !(this.day.isBeginAfterCore() || this.day.isEndAfterCore(holidays))
+      !(this.day.isBeginAfterCore() || this.day.isEndAfterCore(this.holidays))
     ) {
-      errors.push(
+      this.errors.push(
         'Die Bemerkung \u201EZeitausgleich" ist nur zulässig, falls Arbeitsbeginn' +
           " oder -ende außerhalb der Kernarbeitszeit liegt."
       );
     }
     if (
       (this.day.timeOff === "da_krank" || this.day.timeOff === "da_befr") &&
-      !this.day.isEndAfterCore(holidays)
+      !this.day.isEndAfterCore(this.holidays)
     ) {
-      errors.push(
+      this.errors.push(
         'Die Bemerkungen "Dienstabbruch (krank)" und' +
           '\u201EDienstabbruch (Dienstbefr.)" sind nur zulässig, falls das' +
           " Arbeitsende außerhalb der Kernarbeitszeit liegt."
       );
     }
-    return errors;
   }
 
-  isWorkingDay(): string[] {
+  isWorkingDay() {
     // TODO comment!
     if (
       this.day.hasWorkingTime &&
@@ -104,45 +121,40 @@ export default class DayFormValidator {
         (this.day.isCommonWorkingDay && !this.day.hasRule)) &&
       this.day.timeOff !== "zusatz"
     ) {
-      return [
+      this.errors.push(
         "An diesem Tag haben Sie keinen Arbeitstag. Falls Sie trotzdem" +
           " Arbeitszeiten eintragen, müssen Sie die Bemerkung" +
-          ' \u201Ezusätzlicher Arbeitstag" hinzufügen.',
-      ];
+          ' \u201Ezusätzlicher Arbeitstag" hinzufügen.'
+      );
     }
     if (this.day.isActualWorkingDay && this.day.timeOff === "zusatz") {
-      return [
+      this.errors.push(
         "An einem regulären Arbeitstag darf die Bemerkung" +
-          ' \u201Ezusätzlicher Arbeitstag" nicht angegeben werden',
-      ];
+          ' \u201Ezusätzlicher Arbeitstag" nicht angegeben werden'
+      );
     }
-    return [];
   }
 
-  negativeRestOfTakenHolidays(carryResult: Carry, month: WorkingMonth) {
-    // console.log(carryResult.holidays);
-    // console.log(month.takenHolidays);
-    const errors = [];
+  negativeRestOfTakenHolidays() {
     const remainingHolidays =
-      month.monthNumber <= timesConfig.previousHolidaysValidTo
-        ? carryResult.holidaysPrevious + carryResult.holidays
-        : carryResult.holidays;
+      this.month.monthNumber <= timesConfig.previousHolidaysValidTo
+        ? this.carryResult.holidaysPrevious + this.carryResult.holidays
+        : this.carryResult.holidays;
     if (
       // TODO review!
-      remainingHolidays <= month.takenHolidays &&
+      remainingHolidays <= this.month.takenHolidays &&
       this.day.timeOff === "urlaub"
     ) {
-      errors.push(
+      this.errors.push(
         'Sie können die Bemerkung \u201EUrlaub" nur eintragen,' +
           " wenn Sie noch über Urlaubstage verfügen."
       );
     }
     if (!this.day.isActualWorkingDay && this.day.timeOff === "urlaub") {
-      errors.push(
+      this.errors.push(
         'Sie können die Bemerkung \u201EUrlaub" nur eintragen,' +
           " wenn Sie einen Arbeitstag haben."
       );
     }
-    return errors;
   }
 }

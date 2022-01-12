@@ -235,19 +235,13 @@ export default class DayForm extends Vue {
   }
 
   private validate() {
-    this.errors = [];
-    const dfv = new DayFormValidator(this.form);
-    this.errors.push(...dfv.beginAfterEnd());
-    this.errors.push(...dfv.timeOffWithBeginAndEnd());
-    this.errors.push(...dfv.moreThanTenHours());
-    this.errors.push(...dfv.inCoreTime(this.$store.state.workingTime.holidays));
-    this.errors.push(...dfv.isWorkingDay());
-    this.errors.push(
-      ...dfv.negativeRestOfTakenHolidays(
-        this.$store.state.workingTime.carryResult,
-        this.$store.state.workingTime.month
-      )
+    const dfv = new DayFormValidator(
+      this.form,
+      this.$store.state.workingTime.holidays,
+      this.$store.state.workingTime.carryResult,
+      this.$store.state.workingTime.month
     );
+    this.errors = dfv.validate();
     return this.errors.length === 0;
   }
 }
