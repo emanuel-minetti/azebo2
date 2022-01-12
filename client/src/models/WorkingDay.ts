@@ -273,7 +273,8 @@ export default class WorkingDay {
   }
 
   /**
-   * Returns the time intervall from begin to end if these are set, `undefined` otherwise.
+   * Returns the time intervall from begin to end if these are set,
+   * `undefined` otherwise.
    */
   get totalTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
@@ -345,6 +346,10 @@ export default class WorkingDay {
 
   get id(): number {
     return this._id;
+  }
+
+  get hasRule() {
+    return this._rule !== undefined;
   }
 
   /**
@@ -431,9 +436,5 @@ export default class WorkingDay {
       _afternoonEnd: this.afternoonEnd,
       _edited: this.edited,
     };
-  }
-
-  get hasRule() {
-    return this._rule !== undefined;
   }
 }
