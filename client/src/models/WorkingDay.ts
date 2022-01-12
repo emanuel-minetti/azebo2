@@ -244,11 +244,24 @@ export default class WorkingDay {
   }
 
   /**
-   * Returns whether a date is an actual working day.
+   * Returns whether a date is a common working day.
    */
-  get isWorkingDay() {
+  get isCommonWorkingDay() {
     return (
       this._date.getDay() !== 0 && this._date.getDay() !== 6 && !this.isHoliday
+    );
+  }
+
+  /**
+   * Returns whether a date is an actual working day meaning this day
+   * is a working day for this user.
+   */
+  get isActualWorkingDay() {
+    return (
+      this._date.getDay() !== 0 &&
+      this._date.getDay() !== 6 &&
+      !this.isHoliday &&
+      this.hasRule
     );
   }
 

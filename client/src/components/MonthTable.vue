@@ -155,7 +155,7 @@ export default class MonthTable extends Vue {
   // adds a class for non-working days
   rowClass(day: WorkingDay, type: string) {
     if (!day || type !== "row") return;
-    if (!day.isWorkingDay) return "not-a-working-day";
+    if (!day.isCommonWorkingDay) return "not-a-working-day";
   }
 
   // formats the shown date

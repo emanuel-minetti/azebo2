@@ -100,8 +100,8 @@ export default class DayFormValidator {
     // TODO comment!
     if (
       this.day.hasWorkingTime &&
-      (!this.day.isWorkingDay ||
-        (this.day.isWorkingDay && !this.day.hasRule)) &&
+      (!this.day.isCommonWorkingDay ||
+        (this.day.isCommonWorkingDay && !this.day.hasRule)) &&
       this.day.timeOff !== "zusatz"
     ) {
       return [
@@ -110,11 +110,7 @@ export default class DayFormValidator {
           ' \u201Ezusätzlicher Arbeitstag" hinzufügen.',
       ];
     }
-    if (
-      this.day.isWorkingDay &&
-      this.day.hasRule &&
-      this.day.timeOff === "zusatz"
-    ) {
+    if (this.day.isActualWorkingDay && this.day.timeOff === "zusatz") {
       return [
         "An einem regulären Arbeitstag darf die Bemerkung" +
           ' \u201Ezusätzlicher Arbeitstag" nicht angegeben werden',
@@ -124,8 +120,9 @@ export default class DayFormValidator {
   }
 
   negativeRestOfTakenHolidays(carryResult: Carry, month: WorkingMonth) {
-    console.log(carryResult.holidays);
-    console.log(month.takenHolidays);
+    // console.log(carryResult.holidays);
+    // console.log(month.takenHolidays);
+    const errors = [];
     const remainingHolidays =
       month.monthNumber <= timesConfig.previousHolidaysValidTo
         ? carryResult.holidaysPrevious + carryResult.holidays
@@ -135,12 +132,17 @@ export default class DayFormValidator {
       remainingHolidays <= month.takenHolidays &&
       this.day.timeOff === "urlaub"
     ) {
-      return [
+      errors.push(
         'Sie können die Bemerkung \u201EUrlaub" nur eintragen,' +
-          " wenn Sie noch über Urlaubstage verfügen.",
-      ];
+          " wenn Sie noch über Urlaubstage verfügen."
+      );
     }
-    // TODO test for `isWorkingDay` and `hasRule`
-    return [];
+    if (!this.day.isActualWorkingDay && this.day.timeOff === "urlaub") {
+      errors.push(
+        'Sie können die Bemerkung \u201EUrlaub" nur eintragen,' +
+          " wenn Sie einen Arbeitstag haben."
+      );
+    }
+    return errors;
   }
 }
