@@ -9,6 +9,7 @@
           v-model="begin"
           placeholder="Arbeitsbeginn"
           autofocus
+          @blur="validate"
         ></b-form-input>
         <div v-html="compareTimes"></div>
       </b-form-group>
@@ -18,10 +19,11 @@
           type="time"
           v-model="end"
           placeholder="Arbeitsende"
+          @blur="validate"
         ></b-form-input>
       </b-form-group>
       <b-form-group
-        label="Dienstbefreiung:"
+        label="Bemerkung:"
         label-for="time-off-input"
         size="lg"
         class="left"
@@ -30,21 +32,39 @@
           id="select"
           v-model="form.timeOff"
           :options="timeOffOptions"
+          @change="validate"
         ></b-form-select>
       </b-form-group>
-      <b-form-group label="Bemerkung:" label-for="comment-input">
-        <b-form-textarea id="comment-input" size="sm" v-model="form.comment">
-        </b-form-textarea>
+      <b-form-group label="Anmerkung:" label-for="comment-input">
+        <b-form-textarea
+          id="comment-input"
+          size="sm"
+          v-model="form.comment"
+          @blur="validate"
+        ></b-form-textarea>
       </b-form-group>
       <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
         <b-form-checkbox
           id="mobile-working-input-input"
           v-model="form.mobileWorking"
           class="left"
-        >
-        </b-form-checkbox>
+          @blur="validate"
+        ></b-form-checkbox>
+        <div v-if="errors.length">
+          <div v-if="errors.length === 1">
+            Bitte korrigieren Sie den folgenden Fehler:
+          </div>
+          <div v-else>Bitte korrigieren Sie die folgenden Fehler:</div>
+          <div v-for="(error, index) in errors" :key="index">
+            <b-alert show variant="primary">
+              {{ error }}
+            </b-alert>
+          </div>
+        </div>
       </b-form-group>
-      <b-button type="submit" variant="primary">Absenden</b-button>
+      <b-button type="submit" variant="primary" :disabled="errors.length !== 0">
+        Absenden
+      </b-button>
       <b-button type="reset" variant="secondary" class="ml-2">
         Zurücksetzen
       </b-button>
@@ -64,6 +84,7 @@
 import { timesConfig, timeOffsConfig } from "@/configs";
 import { Component, Vue } from "vue-property-decorator";
 import { WorkingDay } from "@/models";
+import DayFormValidator from "@/validators/DayFormValidator";
 
 const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
   hour: "2-digit",
@@ -74,6 +95,7 @@ const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
 export default class DayForm extends Vue {
   show = true;
   timeOffOptions = timeOffsConfig;
+  errors: string[] = [];
 
   // get a copy of the `WorkingDay` to work on
   form = Object.assign(
@@ -173,18 +195,24 @@ export default class DayForm extends Vue {
         Number(value.substring(0, 2)),
         Number(value.substring(3, 5))
       );
+    } else {
+      this.form.end = undefined;
     }
   }
 
   onSubmit(evt: Event) {
     evt.preventDefault();
-    this.$store
-      // TODO repair summer time!
-      .dispatch("workingTime/setDay", this.form)
-      .then(() => this.$store.dispatch("workingTime/getMonth", this.form.date))
-      .then(() => {
-        this.$emit("submitted");
-      });
+    if (this.errors.length === 0) {
+      this.$store
+        // TODO repair summer time!
+        .dispatch("workingTime/setDay", this.form)
+        .then(() =>
+          this.$store.dispatch("workingTime/getMonth", this.form.date)
+        )
+        .then(() => {
+          this.$emit("submitted");
+        });
+    }
   }
 
   onReset(evt: Event) {
@@ -204,6 +232,17 @@ export default class DayForm extends Vue {
 
   onCancel() {
     this.$emit("submitted");
+  }
+
+  private validate() {
+    const dfv = new DayFormValidator(
+      this.form,
+      this.$store.state.workingTime.holidays,
+      this.$store.state.workingTime.carryResult,
+      this.$store.state.workingTime.month
+    );
+    this.errors = dfv.validate();
+    return this.errors.length === 0;
   }
 }
 </script>

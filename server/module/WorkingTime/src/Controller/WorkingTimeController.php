@@ -16,8 +16,11 @@ use DateInterval;
 use DateTime;
 use Exception;
 use Laminas\Config\Factory;
+use Laminas\Validator\StringLength;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
+use Validation\BeginBeforeEndValidator;
+use Validation\TimeOffValidator;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayTable;
 
@@ -58,27 +61,46 @@ class WorkingTimeController extends ApiController
 
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
             $userId = $this->httpRequest->getQuery()->user_id;
+            if (!isset($post->_id) || !is_numeric($post->_id)) return $this->invalidRequest;
             $id = $post->_id;
             $oneHour = new DateInterval('PT1H');
             if ($id != 0) {
                 $day = $this->table->find($id);
+                if (!$day) return $this->invalidRequest;
             } else {
+                if (!isset($post->_date)) return $this->invalidRequest;
+                $date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
+                if (!$date) return $this->invalidRequest;
                 $day = new WorkingDay();
-                $day->date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
+                $day->date = $date;
                 $day->date->add($oneHour);
-                $day->userId = $userId; $this->prepare();
-                $post = json_decode($this->httpRequest->getContent());
+                $day->userId = $userId;
                 $day->id = 0;
             }
             if (isset($post->_begin)) {
-                $day->begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_begin);
+                $begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_begin);
+                if (!$begin) return $this->invalidRequest;
+                $day->begin = $begin;
                 $day->begin->add($oneHour);
+            } else {
+                $day->begin = null;
             }
             if (isset($post->_end)) {
-                $day->end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
+                $end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
+                if (!$end) return $this->invalidRequest;
+                $day->end = $end;
                 $day->end->add($oneHour);
+            } else {
+                $day->end = null;
             }
             if (isset($post->_begin) && isset($post->_end)) {
+                // validate
+                $bbeValidator = new BeginBeforeEndValidator();
+                $value = [
+                    'begin' => $day->begin,
+                    'end' => $day->end
+                ];
+                if (!$bbeValidator->isValid($value)) return $this->invalidRequest;
                 $config = Factory::fromFile('./../server/config/times.config.php', true);
                 try {
                     $breakRequiredFrom = new DateInterval('PT' . $config->get('breakRequiredFrom') . 'H');
@@ -95,8 +117,25 @@ class WorkingTimeController extends ApiController
                 } catch (Exception $ignored) {
                 }
             }
-            $day->timeOff = $post->_timeOff ?? "";
-            $day->comment = $post->_comment ?? "";
+            if (isset($post->_timeOff)) {
+                $toValidator = new TimeOffValidator();
+                $value = [
+                    'begin' => $day->begin,
+                    'end' => $day->end,
+                    'timeOff' => $post->_timeOff,
+                ];
+                if (!$toValidator->isValid($value)) return $this->invalidRequest;
+                $day->timeOff = $post->_timeOff;
+            } else {
+                $day->timeOff = "";
+            }
+            if (isset($post->_comment)) {
+                $slValidator = new StringLength(['max' => 120]);
+                if (!$slValidator->isValid($post->_comment)) return $this->invalidRequest;
+                $day->comment = $post->_comment;
+            } else {
+                $day->comment = "";
+            }
             $day->mobile_working = $post->_mobile_working ?? false;
             $day->afternoon = $post->_afternoon ?? false;
             $this->table->upsert($day);

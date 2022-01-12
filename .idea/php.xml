@@ -35,7 +35,6 @@
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-http" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-json" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-dependency-plugin" />
-      <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-dom" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-loader" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-view" />
       <path value="$PROJECT_DIR$/server/vendor/laminas/laminas-router" />
@@ -86,6 +85,14 @@
       <path value="$PROJECT_DIR$/server/vendor/sebastian/cli-parser" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/lines-of-code" />
       <path value="$PROJECT_DIR$/server/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/server/vendor/phpunit/php-token-stream" />
+      <path value="$PROJECT_DIR$/server/vendor/phpunit/phpunit-mock-objects" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/deprecation-contracts" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

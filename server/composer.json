@@ -21,7 +21,8 @@
         "laminas/laminas-db": "^2",
         "firebase/php-jwt": "^5",
         "laminas/laminas-dependency-plugin": "^2",
-        "laminas/laminas-log": "^2"
+        "laminas/laminas-log": "^2",
+        "laminas/laminas-validator": "^2.15"
     },
     "autoload": {
         "psr-4": {
@@ -32,7 +33,8 @@
             "Service\\": "service/",
             "WorkingRule\\": "module/WorkingRule/src/",
             "Carry\\": "module/Carry/src",
-            "AzeboLib\\": "lib"
+            "AzeboLib\\": "lib",
+            "Validation\\": "validation/"
         }
     },
     "scripts": {
@@ -46,7 +48,5 @@
             "php -r \"$file = file_get_contents('.gitignore'); $file = str_replace('composer.lock', '', $file); file_put_contents('.gitignore', $file);\""
         ],
         "test": "phpunit"
-    },
-    "require-dev": {
     }
 }

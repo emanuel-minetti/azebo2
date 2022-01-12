@@ -1,6 +1,7 @@
 import { Holiday, Saldo, WorkingRule } from "@/models";
 import { FormatterService } from "@/services";
 import { store } from "@/store";
+import { timesConfig } from "@/configs";
 
 // noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
@@ -127,6 +128,7 @@ export default class WorkingDay {
   set begin(value: Date | undefined) {
     if (value) {
       this._begin = value;
+      this._begin.setUTCSeconds(0);
     } else {
       this._begin = undefined;
     }
@@ -140,6 +142,7 @@ export default class WorkingDay {
   set end(value: Date | undefined) {
     if (value) {
       this._end = value;
+      this._end.setUTCSeconds(0);
     } else {
       this._end = undefined;
     }
@@ -147,7 +150,19 @@ export default class WorkingDay {
   }
 
   get break(): Date | undefined {
-    return this._break;
+    if (!this._edited) return this._break;
+    if (!this.hasWorkingTime) return undefined;
+    const breakRequiredFrom = new Saldo(
+      timesConfig.breakRequiredFrom * 60 * 1000
+    );
+    const longBreakRequiredFrom = new Saldo(
+      timesConfig.longBreakRequiredFrom * 60 * 1000
+    );
+    if (this.totalTime!.biggerThan(longBreakRequiredFrom))
+      return new Date(timesConfig.longBreakDuration * 60 * 1000);
+    else if (this.totalTime!.biggerThan(breakRequiredFrom))
+      return new Date(timesConfig.breakRequiredFrom * 60 * 1000);
+    else return undefined;
   }
 
   get timeOff(): string | undefined {
@@ -229,11 +244,24 @@ export default class WorkingDay {
   }
 
   /**
-   * Returns whether a date is an actual working day.
+   * Returns whether a date is a common working day.
    */
-  get isWorkingDay() {
+  get isCommonWorkingDay() {
     return (
       this._date.getDay() !== 0 && this._date.getDay() !== 6 && !this.isHoliday
+    );
+  }
+
+  /**
+   * Returns whether a date is an actual working day meaning this day
+   * is a working day for this user.
+   */
+  get isActualWorkingDay() {
+    return (
+      this._date.getDay() !== 0 &&
+      this._date.getDay() !== 6 &&
+      !this.isHoliday &&
+      this.hasRule
     );
   }
 
@@ -245,7 +273,8 @@ export default class WorkingDay {
   }
 
   /**
-   * Returns the time intervall from begin to end if these are set, `undefined` otherwise.
+   * Returns the time intervall from begin to end if these are set,
+   * `undefined` otherwise.
    */
   get totalTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
@@ -277,6 +306,7 @@ export default class WorkingDay {
       this._rule &&
       !(
         this._timeOff == "urlaub" ||
+        this._timeOff == "gleitzeit" ||
         this._timeOff == "azv" ||
         this._timeOff == "gruen" ||
         this._timeOff == "krank" ||
@@ -318,6 +348,10 @@ export default class WorkingDay {
     return this._id;
   }
 
+  get hasRule() {
+    return this._rule !== undefined;
+  }
+
   /**
    * Returns the number week in the year for this day.
    */
@@ -333,6 +367,59 @@ export default class WorkingDay {
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
+  }
+
+  public isEndAfterBegin(): boolean {
+    if (this.begin && this.end) {
+      return (
+        FormatterService.toGermanTime(this.begin) <
+        FormatterService.toGermanTime(this.end)
+      );
+    }
+    return true;
+  }
+
+  public validateTimeOffWithBeginEnd(): boolean {
+    return (
+      this.timeOff === undefined ||
+      this.timeOff === null ||
+      this.timeOff === "zusatz" ||
+      this.targetTime !== undefined ||
+      (this.begin === undefined && this.end === undefined)
+    );
+  }
+
+  public isMoreThanTenHours(): boolean {
+    if (this.actualTime !== undefined) {
+      const tenHours = Saldo.createFromMillis(1000 * 60 * 60 * 10);
+      return this.actualTime.biggerThan(tenHours);
+    }
+    return false;
+  }
+
+  isBeginAfterCore() {
+    if (!this.hasWorkingTime) return false;
+    return (
+      FormatterService.toGermanTime(this.begin) > timesConfig.coreTimeBegin
+    );
+  }
+
+  isEndAfterCore(holidays: Holiday[]) {
+    if (!this.hasWorkingTime) return false;
+    let coreTimeEndString = timesConfig.coreTimeEndShort;
+    if (this.date.getDay() !== 5) {
+      let nextDayIsHoliday = false;
+      const nextDay = new Date(this.date.getTime());
+      nextDay.setDate(this.date.getDate() + 1);
+      for (const holiday of holidays) {
+        if (holiday.date.getTime() == nextDay.getTime()) {
+          nextDayIsHoliday = true;
+          break;
+        }
+      }
+      if (!nextDayIsHoliday) coreTimeEndString = timesConfig.coreTimeEnd;
+    }
+    return FormatterService.toGermanTime(this.end) < coreTimeEndString;
   }
 
   public toJSON() {
