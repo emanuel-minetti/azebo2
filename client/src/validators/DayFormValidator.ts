@@ -20,6 +20,11 @@ export default class DayFormValidator {
     this.month = month;
   }
 
+  /**
+   * Validates the whole form.
+   *
+   * Should be called on each blur event of each form field.
+   */
   validate(): string[] {
     this.errors = [];
     this.beginAfterEnd();
@@ -31,12 +36,20 @@ export default class DayFormValidator {
     return this.errors;
   }
 
+  /**
+   * Tests if both, begun and end are filled in, whether the beginning time is
+   * before the end time.
+   */
   beginAfterEnd() {
     if (!this.day.isEndAfterBegin()) {
       this.errors.push("Das Ende der Arbeitszeit muss nach dem Beginn liegen!");
     }
   }
 
+  /**
+   * Tests whether there are (superfluous) beginning or end times, if a
+   * 'Time Off' is given.
+   */
   timeOffWithBeginAndEnd() {
     if (!this.day.validateTimeOffWithBeginEnd()) {
       this.errors.push(
@@ -47,6 +60,9 @@ export default class DayFormValidator {
     }
   }
 
+  /**
+   * Tests whether the working day had more than ten working hours.
+   */
   moreThanTenHours() {
     if (this.day.isMoreThanTenHours()) {
       if (this.day.timeOff !== "lang") {
@@ -66,6 +82,9 @@ export default class DayFormValidator {
     }
   }
 
+  /**
+   * Tests whether the core time is covered by the working time.
+   */
   inCoreTime() {
     if (
       this.day.isBeginAfterCore() &&
@@ -113,12 +132,13 @@ export default class DayFormValidator {
     }
   }
 
+  /**
+   * Tests whether this day is an actual working day.
+   */
   isWorkingDay() {
-    // TODO comment!
     if (
       this.day.hasWorkingTime &&
-      (!this.day.isCommonWorkingDay ||
-        (this.day.isCommonWorkingDay && !this.day.hasRule)) &&
+      !this.day.isActualWorkingDay &&
       this.day.timeOff !== "zusatz"
     ) {
       this.errors.push(
@@ -135,13 +155,15 @@ export default class DayFormValidator {
     }
   }
 
+  /**
+   * Tests the 'Time Off' `urlaub`.
+   */
   negativeRestOfTakenHolidays() {
     const remainingHolidays =
       this.month.monthNumber <= timesConfig.previousHolidaysValidTo
         ? this.carryResult.holidaysPrevious + this.carryResult.holidays
         : this.carryResult.holidays;
     if (
-      // TODO review!
       remainingHolidays <= this.month.takenHolidays &&
       this.day.timeOff === "urlaub"
     ) {
