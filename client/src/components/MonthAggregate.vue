@@ -19,7 +19,6 @@ import { mapState } from "vuex";
 @Component({
   computed: { ...mapState("workingTime", ["carryResult", "month"]) },
 })
-//@Component
 export default class MonthAggregate extends Vue {
   carryResult!: Carry;
   month!: WorkingMonth;
