@@ -31,6 +31,17 @@ return [
                     ],
                 ],
             ],
+            'home-dev' => [
+                'type'    => Hostname::class,
+                'options' => [
+                    // get hostname from config
+                    'route'    => $config['hostname-dev'],
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
