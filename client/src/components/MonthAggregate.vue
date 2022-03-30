@@ -1,5 +1,5 @@
 <template>
-  <div id="month-aggregate">
+  <div id="month-aggregate" class="mx-0 mx-lg-auto">
     <b-table-lite
       caption="Zusammenfassung:"
       caption-top
@@ -114,7 +114,8 @@ export default class MonthAggregate extends Vue {
 <!--suppress CssUnusedSymbol -->
 <style scoped>
 #month-aggregate {
-  padding-left: 40px;
+  text-align: center;
+  width: 90%;
 }
 
 table {
