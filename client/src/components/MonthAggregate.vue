@@ -7,6 +7,13 @@
       :items="items"
       bordered
     />
+    <b-table-lite
+      class="mx-4"
+      caption="Kalenderwochen:"
+      caption-top
+      :fields="weekFields"
+      bordered
+    />
   </div>
 </template>
 
@@ -42,6 +49,17 @@ export default class MonthAggregate extends Vue {
     },
   ];
 
+  weekFields = [
+    {
+      key: "soso",
+      label: "test1",
+    },
+    {
+      key: "soso2",
+      label: "test2",
+    },
+  ];
+
   get holidaysLeftString() {
     return this.month.monthNumber <= timesConfig.previousHolidaysValidTo
       ? this.carryResult.holidays +
@@ -66,31 +84,6 @@ export default class MonthAggregate extends Vue {
     }
     return holidays - taken;
   }
-
-  // get monthSaldoString() {
-  // if (
-  //   this.$store.getters["workingTime/saldoMobile"] === "" ||
-  //   this.$store.getters["workingTime/saldo"].getMillis() === 0 ||
-  //   this.$store.getters["workingTime/saldoMobile"].getMillis() === 0
-  // ) {
-  // return this.$store.getters["workingTime/saldo"];
-  // } else {
-  //   return (
-  //     this.$store.getters["workingTime/saldo"] +
-  //     " (davon " +
-  //     this.$store.getters["workingTime/saldoMobile"] +
-  //     " = " +
-  //     Saldo.getPercentage(
-  //       this.$store.getters["workingTime/saldo"],
-  //       this.$store.getters["workingTime/saldoMobile"]
-  //     ).toLocaleString("de-DE", {
-  //       maximumFractionDigits: 1,
-  //       minimumFractionDigits: 1,
-  //     }) +
-  //     "% Mobil)"
-  //   );
-  // }
-  //}
 
   get capture() {
     let capture = "Zusammenfassung: ";
@@ -153,6 +146,7 @@ export default class MonthAggregate extends Vue {
 table {
   width: 500px;
   font-size: larger;
+  float: left;
 }
 
 /deep/ table caption {
