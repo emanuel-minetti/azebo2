@@ -63,33 +63,29 @@ class WorkingTimeController extends ApiController
             $userId = $this->httpRequest->getQuery()->user_id;
             if (!isset($post->_id) || !is_numeric($post->_id)) return $this->invalidRequest;
             $id = $post->_id;
-            $oneHour = new DateInterval('PT1H');
             if ($id != 0) {
                 $day = $this->table->find($id);
                 if (!$day) return $this->invalidRequest;
             } else {
                 if (!isset($post->_date)) return $this->invalidRequest;
-                $date = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_date);
+                $date = DateTime::createFromFormat("D M d Y", $post->_date);
                 if (!$date) return $this->invalidRequest;
                 $day = new WorkingDay();
                 $day->date = $date;
-                $day->date->add($oneHour);
                 $day->userId = $userId;
                 $day->id = 0;
             }
             if (isset($post->_begin)) {
-                $begin = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_begin);
+                $begin = DateTime::createFromFormat("H:i:s+", $post->_begin);
                 if (!$begin) return $this->invalidRequest;
                 $day->begin = $begin;
-                $day->begin->add($oneHour);
             } else {
                 $day->begin = null;
             }
             if (isset($post->_end)) {
-                $end = DateTime::createFromFormat("Y-m-d\TH:i:s+", $post->_end);
+                $end = DateTime::createFromFormat("H:i:s+", $post->_end);
                 if (!$end) return $this->invalidRequest;
                 $day->end = $end;
-                $day->end->add($oneHour);
             } else {
                 $day->end = null;
             }

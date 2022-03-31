@@ -14,14 +14,15 @@ namespace Carry\Model;
 
 use DateTime;
 use Laminas\Db\Sql\Literal;
+use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
 
 class WorkingMonthTable
 {
 
-    private $tableGateway;
-    private $sql;
+    private TableGateway $tableGateway;
+    private Sql $sql;
 
     public function __construct(TableGateway $tableGateway)
     {
@@ -32,16 +33,26 @@ class WorkingMonthTable
     /**
      * @param $userId
      * @param DateTime $month
+     * @param bool $includeEarlier whether to include earlier months into array
      * @return WorkingMonth[]
      */
-    public function getByUserIdAndMonth($userId, DateTime $month) {
+    public function getByUserIdAndMonth($userId, DateTime $month, bool $includeEarlier = true): array
+    {
         $select = $this->sql->select();
         $where = new Where();
-        $where->equalTo('user_id', $userId)
-            ->and
-            ->equalTo('carried', 0)
-            ->and
-            ->lessThanOrEqualTo(new Literal('MONTH(month)'), $month->format('n'));
+        if ($includeEarlier) {
+            $where->equalTo('user_id', $userId)
+                ->and
+                ->equalTo('carried', 0)
+                ->and
+                ->lessThanOrEqualTo(new Literal('MONTH(month)'), $month->format('n'));
+        } else {
+            $where->equalTo('user_id', $userId)
+                ->and
+                ->equalTo('carried', 0)
+                ->and
+                ->equalTo(new Literal('MONTH(month)'), $month->format('n'));
+        }
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];

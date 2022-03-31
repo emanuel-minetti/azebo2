@@ -21,6 +21,8 @@ use Laminas\Db\TableGateway\TableGateway;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Service\log\AzeboLog;
+use WorkingRule\Model\WorkingRule;
+use WorkingRule\Model\WorkingRuleTable;
 
 class Module
 {
@@ -47,6 +49,13 @@ class Module
                     $tableGateway = new TableGateway('carry', $dbAdapter, null, $resultSetPrototype);
                     return new CarryTable($tableGateway);
                 },
+                WorkingRuleTable::class => function(ServiceManager $container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->getArrayObjectPrototype(new WorkingRule());
+                    $tableGateway = new TableGateway('working_rule', $dbAdapter, null, $resultSetPrototype);
+                    return new WorkingRuleTable($tableGateway);
+                },
                 AzeboLog::class => InvokableFactory::class,
             ],
         ];
@@ -60,7 +69,8 @@ class Module
                     return new CarryController(
                         $container->get(AzeboLog::class),
                         $container->get(WorkingMonthTable::class),
-                        $container->get(CarryTable::class)
+                        $container->get(CarryTable::class),
+                        $container->get(WorkingRuleTable::class)
                     );
                 }
             ],

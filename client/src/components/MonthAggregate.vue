@@ -1,7 +1,7 @@
 <template>
   <div id="month-aggregate" class="mx-0 mx-lg-auto">
     <b-table-lite
-      caption="Zusammenfassung:"
+      :caption="capture"
       caption-top
       :fields="fields"
       :items="items"
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry, Saldo, WorkingMonth } from "@/models";
+import { Carry, WorkingMonth } from "@/models";
 import { timesConfig } from "@/configs";
 import { mapState } from "vuex";
 
@@ -34,7 +34,7 @@ export default class MonthAggregate extends Vue {
     },
     {
       key: "month",
-      label: "Bisher",
+      label: "Laufender Monat",
     },
     {
       key: "total",
@@ -67,46 +67,78 @@ export default class MonthAggregate extends Vue {
     return holidays - taken;
   }
 
-  get monthSaldoString() {
-    if (
-      this.$store.getters["workingTime/saldoMobile"] === "" ||
-      this.$store.getters["workingTime/saldo"].getMillis() === 0 ||
-      this.$store.getters["workingTime/saldoMobile"].getMillis() === 0
-    ) {
-      return this.$store.getters["workingTime/saldo"];
-    } else {
-      return (
-        this.$store.getters["workingTime/saldo"] +
-        " (davon " +
-        this.$store.getters["workingTime/saldoMobile"] +
-        " = " +
-        Saldo.getPercentage(
-          this.$store.getters["workingTime/saldo"],
-          this.$store.getters["workingTime/saldoMobile"]
-        ).toLocaleString("de-DE", {
-          maximumFractionDigits: 1,
-          minimumFractionDigits: 1,
-        }) +
-        "% Mobil)"
-      );
+  // get monthSaldoString() {
+  // if (
+  //   this.$store.getters["workingTime/saldoMobile"] === "" ||
+  //   this.$store.getters["workingTime/saldo"].getMillis() === 0 ||
+  //   this.$store.getters["workingTime/saldoMobile"].getMillis() === 0
+  // ) {
+  // return this.$store.getters["workingTime/saldo"];
+  // } else {
+  //   return (
+  //     this.$store.getters["workingTime/saldo"] +
+  //     " (davon " +
+  //     this.$store.getters["workingTime/saldoMobile"] +
+  //     " = " +
+  //     Saldo.getPercentage(
+  //       this.$store.getters["workingTime/saldo"],
+  //       this.$store.getters["workingTime/saldoMobile"]
+  //     ).toLocaleString("de-DE", {
+  //       maximumFractionDigits: 1,
+  //       minimumFractionDigits: 1,
+  //     }) +
+  //     "% Mobil)"
+  //   );
+  // }
+  //}
+
+  get capture() {
+    let capture = "Zusammenfassung: ";
+    if (this.carryResult.hasMissing) {
+      let missing = this.carryResult.missing;
+      capture += "(Eine Darstellung des Übertrags ist nicht möglich, denn ";
+      if (missing.length === 1) {
+        capture += "der Monat " + missing[0] + " ist ";
+      } else {
+        capture += "die Monate ";
+        missing.forEach((missed, index) => {
+          if (index + 1 === missing.length) {
+            capture += " und ";
+          }
+          capture += missed;
+          if (index + 3 <= missing.length) {
+            capture += ", ";
+          }
+        });
+        capture += " sind ";
+      }
+      capture += "noch nicht abgeschlossen.)";
     }
+    return capture;
   }
 
   get items() {
-    return [
-      {
-        key: "Saldo",
-        carryResult: this.carryResult.saldo,
-        month: this.monthSaldoString,
-        total: this.$store.getters["workingTime/saldoTotal"],
-      },
-      {
-        key: "Urlaub",
-        carryResult: this.holidaysLeftString,
-        month: this.month.takenHolidays,
-        total: this.holidaysTotalString,
-      },
-    ];
+    let carryResult = {
+      key: "Saldo",
+      carryResult: this.carryResult.saldo
+        ? this.carryResult.saldo.toString()
+        : "",
+      month: this.$store.getters["workingTime/saldo"],
+      total: this.$store.getters["workingTime/saldoTotal"],
+    };
+    let holidayResult = {
+      key: "Urlaub",
+      carryResult: this.holidaysLeftString,
+      month: this.month.takenHolidays,
+      total: this.holidaysTotalString,
+    };
+    if (this.carryResult.hasMissing) {
+      carryResult.carryResult = "Unbekannt";
+      carryResult.total = carryResult.month;
+      holidayResult.carryResult = "Unbekannt";
+      holidayResult.total = holidayResult.month;
+    }
+    return [carryResult, holidayResult];
   }
 }
 </script>

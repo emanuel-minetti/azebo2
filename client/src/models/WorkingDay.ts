@@ -425,15 +425,15 @@ export default class WorkingDay {
   public toJSON() {
     return {
       _id: this.id,
-      _date: this.date,
+      _date: this.date.toDateString(),
       _afternoon: this.afternoon,
-      _begin: this.begin,
-      _end: this.end,
+      _begin: this.begin?.toTimeString(),
+      _end: this.end?.toTimeString(),
       _timeOff: this.timeOff,
       _comment: this.comment,
       _mobile_working: this.mobileWorking,
-      _afternoonBegin: this.afternoonBegin,
-      _afternoonEnd: this.afternoonEnd,
+      _afternoonBegin: this.afternoonBegin?.toTimeString(),
+      _afternoonEnd: this.afternoonEnd?.toTimeString(),
       _edited: this.edited,
     };
   }
