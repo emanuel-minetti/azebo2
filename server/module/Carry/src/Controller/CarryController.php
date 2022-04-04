@@ -53,6 +53,7 @@ class CarryController extends ApiController
             $month = DateTime::createFromFormat(WorkingRule::DATE_FORMAT, "$yearId-$monthId-01");
             $resultMonths = $this->monthTable->getByUserIdAndMonth($userId, $month);
             $resultCarry = $this->carryTable->getByUserIdAndYear($userId, $month);
+            // TODO test §resultCarry not to be NULL
             $missing = [];
             $monthToTest = date_create($resultCarry->year->format("y-1-1"));
             // skip months with no working rule
