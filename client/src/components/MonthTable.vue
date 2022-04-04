@@ -161,7 +161,12 @@ export default class MonthTable extends Vue {
   // formats the shown date
   formatDate(date: Date, key: string, day: WorkingDay) {
     const dateString = FormatterService.toLongGermanDate(date);
-    return day.isHoliday ? dateString + " " + day.holidayName : dateString;
+    const kwString =
+      date.getDay() !== 1 ? "" : " " + MonthTable.getGermanKW(date) + ". KW";
+    return (
+      (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
+      kwString
+    );
   }
 
   formatTimeOff(timeOff: string): string {
@@ -195,6 +200,25 @@ export default class MonthTable extends Vue {
 
   onSubmitted() {
     this.formShown = false;
+  }
+
+  private static getGermanKW(date: Date) {
+    const millisPerDay = 86400000;
+    let thursdayOfDate = new Date(
+      date.getTime() + (3 - ((date.getDay() + 6) % 7)) * millisPerDay
+    );
+    let yearOfThursday = thursdayOfDate.getFullYear();
+    let firstThursdayOfYear = new Date(
+      new Date(yearOfThursday, 0, 4).getTime() +
+        (3 - ((new Date(yearOfThursday, 0, 4).getDay() + 6) % 7)) * millisPerDay
+    );
+    return Math.floor(
+      1 +
+        0.5 +
+        (thursdayOfDate.getTime() - firstThursdayOfYear.getTime()) /
+          millisPerDay /
+          7
+    );
   }
 }
 </script>
