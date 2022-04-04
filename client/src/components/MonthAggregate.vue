@@ -141,6 +141,7 @@ export default class MonthAggregate extends Vue {
 #month-aggregate {
   text-align: center;
   width: 90%;
+  overflow: hidden;
 }
 
 table {
