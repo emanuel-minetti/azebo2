@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { FormatterService } from "@/services";
+import { FormatterService, GermanKwService } from "@/services";
 import { WorkingDay } from "@/models";
 import { timeOffsConfig } from "@/configs";
 import DayForm from "@/components/DayForm.vue";
@@ -162,7 +162,9 @@ export default class MonthTable extends Vue {
   formatDate(date: Date, key: string, day: WorkingDay) {
     const dateString = FormatterService.toLongGermanDate(date);
     const kwString =
-      date.getDay() !== 1 ? "" : " " + MonthTable.getGermanKW(date) + ". KW";
+      date.getDay() !== 1
+        ? ""
+        : " " + GermanKwService.getGermanKW(date) + ". KW";
     return (
       (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
       kwString
@@ -200,25 +202,6 @@ export default class MonthTable extends Vue {
 
   onSubmitted() {
     this.formShown = false;
-  }
-
-  private static getGermanKW(date: Date) {
-    const millisPerDay = 86400000;
-    let thursdayOfDate = new Date(
-      date.getTime() + (3 - ((date.getDay() + 6) % 7)) * millisPerDay
-    );
-    let yearOfThursday = thursdayOfDate.getFullYear();
-    let firstThursdayOfYear = new Date(
-      new Date(yearOfThursday, 0, 4).getTime() +
-        (3 - ((new Date(yearOfThursday, 0, 4).getDay() + 6) % 7)) * millisPerDay
-    );
-    return Math.floor(
-      1 +
-        0.5 +
-        (thursdayOfDate.getTime() - firstThursdayOfYear.getTime()) /
-          millisPerDay /
-          7
-    );
   }
 }
 </script>

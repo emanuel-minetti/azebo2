@@ -5,6 +5,7 @@ import WorkingTimeService from "./WorkingTimeService";
 import HolidayService from "./HolidayService";
 import WorkingRuleService from "./WorkingRuleService";
 import CarryService from "./CarryService";
+import GermanKwService from "@/services/GermanKwService";
 
 export {
   ApiService,
@@ -14,4 +15,5 @@ export {
   WorkingTimeService,
   WorkingRuleService,
   CarryService,
+  GermanKwService,
 };
