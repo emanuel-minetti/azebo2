@@ -58,7 +58,7 @@ class Carry extends ArrayObject
         $this->id = (int)$array['id'] ?? 0;
         $this->userId = (int)$array['user_id'] ?? 0;
         $this->year = !empty($array['year'])
-            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $array['year']) : null;
+            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $array['year']) : new DateTime();
         $this->saldo = !(empty($array['saldo_hours']) && empty($array['saldo_minutes']) && empty($array['saldo_positive']))
             ? Saldo::createFromHoursAndMinutes($array['saldo_hours'], $array['saldo_minutes'], $array['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();
