@@ -22,6 +22,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Carry, WorkingMonth } from "@/models";
 import { timesConfig } from "@/configs";
 import { mapState } from "vuex";
+import { GermanKwService } from "@/services";
 
 @Component({
   computed: { ...mapState("workingTime", ["carryResult", "month"]) },
@@ -49,16 +50,35 @@ export default class MonthAggregate extends Vue {
     },
   ];
 
-  weekFields = [
-    {
-      key: "soso",
-      label: "test1",
-    },
-    {
-      key: "soso2",
-      label: "test2",
-    },
-  ];
+  get weekFields() {
+    const firstOfMonth = new Date(this.month.monthDate);
+    firstOfMonth.setDate(1);
+    const lastOfMonth = new Date(this.month.monthDate);
+    lastOfMonth.setMonth(lastOfMonth.getMonth() + 1);
+    lastOfMonth.setDate(0);
+    let firstKw = GermanKwService.getGermanKW(firstOfMonth);
+    let lastKw = GermanKwService.getGermanKW(lastOfMonth);
+    if (GermanKwService.getGermanDay(firstOfMonth) >= 5) {
+      if (firstKw >= 52) firstKw = 1;
+      else firstKw++;
+    }
+    if (GermanKwService.getGermanDay(lastOfMonth) < 4) lastKw--;
+    const weekFields = [];
+    if (firstKw >= 52) {
+      weekFields.push({
+        key: "kw" + firstKw,
+        label: "KW " + firstKw,
+      });
+      firstKw = 1;
+    }
+    for (let i = firstKw; i <= lastKw; i++) {
+      weekFields.push({
+        key: "kw" + i,
+        label: "KW " + i,
+      });
+    }
+    return weekFields;
+  }
 
   get holidaysLeftString() {
     return this.month.monthNumber <= timesConfig.previousHolidaysValidTo
