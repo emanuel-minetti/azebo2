@@ -76,8 +76,13 @@ export default class MonthAggregate extends Vue {
   }
 
   get weekFields() {
-    const weekFields: { key: string; label: string }[] = [];
+    const weekFields: { key: string; label: string; class?: string }[] = [];
     const kWs = this.kWs;
+    weekFields.push({
+      key: "key",
+      label: "",
+      class: "first_column",
+    });
     kWs.forEach((kw) => {
       weekFields.push({
         key: "" + kw,
@@ -88,14 +93,33 @@ export default class MonthAggregate extends Vue {
   }
 
   get weekItems() {
-    const result: { [key: string]: string } = {};
+    interface LooseObj {
+      [key: string]: string;
+    }
+    const total: LooseObj = {};
+    total.key = "Gesamt";
     this.weekFields.forEach((field) => {
-      result[field.key] = GermanKwService.getMondayForKW(
-        Number.parseInt(field.key),
-        this.month.monthDate.getFullYear()
-      ).toLocaleDateString();
+      if (field.key !== "key") {
+        total[field.key] = this.getTotalStringForKW(Number.parseInt(field.key));
+      }
     });
-    return [result];
+    const mobile: LooseObj = {};
+    mobile.key = "Mobiles Arbeiten";
+    this.weekFields.forEach((field) => {
+      if (field.key !== "key") {
+        mobile[field.key] = this.getMobileStringForKW(
+          Number.parseInt(field.key)
+        );
+      }
+    });
+    const share: LooseObj = {};
+    share.key = "Anteil";
+    this.weekFields.forEach((field) => {
+      if (field.key !== "key") {
+        share[field.key] = this.getShareStringForKW(Number.parseInt(field.key));
+      }
+    });
+    return [total, mobile, share];
   }
 
   get holidaysLeftString() {
@@ -171,6 +195,30 @@ export default class MonthAggregate extends Vue {
     }
     return result;
   }
+
+  private getTotalStringForKW(kw: number) {
+    // TODO implement!
+    return GermanKwService.getMondayForKW(
+      kw,
+      this.month.monthDate.getFullYear()
+    ).toLocaleDateString();
+  }
+
+  private getMobileStringForKW(kw: number) {
+    // TODO implement!
+    return GermanKwService.getMondayForKW(
+      kw,
+      this.month.monthDate.getFullYear()
+    ).toLocaleDateString();
+  }
+
+  private getShareStringForKW(kw: number) {
+    // TODO implement!
+    return GermanKwService.getMondayForKW(
+      kw,
+      this.month.monthDate.getFullYear()
+    ).toLocaleDateString();
+  }
 }
 </script>
 
@@ -199,6 +247,7 @@ table {
 
 /deep/ table td {
   text-align: center;
+  vertical-align: middle;
 }
 
 /deep/ table th {
