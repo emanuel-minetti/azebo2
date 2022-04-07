@@ -12,6 +12,7 @@
       caption="Kalenderwochen:"
       caption-top
       :fields="weekFields"
+      :items="weekItems"
       bordered
     />
   </div>
@@ -50,34 +51,51 @@ export default class MonthAggregate extends Vue {
     },
   ];
 
+  get items() {
+    let carryResult = {
+      key: "Saldo",
+      carryResult: this.carryResult.saldo
+        ? this.carryResult.saldo.toString()
+        : "",
+      month: this.$store.getters["workingTime/saldo"],
+      total: this.$store.getters["workingTime/saldoTotal"],
+    };
+    let holidayResult = {
+      key: "Urlaub",
+      carryResult: this.holidaysLeftString,
+      month: this.month.takenHolidays,
+      total: this.holidaysTotalString,
+    };
+    if (this.carryResult.hasMissing) {
+      carryResult.carryResult = "Unbekannt";
+      carryResult.total = carryResult.month;
+      holidayResult.carryResult = "Unbekannt";
+      holidayResult.total = holidayResult.month;
+    }
+    return [carryResult, holidayResult];
+  }
+
   get weekFields() {
-    const firstOfMonth = new Date(this.month.monthDate);
-    firstOfMonth.setDate(1);
-    const lastOfMonth = new Date(this.month.monthDate);
-    lastOfMonth.setMonth(lastOfMonth.getMonth() + 1);
-    lastOfMonth.setDate(0);
-    let firstKw = GermanKwService.getGermanKW(firstOfMonth);
-    let lastKw = GermanKwService.getGermanKW(lastOfMonth);
-    if (GermanKwService.getGermanDay(firstOfMonth) >= 5) {
-      if (firstKw >= 52) firstKw = 1;
-      else firstKw++;
-    }
-    if (GermanKwService.getGermanDay(lastOfMonth) < 4) lastKw--;
-    const weekFields = [];
-    if (firstKw >= 52) {
+    const weekFields: { key: string; label: string }[] = [];
+    const kWs = this.kWs;
+    kWs.forEach((kw) => {
       weekFields.push({
-        key: "kw" + firstKw,
-        label: "KW " + firstKw,
+        key: "" + kw,
+        label: "KW " + kw,
       });
-      firstKw = 1;
-    }
-    for (let i = firstKw; i <= lastKw; i++) {
-      weekFields.push({
-        key: "kw" + i,
-        label: "KW " + i,
-      });
-    }
+    });
     return weekFields;
+  }
+
+  get weekItems() {
+    const result: { [key: string]: string } = {};
+    this.weekFields.forEach((field) => {
+      result[field.key] = GermanKwService.getMondayForKW(
+        Number.parseInt(field.key),
+        this.month.monthDate.getFullYear()
+      ).toLocaleDateString();
+    });
+    return [result];
   }
 
   get holidaysLeftString() {
@@ -130,28 +148,28 @@ export default class MonthAggregate extends Vue {
     return capture;
   }
 
-  get items() {
-    let carryResult = {
-      key: "Saldo",
-      carryResult: this.carryResult.saldo
-        ? this.carryResult.saldo.toString()
-        : "",
-      month: this.$store.getters["workingTime/saldo"],
-      total: this.$store.getters["workingTime/saldoTotal"],
-    };
-    let holidayResult = {
-      key: "Urlaub",
-      carryResult: this.holidaysLeftString,
-      month: this.month.takenHolidays,
-      total: this.holidaysTotalString,
-    };
-    if (this.carryResult.hasMissing) {
-      carryResult.carryResult = "Unbekannt";
-      carryResult.total = carryResult.month;
-      holidayResult.carryResult = "Unbekannt";
-      holidayResult.total = holidayResult.month;
+  get kWs(): number[] {
+    const firstOfMonth = new Date(this.month.monthDate);
+    firstOfMonth.setDate(1);
+    const lastOfMonth = new Date(this.month.monthDate);
+    lastOfMonth.setMonth(lastOfMonth.getMonth() + 1);
+    lastOfMonth.setDate(0);
+    let firstKw = GermanKwService.getGermanKW(firstOfMonth);
+    let lastKw = GermanKwService.getGermanKW(lastOfMonth);
+    if (GermanKwService.getGermanDay(firstOfMonth) >= 5) {
+      if (firstKw >= 52) firstKw = 1;
+      else firstKw++;
     }
-    return [carryResult, holidayResult];
+    if (GermanKwService.getGermanDay(lastOfMonth) < 4) lastKw--;
+    const result = [];
+    if (firstKw >= 52) {
+      result.push(firstKw);
+      firstKw = 1;
+    }
+    for (let i = firstKw; i <= lastKw; i++) {
+      result.push(i);
+    }
+    return result;
   }
 }
 </script>
