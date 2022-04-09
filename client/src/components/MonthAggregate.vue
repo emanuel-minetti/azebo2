@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry, WorkingMonth } from "@/models";
+import { Carry, Saldo, WorkingMonth } from "@/models";
 import { timesConfig } from "@/configs";
 import { mapState } from "vuex";
 import { GermanKwService } from "@/services";
@@ -100,23 +100,26 @@ export default class MonthAggregate extends Vue {
     total.key = "Gesamt";
     this.weekFields.forEach((field) => {
       if (field.key !== "key") {
-        total[field.key] = this.getTotalStringForKW(Number.parseInt(field.key));
+        total[field.key] = this.getTotalForKW(
+          Number.parseInt(field.key)
+        ).toString(false);
       }
     });
     const mobile: LooseObj = {};
     mobile.key = "Mobiles Arbeiten";
     this.weekFields.forEach((field) => {
       if (field.key !== "key") {
-        mobile[field.key] = this.getMobileStringForKW(
+        mobile[field.key] = this.getMobileForKW(
           Number.parseInt(field.key)
-        );
+        ).toString(false);
       }
     });
     const share: LooseObj = {};
     share.key = "Anteil";
     this.weekFields.forEach((field) => {
       if (field.key !== "key") {
-        share[field.key] = this.getShareStringForKW(Number.parseInt(field.key));
+        share[field.key] =
+          this.getShareForKW(Number.parseInt(field.key)).toFixed(2) + " %";
       }
     });
     return [total, mobile, share];
@@ -196,28 +199,30 @@ export default class MonthAggregate extends Vue {
     return result;
   }
 
-  private getTotalStringForKW(kw: number) {
-    // TODO implement!
-    return GermanKwService.getMondayForKW(
-      kw,
-      this.month.monthDate.getFullYear()
-    ).toLocaleDateString();
+  private getTotalForKW(kw: number) {
+    return this.month.days
+      .filter((day) => day.calendarWeek === kw)
+      .map((day) => day.actualTime)
+      .reduce(
+        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
+        new Saldo(0)
+      )!;
   }
 
-  private getMobileStringForKW(kw: number) {
-    // TODO implement!
-    return GermanKwService.getMondayForKW(
-      kw,
-      this.month.monthDate.getFullYear()
-    ).toLocaleDateString();
+  private getMobileForKW(kw: number) {
+    return this.month.days
+      .filter((day) => day.calendarWeek === kw && day.mobileWorking)
+      .map((day) => day.actualTime)
+      .reduce(
+        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
+        new Saldo(0)
+      )!;
   }
 
-  private getShareStringForKW(kw: number) {
-    // TODO implement!
-    return GermanKwService.getMondayForKW(
-      kw,
-      this.month.monthDate.getFullYear()
-    ).toLocaleDateString();
+  private getShareForKW(kw: number) {
+    return this.getTotalForKW(kw).getMillis()
+      ? Saldo.getPercentage(this.getTotalForKW(kw), this.getMobileForKW(kw))
+      : 0;
   }
 }
 </script>
@@ -231,7 +236,7 @@ export default class MonthAggregate extends Vue {
 }
 
 table {
-  width: 500px;
+  width: 650px;
   font-size: larger;
   float: left;
 }
