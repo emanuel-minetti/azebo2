@@ -26,11 +26,14 @@ import { mapState } from "vuex";
 import { GermanKwService } from "@/services";
 
 @Component({
-  computed: { ...mapState("workingTime", ["carryResult", "month"]) },
+  computed: {
+    ...mapState("workingTime", ["carryResult", "month", "previous"]),
+  },
 })
 export default class MonthAggregate extends Vue {
   carryResult!: Carry;
   month!: WorkingMonth;
+  previous!: WorkingMonth;
   fields = [
     {
       key: "key",
@@ -200,23 +203,39 @@ export default class MonthAggregate extends Vue {
   }
 
   private getTotalForKW(kw: number) {
-    return this.month.days
+    const monthTotal = this.month.days
       .filter((day) => day.calendarWeek === kw)
       .map((day) => day.actualTime)
       .reduce(
         (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
         new Saldo(0)
       )!;
+    const prevTotal = this.previous.days
+      .filter((day) => day.calendarWeek === kw)
+      .map((day) => day.actualTime)
+      .reduce(
+        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
+        new Saldo(0)
+      )!;
+    return Saldo.getSum(monthTotal, prevTotal);
   }
 
   private getMobileForKW(kw: number) {
-    return this.month.days
+    const monthMobile = this.month.days
       .filter((day) => day.calendarWeek === kw && day.mobileWorking)
       .map((day) => day.actualTime)
       .reduce(
         (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
         new Saldo(0)
       )!;
+    const prevMobile = this.previous.days
+      .filter((day) => day.calendarWeek === kw && day.mobileWorking)
+      .map((day) => day.actualTime)
+      .reduce(
+        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
+        new Saldo(0)
+      )!;
+    return Saldo.getSum(monthMobile, prevMobile);
   }
 
   private getShareForKW(kw: number) {
