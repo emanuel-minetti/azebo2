@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { FormatterService } from "@/services";
+import { FormatterService, GermanKwService } from "@/services";
 import { WorkingDay } from "@/models";
 import { timeOffsConfig } from "@/configs";
 import DayForm from "@/components/DayForm.vue";
@@ -161,7 +161,14 @@ export default class MonthTable extends Vue {
   // formats the shown date
   formatDate(date: Date, key: string, day: WorkingDay) {
     const dateString = FormatterService.toLongGermanDate(date);
-    return day.isHoliday ? dateString + " " + day.holidayName : dateString;
+    const kwString =
+      date.getDay() !== 1
+        ? ""
+        : " " + GermanKwService.getGermanKW(date) + ". KW";
+    return (
+      (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
+      kwString
+    );
   }
 
   formatTimeOff(timeOff: string): string {

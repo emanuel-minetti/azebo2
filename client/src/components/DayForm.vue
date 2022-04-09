@@ -204,7 +204,6 @@ export default class DayForm extends Vue {
     evt.preventDefault();
     if (this.errors.length === 0) {
       this.$store
-        // TODO repair summer time!
         .dispatch("workingTime/setDay", this.form)
         .then(() =>
           this.$store.dispatch("workingTime/getMonth", this.form.date)

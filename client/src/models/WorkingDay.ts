@@ -1,5 +1,5 @@
 import { Holiday, Saldo, WorkingRule } from "@/models";
-import { FormatterService } from "@/services";
+import { FormatterService, GermanKwService } from "@/services";
 import { store } from "@/store";
 import { timesConfig } from "@/configs";
 
@@ -355,18 +355,8 @@ export default class WorkingDay {
   /**
    * Returns the number week in the year for this day.
    */
-  private get calendarWeek(): number {
-    const d = new Date(
-      Date.UTC(
-        this._date.getFullYear(),
-        this._date.getMonth(),
-        this._date.getDate()
-      )
-    );
-    const dayNum = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil(((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
+  public get calendarWeek(): number {
+    return GermanKwService.getGermanKW(this.date);
   }
 
   public isEndAfterBegin(): boolean {
@@ -425,15 +415,15 @@ export default class WorkingDay {
   public toJSON() {
     return {
       _id: this.id,
-      _date: this.date,
+      _date: this.date.toDateString(),
       _afternoon: this.afternoon,
-      _begin: this.begin,
-      _end: this.end,
+      _begin: this.begin?.toTimeString(),
+      _end: this.end?.toTimeString(),
       _timeOff: this.timeOff,
       _comment: this.comment,
       _mobile_working: this.mobileWorking,
-      _afternoonBegin: this.afternoonBegin,
-      _afternoonEnd: this.afternoonEnd,
+      _afternoonBegin: this.afternoonBegin?.toTimeString(),
+      _afternoonEnd: this.afternoonEnd?.toTimeString(),
       _edited: this.edited,
     };
   }

@@ -8,6 +8,7 @@ export default class Carry {
   private _holidaysPrevious: number;
   private _holidays: number;
   private readonly _finalized: boolean;
+  private readonly _missing: string[];
 
   constructor(data?: any) {
     if (data) {
@@ -19,6 +20,7 @@ export default class Carry {
       this._holidaysPrevious = data.holidays_previous_year;
       this._holidays = data.holidays;
       this._finalized = data.finalized;
+      this._missing = data.missing;
     } else {
       this._id = 0;
       this._user_id = 0;
@@ -27,6 +29,7 @@ export default class Carry {
       this._holidaysPrevious = 0;
       this._holidays = 0;
       this._finalized = false;
+      this._missing = [];
     }
   }
 
@@ -68,5 +71,13 @@ export default class Carry {
 
   get user_id(): number {
     return this._user_id;
+  }
+
+  get missing(): string[] {
+    return this._missing;
+  }
+
+  get hasMissing(): boolean {
+    return this._missing.length !== 0;
   }
 }

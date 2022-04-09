@@ -14,6 +14,7 @@
         "ext-mbstring": "*",
         "ext-json": "*",
         "ext-calendar": "*",
+        "ext-intl": "*",
         "laminas/laminas-component-installer": "^2",
         "laminas/laminas-mvc": "^3",
         "laminas/laminas-development-mode": "^3",

@@ -17,22 +17,30 @@ use Carry\Model\Carry;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
+use IntlDateFormatter;
 use Laminas\Config\Factory;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
 use WorkingRule\Model\WorkingRule;
+use WorkingRule\Model\WorkingRuleTable;
 
 class CarryController extends ApiController
 {
     private $monthTable;
     private $carryTable;
+    private $ruleTable;
 
-    public function __construct(AzeboLog $log, WorkingMonthTable $monthTable, CarryTable $carryTable)
+    public function __construct(AzeboLog $log,
+                                WorkingMonthTable $monthTable,
+                                CarryTable $carryTable,
+                                WorkingRuleTable $ruleTable
+    )
     {
         parent::__construct($log);
         $this->monthTable = $monthTable;
         $this->carryTable = $carryTable;
+        $this->ruleTable = $ruleTable;
     }
 
     public function carryResultAction()
@@ -43,13 +51,29 @@ class CarryController extends ApiController
             $yearId = $this->params('year');
             $monthId = $this->params('month');
             $month = DateTime::createFromFormat(WorkingRule::DATE_FORMAT, "$yearId-$monthId-01");
-            $resultMonth = $this->monthTable->getByUserIdAndMonth($userId, $month);
+            $resultMonths = $this->monthTable->getByUserIdAndMonth($userId, $month);
             $resultCarry = $this->carryTable->getByUserIdAndYear($userId, $month);
+            $missing = [];
+            $monthToTest = date_create($resultCarry->year->format("y-1-1"));
+            // skip months with no working rule
+            while (sizeof($this->ruleTable->getByUserIdAndMonth($userId, $monthToTest)) == 0) {
+                $nextMonth = intval($monthToTest->format('n')) + 1;
+                $monthToTest = date_create($monthToTest->format("y-$nextMonth-1"));
+            }
+            $monthFormatter = new IntlDateFormatter('DE_de', IntlDateFormatter::LONG, IntlDateFormatter::LONG);
+            $monthFormatter->setPattern('MMMM');
+            while (intval($monthToTest->format('n')) < intval($month->format('n'))) {
+                if (sizeof($this->monthTable->getByUserIdAndMonth($userId, $monthToTest, false)) == 0) {
+                    $missing[] = $monthFormatter->format($monthToTest);
+                }
+                $nextMonth = intval($monthToTest->format('n')) + 1;
+                $monthToTest = date_create($monthToTest->format("y-$nextMonth-1"));
+            }
             $saldo = $resultCarry->saldo;
             $holidaysPrevious = $resultCarry->holidaysPreviousYear;
             $holidaysLeft = $resultCarry->holidays;
             $finalized = false;
-            foreach ($resultMonth as $workingMonth) {
+            foreach ($resultMonths as $workingMonth) {
                 // set finalized and continue if this month is already in the table
                 if ($month->format('n') === $workingMonth->month->format('n')) {
                     $finalized = true;
@@ -78,6 +102,7 @@ class CarryController extends ApiController
                 'holidays_previous_year' => $holidaysPrevious,
                 'holidays' => $holidaysLeft,
                 'finalized' => $finalized,
+                'missing' => $missing,
             ];
             return $this->processResult($resultArray, $userId);
         } else {

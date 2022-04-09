@@ -38,7 +38,7 @@ yum install php
 * Install needed PHP extensions and drivers:
 
 ``
-yum install php-opcache php-pdo php-mbstring php-mysqlnd 
+yum install php-opcache php-pdo php-mbstring php-mysqlnd php-intl
 ``
 
 * Enable SSL:

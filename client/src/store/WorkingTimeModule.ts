@@ -18,6 +18,7 @@ const WorkingTimeModule: Module<any, any> = {
   namespaced: true,
   state: {
     month: WorkingMonth,
+    previous: WorkingMonth,
     holidays: Array<Holiday>(),
     rules: Array<WorkingRule>(),
     carryResult: Carry,
@@ -70,11 +71,19 @@ const WorkingTimeModule: Module<any, any> = {
     getMonth({ commit, dispatch, state, rootState }, monthDate: Date) {
       rootState.loading = true;
       monthDate.setDate(1);
+      const prevMonthDate = new Date(monthDate);
+      prevMonthDate.setDate(0);
+      prevMonthDate.setDate(1);
       // make sure holidays are loaded before creating the working day
       const year = monthDate.getFullYear().toString();
+      const yearOfPrev = prevMonthDate.getFullYear().toString();
       const month = monthDate.getMonth() + 1;
+      const monthOfPrev = prevMonthDate.getMonth() + 1;
       const monthString = month < 10 ? "0" + month : "" + month;
+      const monthStringOfPrev =
+        monthOfPrev < 10 ? "0" + monthOfPrev : "" + monthOfPrev;
       const params = year + "/" + monthString;
+      const paramsOfPrev = yearOfPrev + "/" + monthStringOfPrev;
 
       // TODO review (see Issue #28)
       return HolidayService.getHolidays(year)
@@ -92,6 +101,14 @@ const WorkingTimeModule: Module<any, any> = {
               (day: any) => new WorkingDay(day)
             );
             state.month = new WorkingMonth(monthDate, workingDays);
+          })
+        )
+        .then(() =>
+          WorkingTimeService.getMonth(paramsOfPrev).then((data) => {
+            const workingDays = data.result.map(
+              (day: any) => new WorkingDay(day)
+            );
+            state.previous = new WorkingMonth(prevMonthDate, workingDays);
           })
         )
         .then(() =>

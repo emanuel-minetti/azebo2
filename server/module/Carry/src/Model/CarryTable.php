@@ -41,7 +41,14 @@ class CarryTable
             ->equalTo(new Literal('YEAR(year)'), $year->format('Y'));
         $select->where($where);
         $resultSet = $this->tableGateway->selectWith($select);
-        return $resultSet->current();
+        //return $resultSet->current();
+        if ($resultSet->count() === 1) {
+            return $resultSet->current();
+        } else {
+            $empty = new Carry();
+            $empty->exchangeArray([]);
+            return $empty;
+        }
     }
 
     public function insert(User $user)
