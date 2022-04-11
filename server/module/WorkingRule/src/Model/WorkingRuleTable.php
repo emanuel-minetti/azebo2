@@ -12,13 +12,15 @@
 namespace WorkingRule\Model;
 
 use DateTime;
+use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
+use Login\Model\User;
 
 class WorkingRuleTable
 {
-    private $tableGateway;
-    private $sql;
+    private TableGateway $tableGateway;
+    private Sql $sql;
 
     public function __construct(TableGateway $tableGateway)
     {
@@ -32,7 +34,7 @@ class WorkingRuleTable
         return $rowSet->current();
     }
 
-    public function getByUserId($userId) {
+    public function getByUserId($userId): array {
         $select = $this->sql->select();
         $where = new Where();
         $where->equalTo('user_id', $userId);
@@ -45,7 +47,7 @@ class WorkingRuleTable
         return $result;
     }
 
-    public function getByUserIdAndMonth($userId, DateTime $month) {
+    public function getByUserIdAndMonth($userId, DateTime $month): array {
         $cloneOfMonth = clone $month;
         $first = $cloneOfMonth->modify('first day of this month');
         $cloneOfMonth = clone $month;
@@ -68,5 +70,30 @@ class WorkingRuleTable
             $result[] = $row;
         }
         return $result;
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function insert(User $user): void
+    {
+        $firstOfMonth = new DateTime('first day of this month');
+        $ruleData = [
+            'user_id' => $user->id,
+            'calendar_week' => 'all',
+            'flex_time_begin' => '06:30:00',
+            'flex_time_end' => '20:00:00',
+            'core_time_begin' => '09:30:00',
+            'core_time_end' => '14:30:00',
+            'target' => '07:58:00',
+            'valid_from' => $firstOfMonth->format(WorkingRule::DATE_FORMAT),
+        ];
+        $rule = new WorkingRule();
+        for ($i = 1; $i <= 5; $i++) {
+            $ruleData['weekday'] = $i;
+            $rule->exchangeArray($ruleData);
+            $this->tableGateway->insert($rule->getArrayCopy());
+        }
     }
 }

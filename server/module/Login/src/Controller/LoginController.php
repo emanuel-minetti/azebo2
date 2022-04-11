@@ -19,17 +19,20 @@ use Login\Model\User;
 use Login\Model\UserTable;
 use RuntimeException;
 use Service\log\AzeboLog;
+use WorkingRule\Model\WorkingRuleTable;
 
 class LoginController extends ApiController
 {
     private $userTable;
     private $carryTable;
+    private $ruleTable;
 
-    public function __construct(AzeboLog $logger, UserTable $userTable, CarryTable $carryTable)
+    public function __construct(AzeboLog $logger, UserTable $userTable, CarryTable $carryTable, WorkingRuleTable $ruleTable)
     {
         parent::__construct($logger);
         $this->userTable = $userTable;
         $this->carryTable = $carryTable;
+        $this->ruleTable = $ruleTable;
     }
 
     /** @noinspection PhpUnused */
@@ -110,12 +113,13 @@ class LoginController extends ApiController
             try {
                 $user = $this->userTable->getUserByUsername($username);
             } catch (RuntimeException $e) {
-                // ... or insert new user in tables `user` and `carry`
+                // ... or insert new user in tables `user`, `carry` and 'rule'
                 $user = new User();
                 $user->exchangeArray($result);
                 $this->userTable->insert($user);
                 $user = $this->userTable->getUserByUsername($username);
                 $this->carryTable->insert($user);
+                $this->ruleTable->insert($user);
             }
         } else {
             // authenticate via DB table
