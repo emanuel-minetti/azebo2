@@ -86,7 +86,7 @@ class WorkingRuleTable
             'flex_time_end' => '20:00:00',
             'core_time_begin' => '09:30:00',
             'core_time_end' => '14:30:00',
-            'target' => '07:58:00',
+            'target' => '07:52:00',
             'valid_from' => $firstOfMonth->format(WorkingRule::DATE_FORMAT),
         ];
         $rule = new WorkingRule();

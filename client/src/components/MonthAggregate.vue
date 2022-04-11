@@ -64,7 +64,7 @@ export default class MonthAggregate extends Vue {
       total: this.$store.getters["workingTime/saldoTotal"],
     };
     let holidayResult = {
-      key: "Urlaub",
+      key: "Erholungsurlaub",
       carryResult: this.holidaysLeftString,
       month: this.month.takenHolidays,
       total: this.holidaysTotalString,
@@ -131,7 +131,7 @@ export default class MonthAggregate extends Vue {
   get holidaysLeftString() {
     return this.month.monthNumber <= timesConfig.previousHolidaysValidTo
       ? this.carryResult.holidays +
-          " (Vorjahr: " +
+          " (Resturlaub: " +
           this.carryResult.holidaysPrevious +
           ")"
       : this.carryResult.holidays;
@@ -148,7 +148,7 @@ export default class MonthAggregate extends Vue {
         taken -= holidaysPrevious;
         holidays -= taken;
       }
-      return holidays + " (Vorjahr: " + holidaysPrevious + ")";
+      return holidays + " (Resturlaub: " + holidaysPrevious + ")";
     }
     return holidays - taken;
   }
