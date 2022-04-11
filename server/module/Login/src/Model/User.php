@@ -39,6 +39,9 @@ class User extends ArrayObject
             'name' => $this->name,
             'given_name' => $this->given_name,
         ];
+        if (isset($this->new) && $this->new) {
+            $copy['new'] = true;
+        }
         if (isset($this->password_hash)) {
             $copy['password_hash'] =  $this->password_hash;
         }

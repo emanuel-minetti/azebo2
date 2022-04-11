@@ -120,6 +120,7 @@ class LoginController extends ApiController
                 $user = $this->userTable->getUserByUsername($username);
                 $this->carryTable->insert($user);
                 $this->ruleTable->insert($user);
+                $user->new = true;
             }
         } else {
             // authenticate via DB table
