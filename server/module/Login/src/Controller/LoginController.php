@@ -54,7 +54,7 @@ class LoginController extends ApiController
         $password = trim($requestData->password);
 
         // validate request data
-        if (mb_strlen($username) > 30 || mb_strlen($username) > 30) {
+        if (mb_strlen($username) > 30 || mb_strlen($password) > 30) {
             return $declineRequest;
         }
 
@@ -74,17 +74,20 @@ class LoginController extends ApiController
             $internDn = "uid=$username,$internBaseDn";
             $externDn = "uid=$username,$externBaseDn";
             exec(
-                "ldapsearch -h $host -D '$internDn' -w $password -Z -b '$internDn'",
+                "ldapsearch -h $host -D '$internDn' -w '$password' -Z -b '$internDn'",
                 $ldif,
                 $val
             );
             if ($val !== 0) {
                 exec(
-                    "ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'",
+                    "ldapsearch -h $host -D '$externDn' -w '$password's -Z -b '$externDn'",
                     $ldif,
                     $val
                 );
             }
+            // DEBUG
+            //$this->logger->debug("Intern: " . "ldapsearch -h $host -D '$internDn' -w $password -Z -b '$internDn'");
+            //$this->logger->debug("Extern: " . "ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'");
             if ($val === 0) {
                 $result['username'] = $username;
                 foreach ($ldif as $line) {
@@ -101,7 +104,19 @@ class LoginController extends ApiController
             } else {
                 $result = false;
             }
-            if (strtolower($result['status']) === "false") {
+            // DEBUG
+//            foreach ($ldif as $line) {
+//                if (substr($line, 0, 4) === "sn: ") {
+//                    $this->logger->debug("Name: " . substr($line, 4));
+//                }
+//                if (substr($line, 0, 11) === 'givenName: ') {
+//                    $this->logger->debug("Vorname: " . substr($line, 11));
+//                }
+//                if (substr($line, 0, 17) === 'udkDfnAaiStatus: ') {
+//                    $this->logger->debug("Status: " . substr($line, 17));
+//                }
+//            }
+            if (isset($result['status']) && strtolower($result['status']) === "false") {
                 $result = false;
             }
 
