@@ -11,9 +11,4 @@
     <pattern value="\Application\Module" member="getConfig" />
     <pattern value="\Holiday\Module" member="getConfig" />
   </component>
-  <component name="SwUserDefinedSpecifications">
-    <option name="specTypeByUrl">
-      <map />
-    </option>
-  </component>
 </project>
