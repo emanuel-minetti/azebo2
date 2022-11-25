@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Title } from "@/components";
+import { Title } from "/src/components";
 
 @Component({
   components: { Title },

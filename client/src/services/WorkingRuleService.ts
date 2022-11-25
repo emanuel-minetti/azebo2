@@ -1,4 +1,4 @@
-import ApiService from "@/services/ApiService";
+import ApiService from "/src/services/ApiService";
 
 export default class WorkingRuleService extends ApiService {
   static getByMonth(params: string) {

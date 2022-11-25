@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { CarryForm, Title } from "@/components";
+import { CarryForm, Title } from "/src/components";
 import { mapState } from "vuex";
 
 @Component({

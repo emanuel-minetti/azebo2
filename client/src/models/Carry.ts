@@ -1,4 +1,4 @@
-import { Saldo } from "@/models/index";
+import { Saldo } from "/src/models/index";
 
 export default class Carry {
   private readonly _id: number;

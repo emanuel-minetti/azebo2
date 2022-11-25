@@ -1,5 +1,5 @@
-import { FormatterService } from "@/services";
-import { Saldo } from "@/models/index";
+import { FormatterService } from "/src/services";
+import { Saldo } from "/src/models/index";
 
 export default class WorkingRule {
   private readonly _id: number;

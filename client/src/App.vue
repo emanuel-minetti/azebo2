@@ -200,7 +200,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { LoginService } from "@/services";
+import { LoginService } from "/src/services";
 import { BvEvent } from "bootstrap-vue";
 
 @Component

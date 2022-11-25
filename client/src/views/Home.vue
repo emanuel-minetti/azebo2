@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Title, MonthTable, MonthAggregate } from "@/components";
+import { Title, MonthTable, MonthAggregate } from "/src/components";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route } from "vue-router";
 import { mapState } from "vuex";

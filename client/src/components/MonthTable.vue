@@ -46,10 +46,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { FormatterService, GermanKwService } from "@/services";
-import { WorkingDay } from "@/models";
-import { timeOffsConfig } from "@/configs";
-import DayForm from "@/components/DayForm.vue";
+import { FormatterService, GermanKwService } from "/src/services";
+import { WorkingDay } from "/src/models";
+import { timeOffsConfig } from "/src/configs";
+import DayForm from "/src/components/DayForm.vue";
 
 @Component({
   components: {

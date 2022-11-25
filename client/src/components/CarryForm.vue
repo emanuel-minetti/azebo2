@@ -49,8 +49,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry, Saldo } from "@/models";
-import SaldoInput from "@/components/SaldoInput.vue";
+import { Carry, Saldo } from "/src/models";
+import SaldoInput from "/src/components/SaldoInput.vue";
 import { mapState } from "vuex";
 
 @Component({

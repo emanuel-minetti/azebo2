@@ -81,10 +81,10 @@
 </template>
 
 <script lang="ts">
-import { timesConfig, timeOffsConfig } from "@/configs";
+import { timesConfig, timeOffsConfig } from "/src/configs";
 import { Component, Vue } from "vue-property-decorator";
-import { WorkingDay } from "@/models";
-import DayFormValidator from "@/validators/DayFormValidator";
+import { WorkingDay } from "/src/models";
+import DayFormValidator from "/src/validators/DayFormValidator";
 
 const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
   hour: "2-digit",

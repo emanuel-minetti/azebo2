@@ -6,13 +6,13 @@ import {
   WorkingDay,
   WorkingMonth,
   WorkingRule,
-} from "@/models";
+} from "/src/models";
 import {
   CarryService,
   HolidayService,
   WorkingRuleService,
   WorkingTimeService,
-} from "@/services";
+} from "/src/services";
 
 const WorkingTimeModule: Module<any, any> = {
   namespaced: true,

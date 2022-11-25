@@ -1,5 +1,5 @@
-import ApiService from "@/services/ApiService";
-import { Carry } from "@/models";
+import ApiService from "/src/services/ApiService";
+import { Carry } from "/src/models";
 
 export default class CarryService extends ApiService {
   static getCarryResultByMonth(params: string) {

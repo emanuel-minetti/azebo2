@@ -1,4 +1,4 @@
-import { FormatterService } from "@/services";
+import { FormatterService } from "/src/services";
 
 export default class Holiday {
   date: Date;

@@ -20,10 +20,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry, Saldo, WorkingMonth } from "@/models";
-import { timesConfig } from "@/configs";
+import { Carry, Saldo, WorkingMonth } from "/src/models";
+import { timesConfig } from "/src/configs";
 import { mapState } from "vuex";
-import { GermanKwService } from "@/services";
+import { GermanKwService } from "/src/services";
 
 @Component({
   computed: {
