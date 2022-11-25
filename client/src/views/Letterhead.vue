@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Title v-bind:prop-title="title" />
+    <Title :prop-title="title" />
     <div id="intro">
       Hier können Sie die Daten Ihres Kopfbogens kontrollieren und ausdrucken
     </div>
@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Title } from "@/components";
+import { Title } from "/src/components";
 
 @Component({
   components: {

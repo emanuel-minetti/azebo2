@@ -3,16 +3,16 @@
     <div v-if="loading" class="d-flex justify-content-center mb-3">
       <b-spinner id="spinner" label="Loading..."></b-spinner>
     </div>
-    <Title v-bind:prop-title="title" />
+    <Title :prop-title="title" />
     <div id="intro">
       <div v-if="editing">
         Hier können Sie Ihre Überträge bearbeiten:
-        <CarryForm :prop-disabled="false" v-on:submitted="submitted" />
+        <CarryForm :prop-disabled="false" @submitted="submitted" />
       </div>
       <div v-else>
         Ihre aktuellen Überträge lauten:
         <CarryForm :prop-disabled="true" />
-        <b-button variant="primary" v-on:click="setEditing">
+        <b-button variant="primary" @click="setEditing">
           Bearbeiten
         </b-button>
       </div>
@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { CarryForm, Title } from "@/components";
+import { CarryForm, Title } from "/src/components";
 import { mapState } from "vuex";
 
 @Component({

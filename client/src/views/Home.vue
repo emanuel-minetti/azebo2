@@ -4,8 +4,8 @@
       <b-spinner id="spinner" label="Loading..."></b-spinner>
     </div>
     <div v-else>
-      <div class="alert-danger" v-if="error" v-html="error" />
-      <Title v-bind:prop-title="monthName" />
+      <div v-if="error" class="alert-danger" v-html="error" />
+      <Title :prop-title="monthName" />
       <MonthTable />
       <MonthAggregate />
     </div>
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Title, MonthTable, MonthAggregate } from "@/components";
+import { Title, MonthTable, MonthAggregate } from "/src/components";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route } from "vue-router";
 import { mapState } from "vuex";

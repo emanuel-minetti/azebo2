@@ -1,5 +1,5 @@
-import { ApiService } from "@/services";
-import { WorkingDay } from "@/models";
+import { ApiService } from "/src/services";
+import { WorkingDay } from "/src/models";
 
 export default class WorkingTimeService extends ApiService {
   /**

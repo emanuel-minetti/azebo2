@@ -1,5 +1,5 @@
-import { Carry, Holiday, WorkingDay, WorkingMonth } from "@/models";
-import { timeOffsConfig, timesConfig } from "@/configs";
+import { Carry, Holiday, WorkingDay, WorkingMonth } from "/src/models";
+import { timeOffsConfig, timesConfig } from "/src/configs";
 
 export default class DayFormValidator {
   private day: WorkingDay;

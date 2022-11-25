@@ -16,9 +16,9 @@
       </b-form-group>
       <b-form-group label="Passwort:" label-for="password">
         <b-form-input
-          type="password"
           id="password"
           v-model="form.password"
+          type="password"
           placeholder="Ihr Passwort"
           :state="isPasswordValid"
         />
@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Title } from "@/components";
+import { Title } from "/src/components";
 
 @Component({
   components: { Title },

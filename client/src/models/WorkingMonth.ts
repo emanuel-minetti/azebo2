@@ -1,4 +1,4 @@
-import { WorkingDay } from "@/models";
+import { WorkingDay } from "/src/models";
 
 export default class WorkingMonth {
   monthDate: Date;

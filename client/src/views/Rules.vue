@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Title v-bind:prop-title="title" />
+    <Title :prop-title="title" />
     <div id="intro">
       Hier können Sie Ihre wöchentliche Arbeitszeit einstellen und (optional)
       Sollarbeitszeiten für einzelne Wochentage festlegen
@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { RulesForm, Title } from "@/components";
+import { RulesForm, Title } from "/src/components";
 
 @Component({
   components: {

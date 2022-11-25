@@ -1,4 +1,4 @@
-import { ApiService } from "@/services";
+import { ApiService } from "/src/services";
 
 export default class LoginService extends ApiService {
   /**

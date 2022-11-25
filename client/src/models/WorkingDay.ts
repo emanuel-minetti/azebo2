@@ -1,7 +1,7 @@
-import { Holiday, Saldo, WorkingRule } from "@/models";
-import { FormatterService, GermanKwService } from "@/services";
-import { store } from "@/store";
-import { timesConfig } from "@/configs";
+import { Holiday, Saldo, WorkingRule } from "/src/models";
+import { FormatterService, GermanKwService } from "/src/services";
+import { store } from "/src/store";
+import { timesConfig } from "/src/configs";
 
 // noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {

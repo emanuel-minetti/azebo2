@@ -31,7 +31,7 @@
             </b-dropdown>
           </li>
           <li>
-            <b-dropdown text="Monate" variant="primary" v-on:hide="cancelHide">
+            <b-dropdown text="Monate" variant="primary" @hide="cancelHide">
               <b-dropdown-item :to="{ name: 'month', params: { month: 1 } }">
                 Januar
               </b-dropdown-item>
@@ -69,121 +69,121 @@
                 Dezember
               </b-dropdown-item>
               <b-dropdown-divider />
-              <b-dropdown-item-button v-on:click="onShowLastYear">{{
-                this.lastYearShowString
+              <b-dropdown-item-button @click="onShowLastYear">{{
+                lastYearShowString
               }}</b-dropdown-item-button>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 1, year: this.lastYearString },
+                  params: { month: 1, year: lastYearString },
                 }"
               >
-                Januar {{ this.lastYearString }}
+                Januar {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 2, year: this.lastYearString },
+                  params: { month: 2, year: lastYearString },
                 }"
               >
-                Februar {{ this.lastYearString }}
+                Februar {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 3, year: this.lastYearString },
+                  params: { month: 3, year: lastYearString },
                 }"
               >
-                März {{ this.lastYearString }}
+                März {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 4, year: this.lastYearString },
+                  params: { month: 4, year: lastYearString },
                 }"
               >
-                April {{ this.lastYearString }}
+                April {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 5, year: this.lastYearString },
+                  params: { month: 5, year: lastYearString },
                 }"
               >
-                Mai {{ this.lastYearString }}
+                Mai {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 6, year: this.lastYearString },
+                  params: { month: 6, year: lastYearString },
                 }"
               >
-                Juni {{ this.lastYearString }}
+                Juni {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 7, year: this.lastYearString },
+                  params: { month: 7, year: lastYearString },
                 }"
               >
-                Juli {{ this.lastYearString }}
+                Juli {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 8, year: this.lastYearString },
+                  params: { month: 8, year: lastYearString },
                 }"
               >
-                August {{ this.lastYearString }}
+                August {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 9, year: this.lastYearString },
+                  params: { month: 9, year: lastYearString },
                 }"
               >
-                September {{ this.lastYearString }}
+                September {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 10, year: this.lastYearString },
+                  params: { month: 10, year: lastYearString },
                 }"
               >
-                Oktober {{ this.lastYearString }}
+                Oktober {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 11, year: this.lastYearString },
+                  params: { month: 11, year: lastYearString },
                 }"
               >
-                November {{ this.lastYearString }}
+                November {{ lastYearString }}
               </b-dropdown-item>
               <b-dropdown-item
-                v-if="this.lastYearShown"
+                v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 12, year: this.lastYearString },
+                  params: { month: 12, year: lastYearString },
                 }"
               >
-                Dezember {{ this.lastYearString }}
+                Dezember {{ lastYearString }}
               </b-dropdown-item>
             </b-dropdown>
           </li>
           <li>
-            <b-button variant="primary" v-on:click="onLogout">
+            <b-button variant="primary" @click="onLogout">
               Logout
             </b-button>
           </li>
@@ -200,10 +200,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { LoginService } from "@/services";
+import { LoginService } from "/src/services";
 import { BvEvent } from "bootstrap-vue";
-
-const config = require("../package.json");
 
 @Component
 export default class App extends Vue {
@@ -225,8 +223,11 @@ export default class App extends Vue {
   //noinspection JSUnusedGlobalSymbols
   mounted() {
     // copyright and version from `package.json`
-    this.version = config.version;
-    this.copyrightyear = config.copyright;
+    // TODO adapt
+    // this.version = config.version;
+    // this.copyrightyear = config.copyright;
+    this.version = "2.0.2";
+    this.copyrightyear = "2019-2022";
   }
 
   onLogout() {

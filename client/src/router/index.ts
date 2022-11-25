@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { store } from "@/store";
-import User from "@/models/User";
-import { Home, Login, NotFound } from "@/views";
+import { store } from "/src/store";
+import User from "/src/models/User";
+import { Home, Login, NotFound } from "/src/views";
 
 Vue.use(VueRouter);
 
@@ -50,7 +50,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
+  base: import.meta.env.BASE_URL,
   routes,
 });
 
