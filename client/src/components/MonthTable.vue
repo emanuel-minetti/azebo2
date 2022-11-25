@@ -20,7 +20,7 @@
       </template>
     </b-table>
     <div v-if="formShown" id="lower">
-      <DayForm id="form" v-on:submitted="onSubmitted" />
+      <DayForm id="form" @submitted="onSubmitted" />
       <b-table
         bordered
         striped

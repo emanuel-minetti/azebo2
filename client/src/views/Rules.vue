@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Title v-bind:prop-title="title" />
+    <Title :prop-title="title" />
     <div id="intro">
       Hier können Sie Ihre wöchentliche Arbeitszeit einstellen und (optional)
       Sollarbeitszeiten für einzelne Wochentage festlegen

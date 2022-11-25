@@ -16,9 +16,9 @@
       </b-form-group>
       <b-form-group label="Passwort:" label-for="password">
         <b-form-input
-          type="password"
           id="password"
           v-model="form.password"
+          type="password"
           placeholder="Ihr Passwort"
           :state="isPasswordValid"
         />

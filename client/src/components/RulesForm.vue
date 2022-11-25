@@ -2,21 +2,21 @@
   <b-form>
     <b-form-group label="Arbeitszeit:">
       <b-form-radio-group
-        :options="workingTimeOptions"
         v-model="workingTimeMode"
+        :options="workingTimeOptions"
       >
       </b-form-radio-group>
       <div v-if="workingTimeMode === 'relative'">
         <b-form-group label="Anteil an der Wochenarbeitszeit">
           <!-- TODO insert tab-index -->
-          <b-form-input type="number" min="0" max="100" v-model="percentage">
+          <b-form-input v-model="percentage" type="number" min="0" max="100">
           </b-form-input>
         </b-form-group>
       </div>
       <div v-if="workingTimeMode === 'fixed'">
         <b-form-group label="Wochenarbeitszeit in Stunden und Minuten ">
           <!-- TODO insert tab-index -->
-          <SaldoInput :prop-saldo.sync="fixed" :prop-sign="false" />
+          <SaldoInput v-model:prop-saldo="fixed" :prop-sign="false" />
         </b-form-group>
       </div>
     </b-form-group>

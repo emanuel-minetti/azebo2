@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Title v-bind:prop-title="title" />
+    <Title :prop-title="title" />
     <div id="intro">
       Hier können Sie die Daten Ihres Kopfbogens kontrollieren und ausdrucken
     </div>

@@ -1,13 +1,13 @@
 <template>
-  <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+  <b-form v-if="show" @submit="onSubmit" @reset="onReset">
     <!--TODO Should be shown to non new users with a warning (See #30)-->
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
       <SaldoInput
-        :prop-disabled="propDisabled"
         v-if="showSaldoInput"
+        :prop-disabled="propDisabled"
         :prop-saldo="getFormSaldo()"
-        v-on:update-saldo="setFormSaldo"
         :prop-sign="true"
+        @update-saldo="setFormSaldo"
       />
     </b-form-group>
     <b-form-group label="Resturlaub für dieses Jahr:">
@@ -17,7 +17,7 @@
         max="99"
         :disabled="propDisabled"
         :value="getFormHolidays()"
-        v-on:blur="setFormHolidays"
+        @blur="setFormHolidays"
       />
     </b-form-group>
     <b-form-group label="Resturlaub des vergangenen Jahres:">
@@ -27,7 +27,7 @@
         max="99"
         :value="getFormHolidaysPrevious()"
         :disabled="propDisabled"
-        v-on:blur="setFormHolidaysPrevious"
+        @blur="setFormHolidaysPrevious"
       />
     </b-form-group>
     <div v-if="!propDisabled">
@@ -39,7 +39,7 @@
         type="button"
         variant="secondary"
         class="ml-2"
-        v-on:click="onCancel"
+        @click="onCancel"
       >
         Abbrechen
       </b-button>

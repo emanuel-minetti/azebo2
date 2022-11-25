@@ -1,12 +1,12 @@
 <template>
-  <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="mb-3">
+  <b-form v-if="show" class="mb-3" @submit="onSubmit" @reset="onReset">
     <fieldset>
       <legend>{{ title }}</legend>
       <b-form-group label="Arbeitsbeginn:" label-for="begin-input">
         <b-form-input
           id="begin-input"
-          type="time"
           v-model="begin"
+          type="time"
           placeholder="Arbeitsbeginn"
           autofocus
           @blur="validate"
@@ -16,8 +16,8 @@
       <b-form-group label="Arbeitsende:" label-for="end-input">
         <b-form-input
           id="end-input"
-          type="time"
           v-model="end"
+          type="time"
           placeholder="Arbeitsende"
           @blur="validate"
         ></b-form-input>
@@ -38,8 +38,8 @@
       <b-form-group label="Anmerkung:" label-for="comment-input">
         <b-form-textarea
           id="comment-input"
-          size="sm"
           v-model="form.comment"
+          size="sm"
           @blur="validate"
         ></b-form-textarea>
       </b-form-group>
@@ -72,7 +72,7 @@
         type="button"
         variant="secondary"
         class="ml-2"
-        v-on:click="onCancel"
+        @click="onCancel"
       >
         Abbrechen
       </b-button>

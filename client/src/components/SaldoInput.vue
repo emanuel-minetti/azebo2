@@ -4,11 +4,11 @@
       type="text"
       :disabled="propDisabled"
       :value="propSaldo.toString(propSign)"
-      v-on:focus="onfocus"
+      @focus="onfocus"
     />
     <b-modal
-      hide-backdrop
       v-model="modalShow"
+      hide-backdrop
       title="Bitte geben Sie den Betrag in Stunden und Minuten (oder nur in Minuten) ein:"
       @ok="handleOk"
     >
@@ -16,10 +16,10 @@
         <b-form>
           <b-form-group label="Stunden" label-for="hour-input">
             <b-form-input
+              v-model="hours"
               type="number"
               min="0"
               max="999"
-              v-model="hours"
               autofocus
               onfocus="this.select()"
             >
@@ -27,10 +27,10 @@
           </b-form-group>
           <b-form-group label="Minuten" label-for="hour-input">
             <b-form-input
+              v-model="minutes"
               type="number"
               min="0"
               max="999"
-              v-model="minutes"
               onfocus="this.select()"
             >
             </b-form-input>
