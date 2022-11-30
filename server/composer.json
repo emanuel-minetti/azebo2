@@ -10,7 +10,7 @@
     ],
     "homepage": "https://github.com/emanuel-minetti/azebo2",
     "require": {
-        "php": "^7.4",
+        "php": "^8.1",
         "ext-mbstring": "*",
         "ext-json": "*",
         "ext-calendar": "*",
