@@ -12,6 +12,7 @@
       <div id="site-title">
         <hgroup>
           <h1>Arbeitszeitbogen</h1>
+          <h1 v-if='isDev'>Testserver</h1>
           <h1 v-if="loggedIn">für {{ name }}</h1>
         </hgroup>
       </div>
@@ -214,6 +215,10 @@ export default class App extends Vue {
 
   get name() {
     return this.$store.state.user.user.fullName;
+  }
+
+  get isDev() {
+    return import.meta.env.DEV;
   }
 
   get loggedIn() {
