@@ -12,7 +12,7 @@
       <div id="site-title">
         <hgroup>
           <h1>Arbeitszeitbogen</h1>
-          <h1 v-if='isDev'>Testserver</h1>
+          <h1 v-if='isDev' class='text-danger'>Testserver</h1>
           <h1 v-if="loggedIn">für {{ name }}</h1>
         </hgroup>
       </div>
