@@ -67,7 +67,8 @@ class WorkingRuleTable
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
-            $result[] = $row;
+            $rule = new WorkingRule($row->getArrayCopy());
+            $result[] = $rule;
         }
         return $result;
     }
