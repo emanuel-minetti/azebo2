@@ -20,7 +20,7 @@ use WorkingRule\Model\WorkingRuleTable;
 
 class WorkingRuleController extends ApiController
 {
-    private $table;
+    private WorkingRuleTable $table;
 
     public function __construct(AzeboLog $logger, WorkingRuleTable $table)
     {

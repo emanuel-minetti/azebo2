@@ -13,35 +13,21 @@
           </b-form-input>
         </b-form-group>
       </div>
-      <div v-if="workingTimeMode === 'fixed'">
-        <b-form-group label="Wochenarbeitszeit in Stunden und Minuten ">
-          <!-- TODO insert tab-index -->
-          <SaldoInput v-model:prop-saldo="fixed" :prop-sign="false" />
-        </b-form-group>
-      </div>
     </b-form-group>
   </b-form>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SaldoInput from "/src/components/SaldoInput.vue";
-import { Saldo } from "/src/models";
 
-@Component({
-  components: {
-    SaldoInput,
-  },
-})
+@Component({})
 export default class RulesForm extends Vue {
   workingTimeMode = "full";
   percentage = 100;
-  fixed = Saldo.createFromMillis(1000000);
 
   workingTimeOptions = [
     { text: "Vollzeit", value: "full" },
     { text: "Anteilige Arbeitszeit", value: "relative" },
-    { text: "Feste Arbeitszeit", value: "fixed" },
   ];
 }
 </script>
