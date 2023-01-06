@@ -56,9 +56,7 @@ export default class WorkingDay {
         const rule: WorkingRule = rules[i];
         if (
           // If this rule has the same weekday and ...
-          rule.weekday == this._date.getDay() &&
-          // is in the right week and ...
-          rule.isCalendarWeek(this.calendarWeek) &&
+          rule.isWeekday(this._date.getDay()) &&
           // is valid and ...
           rule.validFrom.valueOf() <= this._date.valueOf() &&
           (!rule.validTo || rule.validTo.valueOf() > this._date.valueOf()) &&

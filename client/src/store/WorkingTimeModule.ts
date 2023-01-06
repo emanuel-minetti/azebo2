@@ -68,6 +68,7 @@ const WorkingTimeModule: Module<any, any> = {
     },
   },
   actions: {
+    // eslint-disable-next-line no-unused-vars
     getMonth({ commit, dispatch, state, rootState }, monthDate: Date) {
       rootState.loading = true;
       monthDate.setDate(1);
@@ -92,6 +93,7 @@ const WorkingTimeModule: Module<any, any> = {
         })
         .then(() =>
           WorkingRuleService.getByMonth(params).then((data) => {
+            console.log(data.result);
             state.rules = data.result.map((rule: any) => new WorkingRule(rule));
           })
         )
@@ -177,9 +179,11 @@ const WorkingTimeModule: Module<any, any> = {
           return this;
         });
     },
+    // eslint-disable-next-line no-unused-vars
     setDay({ state }, day: WorkingDay) {
       return WorkingTimeService.setDay(day).then(() => {});
     },
+    // eslint-disable-next-line no-unused-vars
     setCarry({ state }, carry: Carry) {
       return CarryService.setCarry(carry).then(() => {});
     },
