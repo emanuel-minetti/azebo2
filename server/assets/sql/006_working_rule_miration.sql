@@ -1,3 +1,5 @@
+# noinspection SqlResolveForFile
+
 alter table working_rule
     drop column weekday;
 
@@ -22,7 +24,13 @@ alter table working_rule
 alter table working_rule
     add has_weekdays TINYINT default 0 not null;
 
-create table azebo2.working_time_weekday
+alter table working_rule
+    add percentage TINYINT default 100 not null;
+
+alter table working_rule
+    add timestamp TIMESTAMP default CURRENT_TIMESTAMP not null;
+
+create table azebo2.working_rule_weekday
 (
     id              int auto_increment,
     working_rule_id int not null,
@@ -32,5 +40,5 @@ create table azebo2.working_time_weekday
     constraint working_time_weekday_pk2
         unique (working_rule_id, id),
     constraint working_time_weekday_working_rule_user_id_fk
-        foreign key (working_rule_id) references azebo2.working_rule (user_id)
+        foreign key (working_rule_id) references azebo2.working_rule (id)
 );

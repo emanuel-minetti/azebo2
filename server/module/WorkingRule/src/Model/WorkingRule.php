@@ -44,6 +44,15 @@ class WorkingRule extends ArrayObject
      */
     public bool $hasWeekdays;
 
+    /**
+     * @var int if "Teilzeit" the percentage, else 100.
+     */
+    public int $percentage;
+
+    public DateTime $timestamp;
+
+    public array $weekdays = [];
+
     public function __construct(array $array = []) {
         parent::__construct();
         if (sizeof($array) > 0) {
@@ -60,6 +69,9 @@ class WorkingRule extends ArrayObject
         $this->validTo = !empty($array['valid_to']) ?
             DateTime::createFromFormat(self::DATE_FORMAT, $array['valid_to']) : null;
         $this->hasWeekdays = $array['has_weekdays'];
+        $this->percentage = $array['percentage'];
+        $this->timestamp = !empty($array['timestamp']) ?
+            DateTime::createFromFormat(self::DATE_FORMAT . ' ' . self::TIME_FORMAT, $array['timestamp']) : null;
     }
 
     #[ReturnTypeWillChange] public function getArrayCopy(): array {
@@ -68,7 +80,8 @@ class WorkingRule extends ArrayObject
             'user_id' => $this->userId,
             'valid_from' => $this->validFrom->format(self::DATE_FORMAT),
             'valid_to' => $this->validTo?->format(self::DATE_FORMAT),
-            'has_weekdays' => $this->hasWeekdays,
+            'weekdays' => $this->weekdays,
+            'percentage' => $this->percentage,
         ];
     }
 

@@ -12,6 +12,7 @@
 namespace WorkingRule\Model;
 
 use DateTime;
+use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
@@ -68,6 +69,17 @@ class WorkingRuleTable
         $result = [];
         foreach ($resultSet as $row) {
             $rule = new WorkingRule($row->getArrayCopy());
+            if ($rule->hasWeekdays) {
+                $weekdaySelect = new Select('working_rule_weekday');
+                $weekdaySelect->columns(['weekday']);
+                $weekdaySelect->where("working_rule_id = {$rule->id}");
+                $weekdayResultSet = $this->tableGateway->selectWith($weekdaySelect);
+                foreach ($weekdayResultSet as $weekdayRow) {
+                    $rule->weekdays[] = $weekdayRow['weekday'];
+                }
+            } else {
+                $rule->weekdays = [1, 2, 3, 4, 5,];
+            }
             $result[] = $rule;
         }
         return $result;
