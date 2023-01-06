@@ -12,6 +12,8 @@ namespace WorkingRule\Model;
 
 use ArrayObject;
 use DateTime;
+use Laminas\Config\Config;
+use Laminas\Config\Factory;
 use ReturnTypeWillChange;
 
 class WorkingRule extends ArrayObject
@@ -53,6 +55,8 @@ class WorkingRule extends ArrayObject
 
     public array $weekdays = [];
 
+    private Config $config;
+
     public function __construct(array $array = []) {
         parent::__construct();
         if (sizeof($array) > 0) {
@@ -81,12 +85,23 @@ class WorkingRule extends ArrayObject
             'valid_from' => $this->validFrom->format(self::DATE_FORMAT),
             'valid_to' => $this->validTo?->format(self::DATE_FORMAT),
             'weekdays' => $this->weekdays,
-            'percentage' => $this->percentage,
+            'target' => $this->getTarget(),
         ];
     }
 
     public function __toString()
     {
-        return json_encode($this->getArrayCopy());
+        $arrayCopy = $this->getArrayCopy();
+        $arrayCopy['target'] = $this->getTarget();
+        return json_encode($arrayCopy);
     }
+
+    private function getTarget(): int {
+        if (!isset($this->config)) {
+            $this->config = Factory::fromFile('./../server/config/times.config.php', true);
+        }
+        $minutesPerWeek = $this->config->get('workingMinutesPerWeek');
+        return floor($minutesPerWeek * 60 * 1000 * $this->percentage / 100);
+    }
+
 }

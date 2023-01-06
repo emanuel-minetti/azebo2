@@ -8,6 +8,8 @@ export default class WorkingRule {
   private percentage: number;
   private weekdays: number[];
 
+  private readonly targetMillis: number;
+
   constructor(data?: any) {
     if (data) {
       this._id = data.id;
@@ -17,11 +19,13 @@ export default class WorkingRule {
         : undefined;
       this.percentage = data.percentage;
       this.weekdays = data.weekdays;
+      this.targetMillis = data.target;
     } else {
       this._id = 0;
       this._validFrom = new Date();
       this.percentage = 100;
       this.weekdays = [1, 2, 3, 4, 5,];
+      this.targetMillis = 0;
     }
   }
 
@@ -38,6 +42,6 @@ export default class WorkingRule {
   }
 
   get target(): Saldo {
-    return new Saldo(28320000);
+    return new Saldo(this.targetMillis);
   }
 }
