@@ -93,7 +93,6 @@ const WorkingTimeModule: Module<any, any> = {
         })
         .then(() =>
           WorkingRuleService.getByMonth(params).then((data) => {
-            console.log(data.result);
             state.rules = data.result.map((rule: any) => new WorkingRule(rule));
           })
         )
