@@ -6,19 +6,19 @@
 </template>
 
 <script lang="ts">
-// import { onMounted, ref } from "vue";
-// import type { Ref} from "vue";
-// import { WorkingRule } from "/src/models";
+import { defineComponent } from "vue";
+import { WorkingRule } from "/src/models";
 
-export default {
 
-}
-
-// const  workingTimeOptions = [
-//     { text: "Vollzeit", value: "full" },
-//     { text: "Anteilige Arbeitszeit", value: "relative" },
-//   ];
-
+export default defineComponent({
+  data() {
+    return {
+      rules: Array<WorkingRule>
+    }},
+  mounted() {
+    this.rules = this.$store.state.workingTime.rules;
+  }
+})
 </script>
 
 <style scoped>
