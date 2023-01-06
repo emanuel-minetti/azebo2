@@ -1,4 +1,4 @@
-import Title from "./Title.vue";
+import Title from "./ViewTitle.vue";
 import MonthTable from "./MonthTable.vue";
 import MonthAggregate from "./MonthAggregate.vue";
 import RulesForm from "./RulesForm.vue";

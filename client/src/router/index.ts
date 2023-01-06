@@ -32,7 +32,7 @@ const routes = [
     path: "/settings/rules",
     name: "rules",
     component: () =>
-      import(/* webpackChunkName: "settings"  */ "../views/Rules.vue"),
+      import(/* webpackChunkName: "settings"  */ "../views/WorkingRules.vue"),
   },
   {
     path: "/settings/letterhead",

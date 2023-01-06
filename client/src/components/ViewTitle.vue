@@ -5,14 +5,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component({
+import { defineComponent } from "vue";
+export default defineComponent({
   props: {
-    propTitle: String,
-  },
-})
-export default class Title extends Vue {}
+    propTitle: {
+      type: String,
+      required: true
+    },
+  }
+});
 </script>
 
 <style scoped>

@@ -7,17 +7,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { WorkingRule } from "/src/models";
-
 
 export default defineComponent({
-  data() {
-    return {
-      rules: Array<WorkingRule>
-    }},
-  mounted() {
-    this.rules = this.$store.state.workingTime.rules;
-  }
 })
 </script>
 
