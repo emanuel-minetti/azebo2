@@ -52,6 +52,7 @@ import { timeOffsConfig } from "/src/configs";
 import DayForm from "/src/components/DayForm.vue";
 
 @Component({
+  name: "MonthTable",
   components: {
     DayForm,
   },
