@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import { store } from "/src/store";
 import User from "/src/models/User";
-import { Home, Login, NotFound } from "/src/views";
+import { HomeView, Login, NotFound } from "/src/views";
 
 Vue.use(VueRouter);
 
@@ -10,12 +10,12 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: Home,
+    component: HomeView,
   },
   {
     path: "/month/:month(\\d+)/:year(\\d+)?",
     name: "month",
-    component: Home,
+    component: HomeView,
   },
   {
     path: "/login",
