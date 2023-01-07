@@ -85,6 +85,7 @@ class WorkingRule extends ArrayObject
             'valid_from' => $this->validFrom->format(self::DATE_FORMAT),
             'valid_to' => $this->validTo?->format(self::DATE_FORMAT),
             'weekdays' => $this->weekdays,
+            'percentage' => $this->percentage,
             'target' => $this->getTarget(),
         ];
     }

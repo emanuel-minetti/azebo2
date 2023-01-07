@@ -21,6 +21,8 @@
     <b-table
     bordered
     :items='rulesItems'
+    primary-key='id'
+    :fields='getFields()'
     >
     </b-table>
     <RulesForm />
@@ -31,6 +33,7 @@
 import { defineComponent } from "vue";
 import { RulesForm, Title } from "/src/components";
 import { WorkingRule } from "/src/models";
+import { FormatterService } from "/src/services";
 export default defineComponent({
   components: {
     Title,
@@ -46,9 +49,55 @@ export default defineComponent({
   methods: {
     rulesItems() {
       return this.rules;
+    },
+    getFields: function () {
+      return [
+        {
+          key: 'validFrom',
+          label: "Regelungsbegin",
+          formatter: FormatterService.toGermanDate,
+        },
+        {
+          key: 'validTo',
+          label: "Regelungsende",
+          formatter: formatValidTo,
+        },
+        {
+          key: 'percentage',
+          label: "Prozentsatz der vollen Arbeitszeit",
+        },
+        {
+          key: 'weekdays',
+          label: "Wochentage",
+          formatter: formatWeekdays,
+        },
+      ]
     }
   }
 });
+
+function formatValidTo(date: Date|null): string {
+  return date ? FormatterService.toGermanDate(date) : "Bis auf weiteres";
+}
+
+function formatWeekdays(weekdays: Array<Number>): string {
+  let result = '';
+  if (weekdays.length == 5) {
+    result = 'Alle';
+  } else {
+    weekdays.map(weekday => {
+      switch (weekday) {
+        case 1: return 'Montag';
+        case 2: return 'Dienstag';
+        case 3: return 'Mittwoch';
+        case 4: return 'Donnerstag';
+        case 5: return 'Freitag';
+      }
+    }).forEach(day => result += day + ", ");
+    result = result.substring(0, result.length - 2);
+  }
+  return result;
+}
 </script>
 
 <style scoped>
