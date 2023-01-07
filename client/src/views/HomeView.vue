@@ -35,9 +35,12 @@ export default  defineComponent({
         year: "numeric",
         month: "2-digit",
       } as const;
-      if (this.$store.state.workingTime.month.monthDate)
-      return this.$store.state.workingTime.month.monthDate.toLocaleString("de-DE", options);
-      else return '';
+      if (this.$store.state.workingTime.month.monthDate) {
+        return this.$store.state.workingTime.month.monthDate.toLocaleString("de-DE", options);
+      }
+      else {
+        return '';
+      }
     },
     ...mapState(["loading"]),
   },
