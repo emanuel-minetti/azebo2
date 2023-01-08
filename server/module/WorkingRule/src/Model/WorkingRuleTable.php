@@ -43,7 +43,9 @@ class WorkingRuleTable
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
-            $result[] = $row;
+            $rule = new WorkingRule($row->getArrayCopy());
+            $rule->weekdays = $this->getWeekdays($rule);
+            $result[] = $rule;
         }
         return $result;
     }
@@ -69,17 +71,7 @@ class WorkingRuleTable
         $result = [];
         foreach ($resultSet as $row) {
             $rule = new WorkingRule($row->getArrayCopy());
-            if ($rule->hasWeekdays) {
-                $weekdaySelect = new Select('working_rule_weekday');
-                $weekdaySelect->columns(['weekday']);
-                $weekdaySelect->where("working_rule_id = {$rule->id}");
-                $weekdayResultSet = $this->tableGateway->selectWith($weekdaySelect);
-                foreach ($weekdayResultSet as $weekdayRow) {
-                    $rule->weekdays[] = $weekdayRow['weekday'];
-                }
-            } else {
-                $rule->weekdays = [1, 2, 3, 4, 5,];
-            }
+            $rule->weekdays = $this->getWeekdays($rule);
             $result[] = $rule;
         }
         return $result;
@@ -107,6 +99,22 @@ class WorkingRuleTable
             $ruleData['weekday'] = $i;
             $rule->exchangeArray($ruleData);
             $this->tableGateway->insert($rule->getArrayCopy());
+        }
+    }
+
+    private function getWeekdays(WorkingRule $rule): array {
+        if ($rule->hasWeekdays) {
+            $weekdaySelect = new Select('working_rule_weekday');
+            $weekdaySelect->columns(['weekday']);
+            $weekdaySelect->where("working_rule_id = {$rule->id}");
+            $result = [];
+            $weekdayResultSet = $this->tableGateway->selectWith($weekdaySelect);
+            foreach ($weekdayResultSet as $weekdayRow) {
+                $result[] = $weekdayRow['weekday'];
+            }
+            return $result;
+        } else {
+            return [1, 2, 3, 4, 5,];
         }
     }
 }

@@ -18,6 +18,7 @@
       ihre Soll-Arbeitszeiten für den gesamten Gültigkeitszeitraum und es erscheint ein Vermerk auf Ihrem nächsten
       Ausdruck.
     </p>
+    <div v-if='rules.length > 0'>
     <b-table
     bordered
     :items='rulesItems'
@@ -26,6 +27,10 @@
     >
     </b-table>
     <RulesForm />
+    </div>
+    <div v-else>
+      Sie haben noch keine Arbeitszeitregelung
+    </div>
   </div>
 </template>
 

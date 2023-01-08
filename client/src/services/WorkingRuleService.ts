@@ -1,8 +1,8 @@
 import ApiService from "/src/services/ApiService";
 
 export default class WorkingRuleService extends ApiService {
-  static getByMonth(params: string) {
-    const url = this.getBaseUrl() + "working-rule/" + params;
+  static get() {
+    const url = this.getBaseUrl() + "working-rule";
     let headers = this.getHeaders();
     headers = { ...headers, ...this.getAuthHeader() };
     const requestOptions = {

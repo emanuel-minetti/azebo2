@@ -102,7 +102,7 @@ class WorkingRule extends ArrayObject
             $this->config = Factory::fromFile('./../server/config/times.config.php', true);
         }
         $minutesPerWeek = $this->config->get('workingMinutesPerWeek');
-        return floor($minutesPerWeek * 60 * 1000 * $this->percentage / 100);
+        return floor($minutesPerWeek * 60 * 1000 * $this->percentage / 100 / sizeof($this->weekdays));
     }
 
 }

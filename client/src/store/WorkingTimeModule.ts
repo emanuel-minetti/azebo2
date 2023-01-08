@@ -92,7 +92,7 @@ const WorkingTimeModule: Module<any, any> = {
           state.holidays = data.result.map((day: any) => new Holiday(day));
         })
         .then(() =>
-          WorkingRuleService.getByMonth(params).then((data) => {
+          WorkingRuleService.get().then((data) => {
             state.rules = data.result.map((rule: any) => new WorkingRule(rule));
           })
         )
