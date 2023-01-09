@@ -87,7 +87,7 @@ class WorkingRuleTable
      * @param User $user
      * @return void
      */
-    public function insert(WorkingRule $rule): void {
+    public function insert(WorkingRule $rule): WorkingRule|false {
         $selectRunning = $this->sql->select();
         //$selectRunning->where->isNull('valid_to')->and->equalTo('user_id', $rule->userId);
         $where = new Where();
@@ -102,6 +102,27 @@ class WorkingRuleTable
                 'id' => $running->current()['id'],
             ]);
         }
+        $selectOverwrite = $this->sql->select();
+        $overwriteWhere = new Where();
+        $overwriteWhere
+            ->equalTo('userId', $rule->userId)
+            ->and
+            ->equalTo('valid_from', $rule->validFrom->format(self::DATE_FORMAT));
+        $overwrte = $this->ruleGateway->selectWith($selectOverwrite);
+        if ($overwrte->current()) {
+            if ($overwrte->current()['id'] !== $running->current()['id']) {
+                $this->ruleGateway->update([
+                    'valid_from' => $rule->validFrom->format(self::DATE_FORMAT),
+                    'valid_to' => $rule->validTo?->format(self::DATE_FORMAT),
+                    'percentage' => $rule->percentage,
+                    'has_weekdays' => $rule->hasWeekdays,
+                ], [
+                    'id' => $running->current()['id'],
+                ]);
+            } else {
+                return false;
+            }
+        }
         $arrayCopy = $rule->getArrayCopy();
         $arrayCopy['has_weekdays'] = $rule->hasWeekdays;
         unset($arrayCopy['weekdays']);
@@ -109,6 +130,7 @@ class WorkingRuleTable
         unset($arrayCopy['target']);
         $this->ruleGateway->insert($arrayCopy);
         $ruleId = $this->ruleGateway->getLastInsertValue();
+        $rule->userId = $ruleId;
         if ($rule->hasWeekdays) {
             $insertWeekdays = new Insert('working_rule_weekday');
             foreach ($rule->weekdays as $weekday) {
@@ -119,7 +141,7 @@ class WorkingRuleTable
                 $this->weekdayGateway->insertWith($insertWeekdays);
             }
         }
-
+        return $rule;
     }
 
     public function insertNewUser(User $user): void {
