@@ -12,6 +12,7 @@
 namespace WorkingRule\Model;
 
 use DateTime;
+use Laminas\Db\Sql\Insert;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Where;
@@ -20,18 +21,20 @@ use Login\Model\User;
 
 class WorkingRuleTable
 {
-    private TableGateway $tableGateway;
+    private TableGateway $ruleGateway;
+    private TableGateway $weekdayGateway;
     private Sql $sql;
 
-    public function __construct(TableGateway $tableGateway)
+    public function __construct(TableGateway $ruleGateway, TableGateway $weekdayGateway)
     {
-        $this->tableGateway = $tableGateway;
-        $this->sql = $tableGateway->getSql();
+        $this->ruleGateway = $ruleGateway;
+        $this->weekdayGateway = $weekdayGateway;
+        $this->sql = $ruleGateway->getSql();
     }
 
     public function find($id): WorkingRule
     {
-        $rowSet = $this->tableGateway->select(['id' => $id]);
+        $rowSet = $this->ruleGateway->select(['id' => $id]);
         return $rowSet->current();
     }
 
@@ -40,7 +43,7 @@ class WorkingRuleTable
         $where = new Where();
         $where->equalTo('user_id', $userId);
         $select->where($where);
-        $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet = $this->ruleGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
             $rule = new WorkingRule($row->getArrayCopy());
@@ -67,7 +70,7 @@ class WorkingRuleTable
             ->and
             ->lessThanOrEqualTo('valid_from', $last->format(WorkingRule::DATE_FORMAT));
         $select->where($where);
-        $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet = $this->ruleGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
             $rule = new WorkingRule($row->getArrayCopy());
@@ -81,14 +84,25 @@ class WorkingRuleTable
      * @param User $user
      * @return void
      */
-    public function insert(WorkingRule $rule): void
-    {
-            $arrayCopy = $rule->getArrayCopy();
-            $arrayCopy['has_weekdays'] = $rule->hasWeekdays;
-            unset($arrayCopy['weekdays']);
-            unset($arrayCopy['id']);
-            unset($arrayCopy['target']);
-            $this->tableGateway->insert($arrayCopy);
+    public function insert(WorkingRule $rule): void {
+        $arrayCopy = $rule->getArrayCopy();
+        $arrayCopy['has_weekdays'] = $rule->hasWeekdays;
+        unset($arrayCopy['weekdays']);
+        unset($arrayCopy['id']);
+        unset($arrayCopy['target']);
+        $this->ruleGateway->insert($arrayCopy);
+        $ruleId = $this->ruleGateway->getLastInsertValue();
+        if ($rule->hasWeekdays) {
+            $insertWeekdays = new Insert('working_rule_weekday');
+            foreach ($rule->weekdays as $weekday) {
+                $insertWeekdays->values([
+                    'working_rule_id' => $ruleId,
+                    'weekday' => $weekday,
+                ]);
+                $this->weekdayGateway->insertWith($insertWeekdays);
+            }
+        }
+
     }
 
     public function insertNewUser(User $user): void {
@@ -98,7 +112,7 @@ class WorkingRuleTable
             'has_weekdays' => false,
             'percentage' => 100,
         ];
-        $this->tableGateway->insert($rule);
+        $this->ruleGateway->insert($rule);
     }
 
     public function getWeekdays(WorkingRule $rule): array {
@@ -107,7 +121,7 @@ class WorkingRuleTable
             $weekdaySelect->columns(['weekday']);
             $weekdaySelect->where("working_rule_id = {$rule->id}");
             $result = [];
-            $weekdayResultSet = $this->tableGateway->selectWith($weekdaySelect);
+            $weekdayResultSet = $this->weekdayGateway->selectWith($weekdaySelect);
             foreach ($weekdayResultSet as $weekdayRow) {
                 $result[] = $weekdayRow['weekday'];
             }

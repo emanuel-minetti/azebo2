@@ -76,6 +76,7 @@ class WorkingRule extends ArrayObject
         $this->percentage = $array['percentage'];
         $this->timestamp = !empty($array['timestamp']) ?
             DateTime::createFromFormat(self::DATE_FORMAT . ' ' . self::TIME_FORMAT, $array['timestamp']) : null;
+        $this->weekdays = $array['weekdays'] ?? [];
     }
 
     #[ReturnTypeWillChange] public function getArrayCopy(): array {

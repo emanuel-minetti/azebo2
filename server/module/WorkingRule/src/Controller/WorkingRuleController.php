@@ -68,7 +68,9 @@ class WorkingRuleController extends ApiController
         if (AuthorizationService::authorize($this->request, $this->response, ['POST',])) {
             $userId = $this->request->getQuery()->user_id;
             $rule = new WorkingRule((array)$post);
-            $rule->weekdays = $this->table->getWeekdays($rule);
+            if (!$rule->hasWeekdays) {
+                $rule->weekdays = $this->table->getWeekdays($rule);
+            }
             $rule->userId = $userId;
             $this->table->insert($rule);
             return $this->processResult($rule->getArrayCopy(), $userId);

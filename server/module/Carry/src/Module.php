@@ -53,8 +53,9 @@ class Module
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->getArrayObjectPrototype(new WorkingRule());
-                    $tableGateway = new TableGateway('working_rule', $dbAdapter, null, $resultSetPrototype);
-                    return new WorkingRuleTable($tableGateway);
+                    $ruleGateway = new TableGateway('working_rule', $dbAdapter, null, $resultSetPrototype);
+                    $weekdayGateway = new TableGateway('working_rule_weekday', $dbAdapter);
+                    return new WorkingRuleTable($ruleGateway, $weekdayGateway);
                 },
                 AzeboLog::class => InvokableFactory::class,
             ],
