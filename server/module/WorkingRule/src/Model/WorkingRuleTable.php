@@ -104,6 +104,7 @@ class WorkingRuleTable
         }
         $selectOverwrite = $this->sql->select();
         $overwriteWhere = new Where();
+        $done = false;
         $overwriteWhere
             ->equalTo('userId', $rule->userId)
             ->and
@@ -119,17 +120,22 @@ class WorkingRuleTable
                 ], [
                     'id' => $running->current()['id'],
                 ]);
+                $ruleId = $running->current()['id'];
+                $done = true;
             } else {
                 return false;
             }
         }
-        $arrayCopy = $rule->getArrayCopy();
-        $arrayCopy['has_weekdays'] = $rule->hasWeekdays;
-        unset($arrayCopy['weekdays']);
-        unset($arrayCopy['id']);
-        unset($arrayCopy['target']);
-        $this->ruleGateway->insert($arrayCopy);
-        $ruleId = $this->ruleGateway->getLastInsertValue();
+        if (!$done) {
+            $arrayCopy = $rule->getArrayCopy();
+            $arrayCopy['has_weekdays'] = $rule->hasWeekdays;
+            unset($arrayCopy['weekdays']);
+            unset($arrayCopy['id']);
+            unset($arrayCopy['target']);
+            $this->ruleGateway->insert($arrayCopy);
+            $ruleId = $this->ruleGateway->getLastInsertValue();
+        }
+        /** @noinspection PhpUndefinedVariableInspection */
         $rule->userId = $ruleId;
         if ($rule->hasWeekdays) {
             $insertWeekdays = new Insert('working_rule_weekday');
