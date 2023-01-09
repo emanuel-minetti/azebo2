@@ -51,7 +51,7 @@ class WorkingRule extends ArrayObject
      */
     public int $percentage;
 
-    public DateTime $timestamp;
+    public DateTime|null $timestamp;
 
     public array $weekdays = [];
 

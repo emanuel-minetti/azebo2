@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import { store } from "/src/store";
 import User from "/src/models/User";
 import { HomeView, Login, NotFound } from "/src/views";
+import WelcomeView from "/src/views/WelcomeView.vue";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const routes = [
     name: "letterhead",
     component: () =>
       import(/* webpackChunkName: "settings"  */ "../views/Letterhead.vue"),
+  },
+  {
+    path: "/welcome",
+    name: "welcome",
+    component: WelcomeView,
   },
   {
     // route all other requests to a 404 page

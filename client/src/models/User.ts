@@ -1,5 +1,6 @@
 export default class User {
   fullName: string;
+  new: boolean;
 
   constructor(data?: any) {
     if (data && data.given_name && data.name) {
@@ -7,5 +8,6 @@ export default class User {
     } else {
       this.fullName = "";
     }
+    this.new = !!(data && data.new);
   }
 }

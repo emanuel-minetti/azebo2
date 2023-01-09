@@ -74,6 +74,12 @@ export default class Login extends Vue {
     this.$store
       .dispatch("login", credentials)
       .then(() => {
+        //"redirect" new user
+        this.$nextTick().then(() => {
+          if (this.$store.getters.user.new) {
+            this.$router.push({name: "welcome"}).catch(() => {});
+          }
+        });
         //"redirect" after successful login
         if (this.$route.query.redirect) {
           this.$router

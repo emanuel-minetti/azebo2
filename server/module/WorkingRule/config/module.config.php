@@ -10,6 +10,7 @@
 
 namespace WorkingRule;
 
+use Laminas\Router\Http\Method;
 use Laminas\Router\Http\Segment;
 use WorkingRule\Controller\WorkingRuleController;
 
@@ -22,7 +23,28 @@ return array(
                     'route' => '/api/working-rule',
                     'defaults' => [
                         'controller' => WorkingRuleController::class,
-                        'action' => 'all',
+                    ],
+                ],
+                'child_routes' => [
+                    'get' => [
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'get',
+                            'defaults' => [
+                                'action' => 'all',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'post' => [
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'post',
+                            'defaults' => [
+                                'action' => 'setRule',
+                            ],
+                        ],
+                        'may_terminate' => true,
                     ],
                 ],
             ],

@@ -81,28 +81,27 @@ class WorkingRuleTable
      * @param User $user
      * @return void
      */
-    public function insert(User $user): void
+    public function insert(WorkingRule $rule): void
     {
-        $firstOfMonth = new DateTime('first day of this month');
-        $ruleData = [
-            'user_id' => $user->id,
-            'calendar_week' => 'all',
-            'flex_time_begin' => '06:30:00',
-            'flex_time_end' => '20:00:00',
-            'core_time_begin' => '09:30:00',
-            'core_time_end' => '14:30:00',
-            'target' => '07:52:00',
-            'valid_from' => $firstOfMonth->format(WorkingRule::DATE_FORMAT),
-        ];
-        $rule = new WorkingRule();
-        for ($i = 1; $i <= 5; $i++) {
-            $ruleData['weekday'] = $i;
-            $rule->exchangeArray($ruleData);
-            $this->tableGateway->insert($rule->getArrayCopy());
-        }
+            $arrayCopy = $rule->getArrayCopy();
+            $arrayCopy['has_weekdays'] = $rule->hasWeekdays;
+            unset($arrayCopy['weekdays']);
+            unset($arrayCopy['id']);
+            unset($arrayCopy['target']);
+            $this->tableGateway->insert($arrayCopy);
     }
 
-    private function getWeekdays(WorkingRule $rule): array {
+    public function insertNewUser(User $user): void {
+        $rule = [
+            'user_id' => $user->id,
+            'valid_from' => '2023-1-1',
+            'has_weekdays' => false,
+            'percentage' => 100,
+        ];
+        $this->tableGateway->insert($rule);
+    }
+
+    public function getWeekdays(WorkingRule $rule): array {
         if ($rule->hasWeekdays) {
             $weekdaySelect = new Select('working_rule_weekday');
             $weekdaySelect->columns(['weekday']);
@@ -117,4 +116,5 @@ class WorkingRuleTable
             return [1, 2, 3, 4, 5,];
         }
     }
+
 }

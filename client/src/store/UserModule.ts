@@ -12,6 +12,11 @@ const UserModule: Module<any, any> = {
       state.user = user;
     },
   },
+  getters: {
+    user(state) {
+      return state.user;
+    }
+  },
   actions: {
     login({ state }, credentials) {
       return LoginService.login(
