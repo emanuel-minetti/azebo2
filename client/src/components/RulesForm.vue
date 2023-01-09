@@ -45,7 +45,8 @@ export default defineComponent({
         "valid_from": this.validFrom,
         "valid_to": this.validTo,
         "percentage": this.percentage,
-        "has_weekdays": this.weekdays.length === 5,
+        "weekdays": this.weekdays,
+        "has_weekdays": this.weekdays.length !== 5 && this.weekdays.length !== 0,
       }
       this.$store.dispatch('workingTime/setRule', data);
     },
