@@ -11,6 +11,7 @@
 
 namespace WorkingRule\Model;
 
+use DateInterval;
 use DateTime;
 use Laminas\Db\Sql\Insert;
 use Laminas\Db\Sql\Select;
@@ -21,6 +22,8 @@ use Login\Model\User;
 
 class WorkingRuleTable
 {
+    public const TIME_FORMAT = 'H:i:s';
+    public const DATE_FORMAT = 'Y-m-d';
     private TableGateway $ruleGateway;
     private TableGateway $weekdayGateway;
     private Sql $sql;
@@ -85,6 +88,20 @@ class WorkingRuleTable
      * @return void
      */
     public function insert(WorkingRule $rule): void {
+        $selectRunning = $this->sql->select();
+        //$selectRunning->where->isNull('valid_to')->and->equalTo('user_id', $rule->userId);
+        $where = new Where();
+        $where->isNull('valid_to')->and->equalTo('user_id', $rule->userId);
+        $selectRunning->where($where);
+        $running = $this->ruleGateway->selectWith($selectRunning);
+        if ($running->current()) {
+            $validFrom = clone $rule->validFrom;
+            $this->ruleGateway->update([
+                'valid_to' => $validFrom->sub(new DateInterval('P1D'))->format(self::DATE_FORMAT),
+            ], [
+                'id' => $running->current()['id'],
+            ]);
+        }
         $arrayCopy = $rule->getArrayCopy();
         $arrayCopy['has_weekdays'] = $rule->hasWeekdays;
         unset($arrayCopy['weekdays']);
