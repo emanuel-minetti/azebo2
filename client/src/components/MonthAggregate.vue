@@ -7,21 +7,12 @@
       :items="items"
       bordered
     />
-    <b-table-lite
-      class="mx-4"
-      caption="Kalenderwochen:"
-      caption-top
-      :fields="weekFields"
-      :items="weekItems"
-      bordered
-    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Carry, Saldo, WorkingMonth } from "/src/models";
-import { timesConfig } from "/src/configs";
+import { Carry, WorkingMonth } from "/src/models";
 import { mapState } from "vuex";
 import { GermanKwService } from "/src/services";
 
@@ -56,6 +47,18 @@ export default class MonthAggregate extends Vue {
 
   get items() {
     let carryResult = {
+      key: "Arbeitszeit",
+      carryResult: null,
+      month: this.$store.getters['workingTime/timeTotal'].toString(false)
+          + " (Davon Mobil: "
+          + this.$store.getters["workingTime/timeMobileTotal"].toString(false)
+          + " = "
+          + (this.$store.getters["workingTime/timeMobileTotal"].getMillis()
+          / this.$store.getters['workingTime/timeTotal'].getMillis() * 100).toFixed(2)
+          + "%)",
+      total: null
+    };
+    let carrySaldo = {
       key: "Saldo",
       carryResult: this.carryResult.saldo
         ? this.carryResult.saldo.toString()
@@ -63,94 +66,11 @@ export default class MonthAggregate extends Vue {
       month: this.$store.getters["workingTime/saldo"],
       total: this.$store.getters["workingTime/saldoTotal"],
     };
-    let holidayResult = {
-      key: "Erholungsurlaub",
-      carryResult: this.holidaysLeftString,
-      month: this.month.takenHolidays,
-      total: this.holidaysTotalString,
-    };
     if (this.carryResult.hasMissing) {
-      carryResult.carryResult = "Unbekannt";
-      carryResult.total = carryResult.month;
-      holidayResult.carryResult = "Unbekannt";
-      holidayResult.total = holidayResult.month;
+      carrySaldo.carryResult = "Unbekannt";
+      carrySaldo.total = carrySaldo.month;
     }
-    return [carryResult, holidayResult];
-  }
-
-  get weekFields() {
-    const weekFields: { key: string; label: string; class?: string }[] = [];
-    const kWs = this.kWs;
-    weekFields.push({
-      key: "key",
-      label: "",
-      class: "first_column",
-    });
-    kWs.forEach((kw) => {
-      weekFields.push({
-        key: "" + kw,
-        label: "KW " + kw,
-      });
-    });
-    return weekFields;
-  }
-
-  get weekItems() {
-    interface LooseObj {
-      [key: string]: string;
-    }
-    const total: LooseObj = {};
-    total.key = "Gesamt";
-    this.weekFields.forEach((field) => {
-      if (field.key !== "key") {
-        total[field.key] = this.getTotalForKW(
-          Number.parseInt(field.key)
-        ).toString(false);
-      }
-    });
-    const mobile: LooseObj = {};
-    mobile.key = "Mobiles Arbeiten";
-    this.weekFields.forEach((field) => {
-      if (field.key !== "key") {
-        mobile[field.key] = this.getMobileForKW(
-          Number.parseInt(field.key)
-        ).toString(false);
-      }
-    });
-    const share: LooseObj = {};
-    share.key = "Anteil";
-    this.weekFields.forEach((field) => {
-      if (field.key !== "key") {
-        share[field.key] =
-          this.getShareForKW(Number.parseInt(field.key)).toFixed(2) + " %";
-      }
-    });
-    return [total, mobile, share];
-  }
-
-  get holidaysLeftString() {
-    return this.month.monthNumber <= timesConfig.previousHolidaysValidTo
-      ? this.carryResult.holidays +
-          " (Resturlaub: " +
-          this.carryResult.holidaysPrevious +
-          ")"
-      : this.carryResult.holidays;
-  }
-
-  get holidaysTotalString() {
-    let holidays = this.carryResult.holidays;
-    let taken = this.month.takenHolidays;
-    if (this.month.monthNumber <= timesConfig.previousHolidaysValidTo) {
-      let holidaysPrevious = this.carryResult.holidaysPrevious;
-      if (holidaysPrevious >= taken) {
-        holidaysPrevious -= taken;
-      } else {
-        taken -= holidaysPrevious;
-        holidays -= taken;
-      }
-      return holidays + " (Resturlaub: " + holidaysPrevious + ")";
-    }
-    return holidays - taken;
+    return [carryResult, carrySaldo];
   }
 
   get capture() {
@@ -200,48 +120,6 @@ export default class MonthAggregate extends Vue {
       result.push(i);
     }
     return result;
-  }
-
-  private getTotalForKW(kw: number) {
-    const monthTotal = this.month.days
-      .filter((day) => day.calendarWeek === kw)
-      .map((day) => day.actualTime)
-      .reduce(
-        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
-        new Saldo(0)
-      )!;
-    const prevTotal = this.previous.days
-      .filter((day) => day.calendarWeek === kw)
-      .map((day) => day.actualTime)
-      .reduce(
-        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
-        new Saldo(0)
-      )!;
-    return Saldo.getSum(monthTotal, prevTotal);
-  }
-
-  private getMobileForKW(kw: number) {
-    const monthMobile = this.month.days
-      .filter((day) => day.calendarWeek === kw && day.mobileWorking)
-      .map((day) => day.actualTime)
-      .reduce(
-        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
-        new Saldo(0)
-      )!;
-    const prevMobile = this.previous.days
-      .filter((day) => day.calendarWeek === kw && day.mobileWorking)
-      .map((day) => day.actualTime)
-      .reduce(
-        (sum, dayTime) => (dayTime ? Saldo.getSum(dayTime, sum!) : sum),
-        new Saldo(0)
-      )!;
-    return Saldo.getSum(monthMobile, prevMobile);
-  }
-
-  private getShareForKW(kw: number) {
-    return this.getTotalForKW(kw).getMillis()
-      ? Saldo.getPercentage(this.getTotalForKW(kw), this.getMobileForKW(kw))
-      : 0;
   }
 }
 </script>
