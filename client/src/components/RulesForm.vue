@@ -28,6 +28,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+emits: ['formSubmitted'],
   data() {
     return {
       showForm: false,
@@ -48,7 +49,11 @@ export default defineComponent({
         "weekdays": this.weekdays,
         "has_weekdays": this.weekdays.length !== 5 && this.weekdays.length !== 0,
       }
-      this.$store.dispatch('workingTime/setRule', data);
+      this.$store.dispatch('workingTime/setRule', data).then(() => {
+        this.$emit('formSubmitted');
+        console.log("Form submitted!   1");
+        this.showForm = false;
+      });
     },
   },
 });

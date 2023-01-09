@@ -13,6 +13,7 @@ namespace WorkingRule\Model;
 
 use DateInterval;
 use DateTime;
+use Laminas\Db\Sql\Delete;
 use Laminas\Db\Sql\Insert;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Sql;
@@ -106,12 +107,13 @@ class WorkingRuleTable
         $overwriteWhere = new Where();
         $done = false;
         $overwriteWhere
-            ->equalTo('userId', $rule->userId)
+            ->equalTo('user_id', $rule->userId)
             ->and
             ->equalTo('valid_from', $rule->validFrom->format(self::DATE_FORMAT));
-        $overwrte = $this->ruleGateway->selectWith($selectOverwrite);
-        if ($overwrte->current()) {
-            if ($overwrte->current()['id'] !== $running->current()['id']) {
+        $selectOverwrite->where($overwriteWhere);
+        $overwrite = $this->ruleGateway->selectWith($selectOverwrite);
+        if ($overwrite->current()) {
+            if ($overwrite->current()['id'] === $running->current()['id']) {
                 $this->ruleGateway->update([
                     'valid_from' => $rule->validFrom->format(self::DATE_FORMAT),
                     'valid_to' => $rule->validTo?->format(self::DATE_FORMAT),
@@ -136,7 +138,12 @@ class WorkingRuleTable
             $ruleId = $this->ruleGateway->getLastInsertValue();
         }
         /** @noinspection PhpUndefinedVariableInspection */
-        $rule->userId = $ruleId;
+        $rule->id = $ruleId;
+        $deleteWeekdays = new Delete('working_rule_weekday');
+        $deleteWhere = new Where();
+        $deleteWhere->equalTo('working_rule_id', $ruleId);
+        $deleteWeekdays->where($deleteWhere);
+        $this->weekdayGateway->deleteWith($deleteWeekdays);
         if ($rule->hasWeekdays) {
             $insertWeekdays = new Insert('working_rule_weekday');
             foreach ($rule->weekdays as $weekday) {

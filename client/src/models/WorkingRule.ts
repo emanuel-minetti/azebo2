@@ -17,7 +17,7 @@ export default class WorkingRule {
       this._validTo = data.valid_to
         ? FormatterService.convertToDate(data.valid_to)
         : undefined;
-      this._percentage = data._percentage;
+      this._percentage = data.percentage;
       this.weekdays = data.weekdays;
       this.targetMillis = data.target;
     } else {
