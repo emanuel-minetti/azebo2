@@ -10,26 +10,6 @@
         @update-saldo="setFormSaldo"
       />
     </b-form-group>
-    <b-form-group label="Resturlaub für dieses Jahr:">
-      <b-form-input
-        type="number"
-        min="0"
-        max="99"
-        :disabled="propDisabled"
-        :value="getFormHolidays()"
-        @blur="setFormHolidays"
-      />
-    </b-form-group>
-    <b-form-group label="Resturlaub des vergangenen Jahres:">
-      <b-form-input
-        type="number"
-        min="0"
-        max="99"
-        :value="getFormHolidaysPrevious()"
-        :disabled="propDisabled"
-        @blur="setFormHolidaysPrevious"
-      />
-    </b-form-group>
     <div v-if="!propDisabled">
       <b-button type="submit" variant="primary">Absenden</b-button>
       <b-button type="reset" variant="secondary" class="ml-2">
@@ -82,27 +62,6 @@ export default class CarryForm extends Vue {
     this._formSaldo = saldo;
     this.showSaldoInput = false;
     this.$nextTick().then(() => (this.showSaldoInput = true));
-  }
-  getFormHolidays() {
-    if (!this._formHolidays && this.carry.holidays) {
-      this._formHolidays = this.carry.holidays;
-    }
-    return this._formHolidays;
-  }
-  setFormHolidays(evt: Event) {
-    let target = evt.target as HTMLInputElement;
-    this._formHolidays = Number(target.value);
-  }
-
-  getFormHolidaysPrevious() {
-    if (!this._formHolidaysPrevious && this.carry.holidaysPrevious) {
-      this._formHolidaysPrevious = this.carry.holidaysPrevious;
-    }
-    return this._formHolidaysPrevious;
-  }
-  setFormHolidaysPrevious(evt: Event) {
-    let target = evt.target as HTMLInputElement;
-    this._formHolidaysPrevious = Number(target.value);
   }
   onSubmit(evt: Event) {
     evt.preventDefault();
