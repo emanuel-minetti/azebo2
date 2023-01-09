@@ -11,4 +11,16 @@ export default class WorkingRuleService extends ApiService {
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }
+
+  static setRule(rule: any) {
+    const url = this.getBaseUrl() + "working-rule";
+    let headers = this.getHeaders();
+    headers = { ...headers, ...this.getAuthHeader() };
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(rule),
+    };
+    return fetch(url, requestOptions).then(this.handleResponse);
+  }
 }

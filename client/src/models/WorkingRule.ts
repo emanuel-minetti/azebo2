@@ -5,7 +5,7 @@ export default class WorkingRule {
   private readonly _id: number;
   private _validFrom: Date;
   private _validTo?: Date;
-  private percentage: number;
+  private _percentage: number;
   private weekdays: number[];
 
   private readonly targetMillis: number;
@@ -17,13 +17,13 @@ export default class WorkingRule {
       this._validTo = data.valid_to
         ? FormatterService.convertToDate(data.valid_to)
         : undefined;
-      this.percentage = data.percentage;
+      this._percentage = data._percentage;
       this.weekdays = data.weekdays;
       this.targetMillis = data.target;
     } else {
       this._id = 0;
       this._validFrom = new Date();
-      this.percentage = 100;
+      this._percentage = 100;
       this.weekdays = [1, 2, 3, 4, 5,];
       this.targetMillis = 0;
     }
@@ -31,6 +31,10 @@ export default class WorkingRule {
 
   get validTo(): Date | undefined {
     return this._validTo;
+  }
+
+  get percentage(): number {
+    return this._percentage;
   }
 
   get validFrom(): Date {
@@ -43,5 +47,9 @@ export default class WorkingRule {
 
   get target(): Saldo {
     return new Saldo(this.targetMillis);
+  }
+
+  get hasWeekdays(): boolean {
+    return this.weekdays.length === 5;
   }
 }

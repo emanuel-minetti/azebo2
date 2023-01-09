@@ -167,6 +167,21 @@ const WorkingTimeModule: Module<any, any> = {
       // getWorkingDays({ state }, params) {
       //
     },
+    getRules({ state, rootState }) {
+      rootState.loading = true;
+      return WorkingRuleService.get()
+        .then((data) => {
+          state.rules = data.result.map((rule: any) => new WorkingRule(rule));
+        })
+        .then(() => {
+          rootState.loading = false;
+          return this;
+        });
+    },
+    // eslint-disable-next-line no-unused-vars
+    setRule({ state }, data: any) {
+      return WorkingRuleService.setRule(data).then(() => {});
+    },
     getCarry({ state, rootState }) {
       rootState.loading = true;
       return CarryService.getCarry()

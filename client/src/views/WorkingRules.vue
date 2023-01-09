@@ -21,7 +21,7 @@
     <div v-if='rules.length > 0'>
     <b-table
     bordered
-    :items='rulesItems'
+    :items='rules'
     primary-key='id'
     :fields='getFields()'
     >
@@ -49,12 +49,11 @@ export default defineComponent({
       rules: Array<WorkingRule>
     }},
   mounted() {
-    this.rules = this.$store.state.workingTime.rules;
+    this.$store.dispatch("workingTime/getRules").then(() => {
+      this.rules = this.$store.state.workingTime.rules;
+    })
   },
   methods: {
-    rulesItems() {
-      return this.rules;
-    },
     getFields: function () {
       return [
         {
