@@ -91,21 +91,28 @@ function formatValidTo(date: Date|null): string {
   return date ? FormatterService.toGermanDate(date) : "Bis auf weiteres";
 }
 
-function formatWeekdays(weekdays: Array<Number>): string {
+function formatWeekdays(weekdays: Array<Number> | null): string {
   let result = '';
-  if (weekdays.length == 5) {
-    result = 'Alle';
-  } else {
-    weekdays.map(weekday => {
-      switch (weekday) {
-        case 1: return 'Montag';
-        case 2: return 'Dienstag';
-        case 3: return 'Mittwoch';
-        case 4: return 'Donnerstag';
-        case 5: return 'Freitag';
-      }
-    }).forEach(day => result += day + ", ");
-    result = result.substring(0, result.length - 2);
+  if (weekdays) {
+    if (weekdays.length == 5) {
+      result = 'Alle';
+    } else {
+      weekdays.map(weekday => {
+        switch (weekday) {
+          case 1:
+            return 'Montag';
+          case 2:
+            return 'Dienstag';
+          case 3:
+            return 'Mittwoch';
+          case 4:
+            return 'Donnerstag';
+          case 5:
+            return 'Freitag';
+        }
+      }).forEach(day => result += day + ", ");
+      result = result.substring(0, result.length - 2);
+    }
   }
   return result;
 }

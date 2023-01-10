@@ -3,13 +3,17 @@ export default class FormatterService {
    * Converts a `Date` to german localized (DD.MM.YYYY) string.
    * @param date the date to convert
    */
-  public static toGermanDate(date: Date) {
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "numeric",
-    } as const;
-    return date.toLocaleString("de-DE", options);
+  public static toGermanDate(date: Date | null) {
+    if (date) {
+      const options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "numeric",
+      } as const;
+      return date.toLocaleString("de-DE", options);
+    } else {
+      return '';
+    }
   }
 
   /**
