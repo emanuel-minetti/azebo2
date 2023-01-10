@@ -40,13 +40,17 @@ const WorkingTimeModule: Module<any, any> = {
     },
     timeMobileTotal(state) {
       if (state.month.days) {
-        return state.month.days.map((day: WorkingDay) => day.mobileWorking ? day.actualTime : Saldo.createFromMillis(0)).reduce(
-          (previousValue: Saldo, currentValue: Saldo) =>
-            currentValue
-              ? Saldo.getSum(previousValue, currentValue)
-              : previousValue,
-          Saldo.createFromMillis(0)
-        )
+        return state.month.days
+          .map((day: WorkingDay) =>
+            day.mobileWorking
+              ? day.actualTime
+              : Saldo.createFromMillis(0))
+          .reduce((previousValue: Saldo, currentValue: Saldo) =>
+              currentValue
+                ? Saldo.getSum(previousValue, currentValue)
+                : previousValue,
+            Saldo.createFromMillis(0)
+          )
       }
       return "";
     },
