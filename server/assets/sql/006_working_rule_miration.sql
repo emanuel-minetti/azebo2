@@ -1,5 +1,3 @@
-# noinspection SqlResolveForFile
-
 alter table working_rule
     drop column weekday;
 
