@@ -36,7 +36,7 @@ const WorkingTimeModule: Module<any, any> = {
           Saldo.createFromMillis(0)
         )
       }
-      return "";
+      return Saldo.createFromMillis(0);
     },
     timeMobileTotal(state) {
       if (state.month.days) {
@@ -52,7 +52,7 @@ const WorkingTimeModule: Module<any, any> = {
             Saldo.createFromMillis(0)
           )
       }
-      return "";
+      return Saldo.createFromMillis(0);
     },
     saldo(state) {
       if (state.month.days) {
