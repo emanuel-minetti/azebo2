@@ -231,7 +231,7 @@ export default class App extends Vue {
     // TODO adapt
     // this.version = config.version;
     // this.copyrightyear = config.copyright;
-    this.version = "2.1.2";
+    this.version = "2.1.3";
     this.copyrightyear = "2019-2023";
   }
 
