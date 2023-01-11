@@ -74,8 +74,6 @@ class LoginController extends ApiController
             $internDn = "uid=$username,$internBaseDn";
             $externDn = "uid=$username,$externBaseDn";
             $password = str_replace('\'', '\'"\'"\'', $password);
-            $password = str_replace('\\', '\\\\', $password);
-            $password = str_replace('$', '\$', $password);
             exec(
                 "ldapsearch -h $host -D '$internDn' -w '$password' -Z -b '$internDn'",
                 $ldif,
@@ -83,7 +81,7 @@ class LoginController extends ApiController
             );
             if ($val !== 0) {
                 exec(
-                    "ldapsearch -h $host -D '$externDn' -w '$password's -Z -b '$externDn'",
+                    "ldapsearch -h $host -D '$externDn' -w '$password' -Z -b '$externDn'",
                     $ldif,
                     $val
                 );
