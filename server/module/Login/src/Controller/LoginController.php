@@ -42,7 +42,7 @@ class LoginController extends ApiController
         $content = $this->httpRequest->getContent();
         $requestData = json_decode($content);
         $declineRequest = new JsonModel([
-            'success' => false
+            'success' => false,
         ]);
         // validate request method
         if ($this->httpRequest->getMethod() !== 'POST') {
@@ -89,9 +89,17 @@ class LoginController extends ApiController
             // DEBUG
             //$this->logger->debug("Intern: " . "ldapsearch -h $host -D '$internDn' -w $password -Z -b '$internDn'");
             //$this->logger->debug("Extern: " . "ldapsearch -h $host -D '$externDn' -w $password -Z -b '$externDn'");
+
             if ($val === 0) {
+                $test = [];
                 $result['username'] = $username;
+                $regEx = '/(^[a-zA-Z0-9]*):: (.*)/';
                 foreach ($ldif as $line) {
+                    $match = preg_match($regEx, $line, $matches);
+                    if ($match) {
+                        $line = $matches[1] . ': ' . base64_decode($matches[2]);
+                    }
+                    $test[] = $line;
                     if (substr($line, 0, 4) === "sn: ") {
                         $result['name'] = substr($line, 4);
                     }
