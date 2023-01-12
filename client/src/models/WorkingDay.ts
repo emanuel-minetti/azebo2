@@ -425,4 +425,22 @@ export default class WorkingDay {
       _edited: this.edited,
     };
   }
+
+  shortBreakFrom() {
+    return new Date(this.begin!.valueOf()
+      + timesConfig.breakRequiredFrom * 60 * 60 * 1000
+      + 60 * 1000);
+  }
+
+  longBreakFrom() {
+    return new Date(this.begin!.valueOf()
+      + timesConfig.longBreakRequiredFrom * 60 * 60 * 1000
+      + 60 * 1000);
+  }
+
+  longDayFrom() {
+    return new Date(this.begin!.valueOf()
+      + timesConfig.longDayFrom * 60 * 60 * 1000
+      + timesConfig.longBreakDuration * 60 * 1000);
+  }
 }

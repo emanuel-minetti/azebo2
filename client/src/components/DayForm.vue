@@ -11,7 +11,9 @@
           autofocus
           @blur="validate"
         ></b-form-input>
-        <div v-html="compareTimes"></div>
+      <ul>
+        <li v-for='item in compareTimes' :key='item'> {{ item }} </li>
+      </ul>
       </b-form-group>
       <b-form-group label="Arbeitsende:" label-for="end-input">
         <b-form-input
@@ -30,7 +32,7 @@
       >
         <b-form-select
           id="select"
-          v-model="form.timeOff"
+          v-model="day.timeOff"
           :options="timeOffOptions"
           @change="validate"
         ></b-form-select>
@@ -38,7 +40,7 @@
       <b-form-group label="Anmerkung:" label-for="comment-input">
         <b-form-textarea
           id="comment-input"
-          v-model="form.comment"
+          v-model="day.comment"
           size="sm"
           @blur="validate"
         ></b-form-textarea>
@@ -46,7 +48,7 @@
       <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
         <b-form-checkbox
           id="mobile-working-input-input"
-          v-model="form.mobileWorking"
+          v-model="day.mobileWorking"
           class="left"
           @blur="validate"
         ></b-form-checkbox>
@@ -81,8 +83,8 @@
 </template>
 
 <script lang="ts">
-import { timesConfig, timeOffsConfig } from "/src/configs";
-import { Component, Vue } from "vue-property-decorator";
+import { timeOffsConfig, timesConfig } from "/src/configs";
+import { defineComponent } from "vue";
 import { WorkingDay } from "/src/models";
 import DayFormValidator from "/src/validators/DayFormValidator";
 
@@ -91,159 +93,134 @@ const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
 };
 
-@Component
-export default class DayForm extends Vue {
-  show = true;
-  timeOffOptions = timeOffsConfig;
-  errors: string[] = [];
+export default defineComponent({
+  name: "DayForm",
+  emits: ['submitted'],
+  data() {
+    return {
+      show: true,
+      timeOffOptions: timeOffsConfig,
+      errors: Array<String>(),
+      day: new WorkingDay(),
+    }
+  },
 
-  // get a copy of the `WorkingDay` to work on
-  form = Object.assign(
-    new WorkingDay(),
-    this.$store.state.workingTime.dayToEdit
-  ) as WorkingDay;
+  computed: {
+    title() {
+        let date = this.day.date;
+        let title = date.toLocaleDateString("de-DE", { weekday: "long" });
+        title += ", den ";
+        title += date.toLocaleDateString("de-DE");
+        title += " bearbeiten";
+        return title;
+    },
+
+    begin: {
+      get() {
+        return this.day.begin ? this.day.begin.toLocaleTimeString('de-DE', localTimeFormatOptions) : '';
+      },
+      set(newValue: string) {
+        this.day.begin = new Date();
+        this.day.begin.setHours(
+          Number(newValue.substring(0, 2)),
+          Number(newValue.substring(3, 5)),
+        );
+      },
+    },
+
+    end: {
+      get() {
+        return this.day.end ? this.day.end.toLocaleTimeString('de-DE', localTimeFormatOptions) : '';
+      },
+      set(newValue: string) {
+        this.day.end = new Date();
+        this.day.end.setHours(
+            Number(newValue.substring(0, 2)),
+            Number(newValue.substring(3, 5)),
+        );
+      },
+    },
+
+    compareTimes(): Array<String> {
+      const result = [];
+      if (this.begin !== "") {
+        const shortBreak = this.day.shortBreakFrom();
+        const longBreak = this.day.longBreakFrom();
+        const longDay = this.day.longDayFrom();
+        result.push(
+            timesConfig.breakDuration +
+            " Minuten Pause ab: " +
+            shortBreak.toLocaleTimeString("de-DE", localTimeFormatOptions));
+        result.push(
+            timesConfig.longBreakDuration +
+            " Minuten Pause ab: " +
+            longBreak.toLocaleTimeString("de-DE", localTimeFormatOptions));
+        result.push(
+            "10 Stunden erreicht ab: " +
+            longDay.toLocaleTimeString("de-DE", localTimeFormatOptions));
+      }
+      return result;
+    }
+  },
 
   mounted() {
+    // get a copy of the `WorkingDay` to work on
+    this.day = Object.assign(
+        new WorkingDay(),
+        this.$store.state.workingTime.dayToEdit
+    ) as WorkingDay;
     // scroll form to top
     let target = document.getElementById("form") as HTMLElement;
     // `{ behaviour: "smooth" }` is not working!
     target.scrollIntoView();
-  }
+  },
 
-  get title() {
-    let date = this.form.date;
-    let title = date.toLocaleDateString("de-DE", { weekday: "long" });
-    title += ", den ";
-    title += date.toLocaleDateString("de-DE");
-    title += " bearbeiten";
-    return title;
-  }
+  methods: {
+    onSubmit(evt: Event) {
+      evt.preventDefault();
+      if (this.errors.length === 0) {
+        this.$store
+            .dispatch("workingTime/setDay", this.day)
+            .then(() =>
+                this.$store.dispatch("workingTime/getMonth", this.day.date)
+            )
+            .then(() => {
+              this.$emit("submitted");
+            });
+      }
+    },
 
-  get begin() {
-    if (this.form.begin)
-      return this.form.begin.toLocaleTimeString(
-        "de-DE",
-        localTimeFormatOptions
+    onReset(evt: Event) {
+      evt.preventDefault();
+      // Reset our form values
+      this.day.begin = undefined;
+      this.day.end = undefined;
+      this.day.timeOff = undefined;
+      this.day.comment = undefined;
+      this.day.mobileWorking = false;
+      // Trick to reset/clear native browser form validation state
+      this.show = false;
+      this.$nextTick(() => {
+        this.show = true;
+      });
+    },
+
+    onCancel() {
+      this.$emit("submitted");
+    },
+
+    validate() {
+      const dfv = new DayFormValidator(
+          new WorkingDay(this.day),
+          this.$store.state.workingTime.holidays,
+          this.$store.state.workingTime.carryResult,
+          this.$store.state.workingTime.month
       );
-    return "";
+      this.errors = dfv.validate();
+      return this.errors.length === 0;
+    },
   }
-
-  get end() {
-    if (this.form.end)
-      return this.form.end.toLocaleTimeString("de-DE", localTimeFormatOptions);
-    return "";
-  }
-
-  get compareTimes() {
-    if (this.begin !== "") {
-      let shortBreak = new Date(this.form.begin!.valueOf());
-      shortBreak.setHours(
-        shortBreak.getHours() + timesConfig.breakRequiredFrom
-      );
-      shortBreak.setMinutes(shortBreak.getMinutes() + 1);
-      let longBreak = new Date(this.form.begin!.valueOf());
-      longBreak.setHours(
-        longBreak.getHours() + timesConfig.longBreakRequiredFrom
-      );
-      longBreak.setMinutes(longBreak.getMinutes() + 1);
-      let longDay = new Date(this.form.begin!.valueOf());
-      longDay.setHours(longDay.getHours() + timesConfig.longDayFrom);
-      longDay.setMinutes(longDay.getMinutes() + timesConfig.longBreakDuration);
-      let result =
-        timesConfig.breakDuration +
-        " Minuten Pause ab: " +
-        shortBreak.toLocaleTimeString("de-DE", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }) +
-        "<br />";
-      result +=
-        timesConfig.longBreakDuration +
-        " Minuten Pause ab: " +
-        longBreak.toLocaleTimeString("de-DE", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }) +
-        "<br /> ";
-      result +=
-        "10 Stunden erreicht ab: " +
-        longDay.toLocaleTimeString("de-DE", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      return result;
-    }
-    return "";
-  }
-
-  set begin(value: string) {
-    if (value.length > 0) {
-      if (!this.form.begin) this.form.begin = new Date();
-      this.form.begin.setHours(
-        Number(value.substring(0, 2)),
-        Number(value.substring(3, 5))
-      );
-    } else {
-      this.form.begin = undefined;
-    }
-  }
-
-  set end(value: string) {
-    if (value.length > 0) {
-      if (!this.form.end) this.form.end = new Date();
-      this.form.end.setHours(
-        Number(value.substring(0, 2)),
-        Number(value.substring(3, 5))
-      );
-    } else {
-      this.form.end = undefined;
-    }
-  }
-
-  onSubmit(evt: Event) {
-    evt.preventDefault();
-    if (this.errors.length === 0) {
-      this.$store
-        .dispatch("workingTime/setDay", this.form)
-        .then(() =>
-          this.$store.dispatch("workingTime/getMonth", this.form.date)
-        )
-        .then(() => {
-          this.$emit("submitted");
-        });
-    }
-  }
-
-  onReset(evt: Event) {
-    evt.preventDefault();
-    // Reset our form values
-    this.form.begin = undefined;
-    this.form.end = undefined;
-    this.form.timeOff = undefined;
-    this.form.comment = undefined;
-    this.form.mobileWorking = false;
-    // Trick to reset/clear native browser form validation state
-    this.show = false;
-    this.$nextTick(() => {
-      this.show = true;
-    });
-  }
-
-  onCancel() {
-    this.$emit("submitted");
-  }
-
-  private validate() {
-    const dfv = new DayFormValidator(
-      this.form,
-      this.$store.state.workingTime.holidays,
-      this.$store.state.workingTime.carryResult,
-      this.$store.state.workingTime.month
-    );
-    this.errors = dfv.validate();
-    return this.errors.length === 0;
-  }
-}
+});
 </script>
 
 <style scoped>
