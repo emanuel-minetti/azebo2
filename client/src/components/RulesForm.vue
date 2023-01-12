@@ -4,11 +4,11 @@
     <div v-if='showForm'>
       <b-form @submit='onSubmit($event)'>
         <label for='validFrom'>Regelungsbeginn:</label>
-        <b-form-input id='validFrom' v-model='validFrom' type='date' value=''></b-form-input>
+        <b-form-input id='validFrom' v-model='validFrom' type='date'></b-form-input>
         <label for='validFrom'>Regelungsende (Für "Bis auf Weiteres" bitte leer lassen):</label>
-        <b-form-input id='validFrom' v-model='validTo' type='date' value=''></b-form-input>
+        <b-form-input id='validFrom' v-model='validTo' type='date'></b-form-input>
         <label for='validFrom'>Prozentsatz der vollen Arbeitszeit:</label>
-        <b-form-input id='validFrom' v-model='percentage' type='number' value=''></b-form-input>
+        <b-form-input id='validFrom' v-model='percentage' type='number'></b-form-input>
         <b-form-group label='Wochentage'>
           <b-form-checkbox-group id='weekdays' v-model='weekdays' checked='[]'>
             <b-form-checkbox value='1'>Montag</b-form-checkbox>
