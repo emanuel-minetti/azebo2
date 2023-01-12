@@ -99,8 +99,12 @@ class WorkingTimeController extends ApiController
                 if (!$bbeValidator->isValid($value)) return $this->invalidRequest;
                 $config = Factory::fromFile('./../server/config/times.config.php', true);
                 try {
-                    $breakRequiredFrom = new DateInterval('PT' . $config->get('breakRequiredFrom') . 'H');
-                    $longBreakRequiredFrom = new DateInterval('PT' . $config->get('longBreakRequiredFrom') . 'H');
+                    $breakRequiredFrom = new DateInterval(
+                        'PT' . $config->get('breakRequiredFromHours') . 'H'
+                        . $config->get('breakRequiredFromMinutes') . 'M');
+                    $longBreakRequiredFrom = new DateInterval(
+                        'PT' . $config->get('longBreakRequiredFromHours') . 'H'
+                    . $config->get('longBreakRequiredFromMinutes') . 'M');
                     $totalTime = $day->end->diff($day->begin, true);
                     $now = new DateTime();
                     if ((clone $now)->add($totalTime) > (clone $now)->add($longBreakRequiredFrom)) {

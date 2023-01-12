@@ -3,7 +3,9 @@
 return [
     'breakDuration' => 30, // half an hour in minutes
     'longBreakDuration' => 45, // three quarters of an hour in minutes
-    'breakRequiredFrom' => 6, // in hours
-    'longBreakRequiredFrom' => 9, // in hours
+    'breakRequiredFromHours' => 6, // in hours
+    'breakRequiredFromMinutes' => 0, // minutes to be added to `breakRequiredFromHours`
+    'longBreakRequiredFromHours' => 9, // in hours
+    'longBreakRequiredFromMinutes' => 30, // in hours
     'workingMinutesPerWeek' => 3260, // "Vollzeit" working minutes per week
 ];
