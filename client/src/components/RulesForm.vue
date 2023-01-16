@@ -9,6 +9,10 @@
         <b-form-input id='validFrom' v-model='validTo' type='date'></b-form-input>
         <label for='validFrom'>Prozentsatz der vollen Arbeitszeit:</label>
         <b-form-input id='validFrom' v-model='rule.percentage' type='number'></b-form-input>
+        <b-form-group label='Vertrag'>
+          <b-form-radio v-model='isOfficer' value='false' name='is_officer'>Angestellte*r</b-form-radio>
+          <b-form-radio v-model='isOfficer' value='true' name='is_officer'>Beamte*r</b-form-radio>
+        </b-form-group>
         <b-form-group label='Wochentage'>
           <b-form-checkbox-group id='weekdays' v-model='weekdays' checked='[]'>
             <b-form-checkbox value='1'>Montag</b-form-checkbox>
@@ -55,6 +59,14 @@ export default defineComponent({
         this.rule.validTo = FormatterService.convertToDate(newValue);
       }
     },
+    isOfficer: {
+      get() {
+        return this.rule.isOfficer ? "true" : "false";
+      },
+      set(newValue: string) {
+        this.rule.isOfficer = (newValue === "true");
+      }
+    },
     weekdays: {
       get() {
           return this.rule.hasWeekdays ? this.rule.weekdays : [];
@@ -74,6 +86,7 @@ export default defineComponent({
         "percentage": this.rule.percentage,
         "weekdays": this.rule.weekdays,
         "has_weekdays": this.rule.hasWeekdays,
+        "is_officer": this.rule.isOfficer,
       }
       this.$store.dispatch('workingTime/setRule', data).then(() => {
         this.$emit('formSubmitted');
