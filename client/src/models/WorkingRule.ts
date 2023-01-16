@@ -6,6 +6,7 @@ export default class WorkingRule {
   private _validFrom: Date;
   private _validTo?: Date;
   private _percentage: number;
+  private _isOfficer: boolean
   private _weekdays: number[];
   private _targetMillis: number;
   private _isNew: boolean;
@@ -18,6 +19,7 @@ export default class WorkingRule {
         ? FormatterService.convertToDate(data.valid_to)
         : undefined;
       this._percentage = data.percentage;
+      this._isOfficer = data.is_officer;
       this._weekdays = data.weekdays;
       this._targetMillis = data.target;
       this._isNew = false;
@@ -25,6 +27,7 @@ export default class WorkingRule {
       this._id = 0;
       this._validFrom = new Date();
       this._percentage = 100;
+      this._isOfficer = false
       this._weekdays = [1, 2, 3, 4, 5,];
       this._targetMillis = 0;
       this._isNew = true;
@@ -51,6 +54,15 @@ export default class WorkingRule {
 
   set percentage(value: number) {
     this._percentage = value;
+  }
+
+
+  get isOfficer(): boolean {
+    return this._isOfficer;
+  }
+
+  set isOfficer(value: boolean) {
+    this._isOfficer = value;
   }
 
   get weekdays(): number[] {

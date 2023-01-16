@@ -77,6 +77,11 @@ export default defineComponent({
           label: "Prozentsatz der vollen Arbeitszeit",
         },
         {
+          key: 'isOfficer',
+          label: "Vertrag",
+          formatter: formatOfficer,
+        },
+        {
           key: 'weekdays',
           label: "Wochentage",
           formatter: formatWeekdays,
@@ -114,6 +119,10 @@ function formatWeekdays(weekdays: Array<Number> | null): string {
     }
   }
   return result;
+}
+
+function formatOfficer(isOfficer: boolean) {
+  return !isOfficer ? "Angestellte*r" : "Beamte*r";
 }
 </script>
 
