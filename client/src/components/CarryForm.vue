@@ -45,8 +45,8 @@ import { mapState } from "vuex";
 export default class CarryForm extends Vue {
   carry!: Carry;
   private _formSaldo: Saldo | undefined;
-  private _formHolidays: number | undefined;
-  private _formHolidaysPrevious: number | undefined;
+  // private _formHolidays: number | undefined;
+  // private _formHolidaysPrevious: number | undefined;
 
   //Fields to support updating the view
   private show = true;
@@ -66,12 +66,12 @@ export default class CarryForm extends Vue {
   onSubmit(evt: Event) {
     evt.preventDefault();
     this.carry.saldo = this._formSaldo ? this._formSaldo : this.carry.saldo;
-    this.carry.holidays = this._formHolidays
-      ? this._formHolidays
-      : this.carry.holidays;
-    this.carry.holidaysPrevious = this._formHolidaysPrevious
-      ? this._formHolidaysPrevious
-      : this.carry.holidaysPrevious;
+    // this.carry.holidays = this._formHolidays
+    //   ? this._formHolidays
+    //   : this.carry.holidays;
+    // this.carry.holidaysPrevious = this._formHolidaysPrevious
+    //   ? this._formHolidaysPrevious
+    //   : this.carry.holidaysPrevious;
     this.$store
       .dispatch("workingTime/setCarry", this.carry)
       .then(() => this.$store.dispatch("workingTime/getCarry"))
@@ -80,8 +80,8 @@ export default class CarryForm extends Vue {
   onReset(evt: Event) {
     evt.preventDefault();
     this._formSaldo = this.carry.saldo;
-    this._formHolidays = this.carry.holidays;
-    this._formHolidaysPrevious = this.carry.holidaysPrevious;
+    // this._formHolidays = this.carry.holidays;
+    // this._formHolidaysPrevious = this.carry.holidaysPrevious;
     this.show = false;
     this.$nextTick().then(() => (this.show = true));
   }
