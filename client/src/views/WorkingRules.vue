@@ -26,7 +26,7 @@
     :fields='getFields()'
     >
     </b-table>
-    <RulesForm @form-submitted='formSubmitted'/>
+    <RulesForm @formSubmitted='formSubmitted'/>
     </div>
     <div v-else>
       Sie haben noch keine Arbeitszeitregelung
@@ -56,8 +56,8 @@ export default defineComponent({
   methods: {
     formSubmitted() {
       this.$store.dispatch("workingTime/getRules").then(() => {
-        this.rules = this.$store.state.workingTime.rules;
-      })
+          this.rules = this.$store.state.workingTime.rules;
+      });
     },
 
     getFields: function () {
