@@ -237,6 +237,7 @@ export default class App extends Vue {
 
   onLogout() {
     LoginService.logout();
+    this.$store.state.user.user.fullName = '';
     this.$router.push({ name: "login" });
   }
 
