@@ -43,7 +43,7 @@ class ApiController extends AbstractActionController
         $this->httpResponse = $this->response;
     }
 
-    protected function processResult($result, $userId) {
+    protected function processResult($result, $userId): JsonModel {
         // refresh jwt ...
         $expire = time() + AuthorizationService::EXPIRE_TIME;
         $jwt = AuthorizationService::getJwt($expire, $userId);
