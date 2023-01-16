@@ -17,6 +17,41 @@ export default class FormatterService {
   }
 
   /**
+   * Converts a `Date` to HTML format date (DD.MM.YYYY) string.
+   * @param date the date to convert
+   */
+  public static toHtmlDateString(date: Date | null) {
+    if (date) {
+      const options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      } as const;
+      return date.toLocaleString("de-DE", options);
+    } else {
+      return '';
+    }
+  }
+
+  public static toServiceString(date: Date | null): string {
+    if (date) {
+      const yeat = '' + date.getFullYear();
+      let month = '' + (date.getMonth() + 1);
+      let day = '' + date.getDate();
+
+      if (month.length < 2) {
+        month = '0' + month;
+      }
+      if (day.length < 2) {
+        day = '0' + day;
+      }
+      return [yeat, month, day].join('-');
+    } else {
+      return '';
+    }
+  }
+
+  /**
    * Converts a `Date` to german localized (Wochentag, DD.MM.YYYY) string.
    * @param date the date to convert
    */

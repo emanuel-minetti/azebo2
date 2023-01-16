@@ -8,7 +8,7 @@
         <label for='validFrom'>Regelungsende (Für "Bis auf Weiteres" bitte leer lassen):</label>
         <b-form-input id='validFrom' v-model='validTo' type='date'></b-form-input>
         <label for='validFrom'>Prozentsatz der vollen Arbeitszeit:</label>
-        <b-form-input id='validFrom' v-model='percentage' type='number'></b-form-input>
+        <b-form-input id='validFrom' v-model='rule.percentage' type='number'></b-form-input>
         <b-form-group label='Wochentage'>
           <b-form-checkbox-group id='weekdays' v-model='weekdays' checked='[]'>
             <b-form-checkbox value='1'>Montag</b-form-checkbox>
@@ -26,32 +26,57 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { WorkingRule } from "/src/models";
+import { FormatterService } from "/src/services";
 
 export default defineComponent({
-emits: ['formSubmitted'],
+  name: "RulesForm",
+  emits: ['formSubmitted'],
   data() {
     return {
       showForm: false,
-      validFrom: Date,
-      validTo: Date,
-      percentage: Number,
-      weekdays: [],
-      //rule: WorkingRule,
+      rule: new WorkingRule(),
     }
+  },
+  computed: {
+    validFrom: {
+      get() {
+        return !this.rule.isNew ? FormatterService.toHtmlDateString(this.rule.validFrom) : '';
+      },
+      set(newValue: string) {
+        this.rule.validFrom = FormatterService.convertToDate(newValue);
+      }
+    },
+    validTo: {
+      get() {
+        return FormatterService.toHtmlDateString(this.rule.validTo);
+      },
+      set(newValue: string) {
+        this.rule.validTo = FormatterService.convertToDate(newValue);
+      }
+    },
+    weekdays: {
+      get() {
+          return this.rule.hasWeekdays ? this.rule.weekdays : [];
+
+      },
+      set(newValue: Array<number>) {
+        this.rule.weekdays = newValue;
+      }
+    },
   },
   methods: {
     onSubmit(evt: Event) {
       evt.preventDefault();
       let data = {
-        "valid_from": this.validFrom,
-        "valid_to": this.validTo,
-        "percentage": this.percentage,
-        "weekdays": this.weekdays,
-        "has_weekdays": this.weekdays.length !== 5 && this.weekdays.length !== 0,
+        "valid_from": FormatterService.toServiceString(this.rule.validFrom),
+        "valid_to": FormatterService.toServiceString(this.rule.validTo),
+        "percentage": this.rule.percentage,
+        "weekdays": this.rule.weekdays,
+        "has_weekdays": this.rule.hasWeekdays,
       }
       this.$store.dispatch('workingTime/setRule', data).then(() => {
         this.$emit('formSubmitted');
-        console.log("Form submitted!   1");
         this.showForm = false;
       });
     },

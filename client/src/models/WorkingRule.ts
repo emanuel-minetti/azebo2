@@ -6,9 +6,9 @@ export default class WorkingRule {
   private _validFrom: Date;
   private _validTo?: Date;
   private _percentage: number;
-  private weekdays: number[];
-
-  private readonly targetMillis: number;
+  private _weekdays: number[];
+  private _targetMillis: number;
+  private _isNew: boolean;
 
   constructor(data?: any) {
     if (data) {
@@ -18,38 +18,73 @@ export default class WorkingRule {
         ? FormatterService.convertToDate(data.valid_to)
         : undefined;
       this._percentage = data.percentage;
-      this.weekdays = data.weekdays;
-      this.targetMillis = data.target;
+      this._weekdays = data.weekdays;
+      this._targetMillis = data.target;
+      this._isNew = false;
     } else {
       this._id = 0;
       this._validFrom = new Date();
       this._percentage = 100;
-      this.weekdays = [1, 2, 3, 4, 5,];
-      this.targetMillis = 0;
+      this._weekdays = [1, 2, 3, 4, 5,];
+      this._targetMillis = 0;
+      this._isNew = true;
     }
   }
 
-  get validTo(): Date | undefined {
+  get validTo(): Date | null {
+    if (typeof this._validTo === "undefined")
+      return null;
     return this._validTo;
+  }
+
+  set validTo(value: Date | null) {
+    if (value) {
+      this._validTo = value;
+    } else {
+      this._validTo = undefined;
+    }
   }
 
   get percentage(): number {
     return this._percentage;
   }
 
+  set percentage(value: number) {
+    this._percentage = value;
+  }
+
+  get weekdays(): number[] {
+    return this._weekdays;
+  }
+
+  set weekdays(value: number[]) {
+    if (value.length === 0) {
+      value = [1, 2, 3, 4, 5];
+    }
+    this._weekdays = value;
+  }
+
   get validFrom(): Date {
     return this._validFrom;
   }
 
+  set validFrom(value: Date) {
+    this._validFrom = value;
+    this._isNew = false;
+  }
+
   isWeekday(weekday: number): boolean {
-    return this.weekdays.findIndex(day => day === weekday) !== -1;
+    return this._weekdays.findIndex(day => day === weekday) !== -1;
   }
 
   get target(): Saldo {
-    return new Saldo(this.targetMillis);
+    return new Saldo(this._targetMillis);
   }
 
   get hasWeekdays(): boolean {
-    return this.weekdays.length === 5;
+    return this._weekdays.length !== 5;
+  }
+  get isNew(): boolean {
+    return this._isNew;
   }
 }
