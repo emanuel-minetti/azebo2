@@ -7,5 +7,6 @@ return [
     'breakRequiredFromMinutes' => 0, // minutes to be added to `breakRequiredFromHours`
     'longBreakRequiredFromHours' => 9, // in hours
     'longBreakRequiredFromMinutes' => 30, // in hours
-    'workingMinutesPerWeek' => 3260, // "Vollzeit" working minutes per week
+    'workingMinutesPerWeek' => 2360, // "Vollzeit" working minutes per week
+    'workingMinutesPerWeekOfficer' => 2400, // "Vollzeit" working minutes per week
 ];
