@@ -51,6 +51,8 @@ class WorkingRule extends ArrayObject
      */
     public int $percentage;
 
+    public bool $isOfficer;
+
     public DateTime|null $timestamp;
 
     public array $weekdays = [];
@@ -77,6 +79,7 @@ class WorkingRule extends ArrayObject
         $this->timestamp = !empty($array['timestamp']) ?
             DateTime::createFromFormat(self::DATE_FORMAT . ' ' . self::TIME_FORMAT, $array['timestamp']) : null;
         $this->weekdays = $array['weekdays'] ?? [];
+        $this->isOfficer = (bool)$array['is_officer'];
     }
 
     #[ReturnTypeWillChange] public function getArrayCopy(): array {
@@ -88,6 +91,7 @@ class WorkingRule extends ArrayObject
             'weekdays' => $this->weekdays,
             'percentage' => $this->percentage,
             'target' => $this->getTarget(),
+            'is_officer' => $this->isOfficer ? 1 : 0,
         ];
     }
 

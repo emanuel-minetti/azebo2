@@ -119,6 +119,7 @@ class WorkingRuleTable
                     'valid_to' => $rule->validTo?->format(self::DATE_FORMAT),
                     'percentage' => $rule->percentage,
                     'has_weekdays' => $rule->hasWeekdays,
+                    'is_officer' => $rule->isOfficer ? 1 : 0,
                 ], [
                     'id' => $running->current()['id'],
                 ]);
@@ -163,6 +164,7 @@ class WorkingRuleTable
             'valid_from' => '2023-1-1',
             'has_weekdays' => false,
             'percentage' => 100,
+            'is_officer' => 0,
         ];
         $this->ruleGateway->insert($rule);
     }
