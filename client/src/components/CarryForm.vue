@@ -1,5 +1,11 @@
 <template>
   <b-form v-if="show" @submit="onSubmit" @reset="onReset">
+    <div v-if="loading" class="d-flex justify-content-center mb-3">
+      <b-spinner id="spinner" label="Loading..."></b-spinner>
+    </div>
+    <div v-if='error.length > 0' class='alert-danger alert'>
+      {{ error }}
+    </div>
     <!--TODO Should be shown to non new users with a warning (See #30)-->
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
       <SaldoInput
@@ -45,13 +51,22 @@ export default  defineComponent({
   ],
   data() {
       return {
+        loading: true,
+        error: '',
         show: true,
         showSaldoInput: true,
         carry: new Carry(),
       };
   },
   mounted() {
-    this.carry = this.$store.state.workingTime.carry;
+    this.loading = this.$store.state.loading;
+    this.$store.dispatch("workingTime/getCarry").then(() =>
+        this.carry = this.$store.state.workingTime.carry
+    ).catch((reason) => {
+      this.error = "Es gab ein Problem beim Laden des Übertrags:<br/>" + reason;
+      this.$store.commit("cancelLoading");
+    });
+
   },
   methods: {
     updateSaldo(saldo: Saldo) {
