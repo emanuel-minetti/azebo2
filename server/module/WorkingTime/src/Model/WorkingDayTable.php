@@ -18,15 +18,19 @@ use Laminas\Db\TableGateway\TableGateway;
 class WorkingDayTable
 {
     private TableGateway $tableGateway;
+    private WorkingDayPartTable $dayPartTable;
 
-    public function __construct(TableGateway $tableGateway)
+    public function __construct(TableGateway $tableGateway, WorkingDayPartTable $dayPartTable)
     {
         $this->tableGateway = $tableGateway;
+        $this->dayPartTable = $dayPartTable;
     }
 
     public function find($id): ?WorkingDay {
         $rowSet = $this->tableGateway->select(['id' => $id]);
-        return $rowSet->current();
+        $day = $rowSet->current();
+        $day->dayParts = $this->dayPartTable->getBayDayId($id);
+        return $day;
     }
 
     public function getByUserIdAndMonth($userId, DateTime $month): array
@@ -44,6 +48,7 @@ class WorkingDayTable
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
+            $row->dayParts = $this->dayPartTable->getBayDayId($row->id);
             $result[] = $row;
         }
         return $result;

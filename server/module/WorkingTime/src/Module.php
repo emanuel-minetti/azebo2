@@ -16,6 +16,7 @@ use Laminas\Db\TableGateway\TableGateway;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Service\log\AzeboLog;
+use WorkingTime\Model\WorkingDayPartTable;
 use WorkingTime\Model\WorkingDayTable;
 
 class Module {
@@ -24,30 +25,36 @@ class Module {
         return include __DIR__ . '/../config/module.config.php';
     }
 
-    public function getServiceConfig()
-    {
+    public function getServiceConfig(): array {
         return [
             'factories' => [
+                Model\WorkingDayPartTable::class => function (ServiceManager $sm) {
+                    $dbAdapter = $sm->get(AdapterInterface::class);
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\WorkingDayPart([]));
+                    $tableGateway = new TableGateway('working_day_part', $dbAdapter, null, $resultSetPrototype);
+                    return new Model\WorkingDayPartTable($tableGateway);
+                },
                 Model\WorkingDayTable::class => function (ServiceManager $sm) {
                     $dbAdapter = $sm->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Model\WorkingDay([]));
                     $tableGateway = new TableGateway('working_day', $dbAdapter, null, $resultSetPrototype);
-                    return new Model\WorkingDayTable($tableGateway);
+                    $dayPartTable = $sm->get(WorkingDayPartTable::class);
+                    return new Model\WorkingDayTable($tableGateway, $dayPartTable);
                 },
                 AzeboLog::class => InvokableFactory::class,
             ],
         ];
     }
 
-    public function getControllerConfig()
-    {
+    public function getControllerConfig(): array {
         return [
             'factories' => [
                 Controller\WorkingTimeController::class => function (ServiceManager $sm) {
                     $logger = $sm->get(AzeboLog::class);
-                    $table = $sm->get(WorkingDayTable::class);
-                    return new Controller\WorkingTimeController($logger, $table);
+                    $dayTable = $sm->get(WorkingDayTable::class);
+                    return new Controller\WorkingTimeController($logger, $dayTable);
                 },
             ],
         ];

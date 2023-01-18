@@ -14,6 +14,8 @@
       <sourceFolder url="file://$MODULE_DIR$/server/module/Application/test" isTestSource="true" packagePrefix="ApplicationTest\" />
       <sourceFolder url="file://$MODULE_DIR$/server/module/WorkingTime/src" isTestSource="false" packagePrefix="WorkingTime\" />
       <sourceFolder url="file://$MODULE_DIR$/server" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/httpRequests" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
