@@ -2,33 +2,21 @@ import { Holiday, Saldo, WorkingRule } from "/src/models";
 import { FormatterService, GermanKwService } from "/src/services";
 import { store } from "/src/store";
 import { timesConfig } from "/src/configs";
+import WorkingDayPart from "/src/models/WorkingDayPart";
 
 // noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
   private readonly _id: number;
   private readonly _date: Date;
   private readonly _rule?: WorkingRule;
-  private readonly _break?: Date;
-
-  private _begin?: Date;
-  private _end?: Date;
   private _timeOff?: string;
   private _comment?: string;
-  private _mobileWorking: boolean;
-  private _afternoon: boolean;
-  private _afternoonBegin?: Date;
-  private _afternoonEnd?: Date;
-
+  private readonly _dayParts: Array<WorkingDayPart> = [];
   private _holiday?: Holiday;
   private _edited: boolean;
 
   constructor(data?: any) {
-    if (
-      data &&
-      data.date &&
-      data.mobile_working != undefined &&
-      data.afternoon != undefined
-    ) {
+    if (data && data.date) {
       this._id = data.id ? data.id : 0;
 
       this._date = FormatterService.convertToDate(data.date);
@@ -69,46 +57,15 @@ export default class WorkingDay {
         }
       }
 
-      this._mobileWorking = Boolean(data.mobile_working);
-      this._afternoon = Boolean(data.afternoon);
+      data.day_parts.forEach((dayPart: any) => {
+        this._dayParts.push(new WorkingDayPart(dayPart));
+      });
 
-      this._begin = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.begin
-      );
-      this._end = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.end
-      );
-      this._break = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.break
-      );
       this._timeOff = data.time_off;
       this._comment = data.comment;
-      this._afternoonBegin = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.afternoon_begin
-      );
-      this._afternoonEnd = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.afternoon_end
-      );
     } else {
       this._id = 0;
       this._date = new Date();
-      this._mobileWorking = false;
-      this._afternoon = false;
     }
     this._edited = false;
   }
@@ -120,47 +77,46 @@ export default class WorkingDay {
   // no setter for `date` because it's the primary key and should not be edited
 
   get begin(): Date | undefined {
-    return this._begin;
+    //TODO adapt
+
+    // return this._begin;
+    return undefined;
   }
 
   set begin(value: Date | undefined) {
-    if (value) {
-      this._begin = value;
-      this._begin.setUTCSeconds(0);
-    } else {
-      this._begin = undefined;
-    }
+    //TODO adapt
+
+    // if (value) {
+    //   this._begin = value;
+    //   this._begin.setUTCSeconds(0);
+    // } else {
+    //   this._begin = undefined;
+    // }
     this._edited = true;
   }
 
   get end(): Date | undefined {
-    return this._end;
+    //TODO adapt
+
+    //return this._end;
+    return undefined;
   }
 
   set end(value: Date | undefined) {
-    if (value) {
-      this._end = value;
-      this._end.setUTCSeconds(0);
-    } else {
-      this._end = undefined;
-    }
+    //TODO adapt
+
+    // if (value) {
+    //   this._end = value;
+    //   this._end.setUTCSeconds(0);
+    // } else {
+    //   this._end = undefined;
+    // }
     this._edited = true;
   }
 
   get break(): Date | undefined {
-    if (!this._edited) return this._break;
-    if (!this.hasWorkingTime) return undefined;
-    const breakRequiredFrom = new Saldo(
-      timesConfig.breakRequiredFrom * 60 * 1000
-    );
-    const longBreakRequiredFrom = new Saldo(
-      timesConfig.longBreakRequiredFrom * 60 * 1000
-    );
-    if (this.totalTime!.biggerThan(longBreakRequiredFrom))
-      return new Date(timesConfig.longBreakDuration * 60 * 1000);
-    else if (this.totalTime!.biggerThan(breakRequiredFrom))
-      return new Date(timesConfig.breakRequiredFrom * 60 * 1000);
-    else return undefined;
+    //TODO implement `get break()`
+    return undefined;
   }
 
   get timeOff(): string | undefined {
@@ -187,46 +143,6 @@ export default class WorkingDay {
       this._comment = undefined;
     }
     this._edited = true;
-  }
-
-  get mobileWorking(): boolean {
-    return this._mobileWorking;
-  }
-
-  set mobileWorking(value: boolean) {
-    this._mobileWorking = value;
-    this._edited = true;
-  }
-
-  get afternoon(): boolean {
-    return this._afternoon;
-  }
-
-  set afternoon(value: boolean) {
-    this._afternoon = value;
-    this._edited = true;
-  }
-
-  get afternoonBegin(): Date | undefined {
-    return this._afternoonBegin;
-  }
-
-  set afternoonBegin(value: Date | undefined) {
-    if (value) {
-      this._afternoonBegin = value;
-      this._edited = true;
-    }
-  }
-
-  get afternoonEnd(): Date | undefined {
-    return this._afternoonEnd;
-  }
-
-  set afternoonEnd(value: Date | undefined) {
-    if (value) {
-      this._afternoonEnd = value;
-      this._edited = true;
-    }
   }
 
   get isHoliday(): boolean {
@@ -414,14 +330,9 @@ export default class WorkingDay {
     return {
       _id: this.id,
       _date: this.date.toDateString(),
-      _afternoon: this.afternoon,
-      _begin: this.begin?.toTimeString(),
-      _end: this.end?.toTimeString(),
       _timeOff: this.timeOff,
       _comment: this.comment,
-      _mobile_working: this.mobileWorking,
-      _afternoonBegin: this.afternoonBegin?.toTimeString(),
-      _afternoonEnd: this.afternoonEnd?.toTimeString(),
+      _day_parts: this._dayParts,
       _edited: this.edited,
     };
   }
@@ -442,5 +353,10 @@ export default class WorkingDay {
     return new Date(this.begin!.valueOf()
       + timesConfig.longDayFrom * 60 * 60 * 1000
       + timesConfig.longBreakDuration * 60 * 1000);
+  }
+
+  public get mobileWorking(): boolean {
+    //TODO adapt!
+    return false;
   }
 }
