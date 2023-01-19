@@ -21,6 +21,14 @@ export default class WorkingDayPart {
     }
   }
 
+  get begin(): string | null {
+    return this._begin;
+  }
+
+  get end(): string | null {
+    return this._end;
+  }
+
   public toJSON() {
     //TODO implement!
     return {

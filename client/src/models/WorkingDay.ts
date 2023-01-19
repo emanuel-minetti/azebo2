@@ -359,4 +359,9 @@ export default class WorkingDay {
     //TODO adapt!
     return false;
   }
+
+
+  get dayParts(): Array<WorkingDayPart> {
+    return this._dayParts;
+  }
 }

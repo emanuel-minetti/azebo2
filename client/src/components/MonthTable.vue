@@ -45,166 +45,324 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { FormatterService, GermanKwService } from "/src/services";
-import { WorkingDay } from "/src/models";
-import { timeOffsConfig } from "/src/configs";
+// import { FormatterService, GermanKwService } from "/src/services";
+// import { WorkingDay, WorkingMonth } from "/src/models";
+// import { timeOffsConfig } from "/src/configs";
 import DayForm from "/src/components/DayForm.vue";
+import { defineComponent } from "vue";
+import { Saldo, WorkingDay, WorkingMonth } from "/src/models";
+import { FormatterService, GermanKwService } from "/src/services";
+import { timeOffsConfig } from "/src/configs";
 
-@Component({
+
+interface TableRowData {
+  day: WorkingDay;
+  date: Date;
+  begin: string | null;
+  end: string | null;
+  break?: Saldo;
+  timeOff?: string;
+  comment?: string;
+  mobileWorking?: boolean;
+  totalTime?: Saldo;
+  actualTime?: Saldo;
+  targetTime?: Saldo;
+  saldoTime?: Saldo;
+}
+
+export default defineComponent({
   name: "MonthTable",
   components: {
     DayForm,
   },
-})
-export default class MonthTable extends Vue {
-  formShown = false;
-  dateToEdit = null as null | Date;
-
-  get upperDays(): WorkingDay[] {
-    if (this.$store.state.workingTime.month.days) {
-      let upperDays = this.$store.state.workingTime.month.days.slice();
-      if (this.formShown) {
-        upperDays = upperDays.filter(
-          (day: WorkingDay) => day.date.valueOf() < this.dateToEdit!.valueOf()
-        );
-      }
-      return upperDays;
+  data() {
+    return {
+      formShown: false,
+      dateToEdit: new Date(),
+      month: new WorkingMonth(new Date(), []),
     }
-    return [];
-  }
+  },
+  computed: {
+    upperDays() {
+      let result: Array<TableRowData> = [];
+      let row: TableRowData;
+      this.month.days.forEach(day => {
+        row = {
+          day: day,
+          date: day.date,
+          targetTime: day.targetTime,
+        }
+        if (day.dayParts.length === 1) {
+          row.begin = day.dayParts[0].begin;
+          row.end = day.dayParts[0].end;
+        }
+        result.push(row);
+      });
+      return result;
+    },
+    finalized() {
+      return this.$store.state.workingTime.carry.finalized;
+    },
+    fields(): any {
+      return [
+        {
+          key: "date",
+          label: "Datum",
+          class: "small-column",
+          formatter: this.formatDate,
+        },
+        {
+          key: "begin",
+          label: "Beginn",
+          class: "small-column",
+          formatter: FormatterService.toGermanTime,
+        },
+        {
+          key: "end",
+          label: "Ende",
+          class: "small-column",
+          formatter: FormatterService.toGermanTime,
+        },
+        {
+          key: "break",
+          label: "Pause",
+          class: "small-column",
+          formatter: this.formatBreak,
+        },
+        {
+          key: "timeOff",
+          label: "Bemerkung",
+          formatter: this.formatTimeOff,
+        },
+        {
+          key: "comment",
+          label: "Anmerkung",
+        },
+        {
+          key: "mobile_working",
+          label: "Mobiles Arbeiten",
+          thStyle: { width: "31px" },
+        },
+        {
+          key: "totalTime",
+          label: "Anwesend",
+          class: "small-column",
+        },
+        {
+          key: "actualTime",
+          label: "Ist",
+          class: "small-column",
+        },
+        {
+          key: "targetTime",
+          label: "Soll",
+          class: "small-column",
+        },
+        {
+          key: "saldoTime",
+          label: "Saldo",
+          class: ["small-column", "saldo"],
+        },
+      ];
+    },
+  },
+  mounted() {
+    this.month = this.$store.state.workingTime.month;
+  },
+  methods: {
+    rowClass(row: TableRowData, type: string) {
+      if (!row || type !== "row") return;
+      if (!row.day.isCommonWorkingDay) return "not-a-working-day";
+    },
 
-  get lowerDays(): WorkingDay[] {
-    if (this.$store.state.workingTime.month.days && this.formShown) {
-      let lowerDays = this.$store.state.workingTime.month.days.slice();
-      lowerDays = lowerDays.filter(
-        (day: WorkingDay) => day.date.valueOf() > this.dateToEdit!.valueOf()
+    // formats the shown date
+    formatDate(date: Date, key: string, day: WorkingDay) {
+      const dateString = FormatterService.toLongGermanDate(date);
+      const kwString =
+          date.getDay() !== 1
+              ? ""
+              : " " + GermanKwService.getGermanKW(date) + ". KW";
+      return (
+          (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
+          kwString
       );
-      return lowerDays;
-    }
-    return [];
-  }
-
-  // specifies the shown columns of the table
-  get fields() {
-    return [
-      {
-        key: "date",
-        label: "Datum",
-        class: "small-column",
-        formatter: this.formatDate,
-      },
-      {
-        key: "begin",
-        label: "Beginn",
-        class: "small-column",
-        formatter: FormatterService.toGermanTime,
-      },
-      {
-        key: "end",
-        label: "Ende",
-        class: "small-column",
-        formatter: FormatterService.toGermanTime,
-      },
-      {
-        key: "break",
-        label: "Pause",
-        class: "small-column",
-        formatter: this.formatBreak,
-      },
-      {
-        key: "timeOff",
-        label: "Bemerkung",
-        formatter: this.formatTimeOff,
-      },
-      {
-        key: "comment",
-        label: "Anmerkung",
-      },
-      {
-        key: "mobile_working",
-        label: "Mobiles Arbeiten",
-        thStyle: { width: "31px" },
-      },
-      {
-        key: "totalTime",
-        label: "Anwesend",
-        class: "small-column",
-      },
-      {
-        key: "actualTime",
-        label: "Ist",
-        class: "small-column",
-      },
-      {
-        key: "targetTime",
-        label: "Soll",
-        class: "small-column",
-      },
-      {
-        key: "saldoTime",
-        label: "Saldo",
-        class: ["small-column", "saldo"],
-      },
-    ];
-  }
-
-  get finalized() {
-    return this.$store.state.workingTime.carry.finalized;
-  }
-
-  // adds a class for non-working days
-  rowClass(day: WorkingDay, type: string) {
-    if (!day || type !== "row") return;
-    if (!day.isCommonWorkingDay) return "not-a-working-day";
-  }
-
-  // formats the shown date
-  formatDate(date: Date, key: string, day: WorkingDay) {
-    const dateString = FormatterService.toLongGermanDate(date);
-    const kwString =
-      date.getDay() !== 1
-        ? ""
-        : " " + GermanKwService.getGermanKW(date) + ". KW";
-    return (
-      (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
-      kwString
-    );
-  }
-
-  formatTimeOff(timeOff: string): string {
-    const element = timeOffsConfig.find((element) => element.value == timeOff);
-    return element ? element.text : "";
-  }
-
-  // formats the break column
-  formatBreak(break_date: Date, key: string, day: WorkingDay): string {
-    if (day && !day.hasWorkingTime) return "";
-    return FormatterService.toGermanTime(break_date);
-  }
-
-  rowClickHandler(row: WorkingDay) {
-    if (!this.finalized) {
-      // store the date ...
-      this.dateToEdit = row.date;
-      this.$store.commit("workingTime/setDayToEdit", this.dateToEdit);
-      // ... and show the form
-      if (!this.formShown) {
-        this.formShown = true;
-      } else {
-        // form was already shown for another day
-        this.formShown = false;
-        this.$nextTick(() => {
+    },
+    formatTimeOff(timeOff: string): string {
+      const element = timeOffsConfig.find((element) => element.value == timeOff);
+      return element ? element.text : "";
+    },
+    // formats the break column
+    formatBreak(break_date: Date, key: string, day: WorkingDay): string {
+      if (day && !day.hasWorkingTime) return "";
+      return FormatterService.toGermanTime(break_date);
+    },
+    rowClickHandler(row: WorkingDay) {
+      if (!this.finalized) {
+        // store the date ...
+        this.dateToEdit = row.date;
+        this.$store.commit("workingTime/setDayToEdit", this.dateToEdit);
+        // ... and show the form
+        if (!this.formShown) {
           this.formShown = true;
-        });
+        } else {
+          // form was already shown for another day
+          this.formShown = false;
+          this.$nextTick(() => {
+            this.formShown = true;
+          });
+        }
       }
-    }
-  }
-
-  onSubmitted() {
-    this.formShown = false;
-  }
-}
+    },
+    onSubmitted() {
+      this.formShown = false;
+    },
+  },
+});
+// {
+//   get upperDays(): WorkingDay[] {
+//     if (this.$store.state.workingTime.month.days) {
+//       let upperDays = this.$store.state.workingTime.month.days.slice();
+//       if (this.formShown) {
+//         upperDays = upperDays.filter(
+//           (day: WorkingDay) => day.date.valueOf() < this.dateToEdit!.valueOf()
+//         );
+//       }
+//       return upperDays;
+//     }
+//     return [];
+//   }
+//
+//   get lowerDays(): WorkingDay[] {
+//     if (this.$store.state.workingTime.month.days && this.formShown) {
+//       let lowerDays = this.$store.state.workingTime.month.days.slice();
+//       lowerDays = lowerDays.filter(
+//         (day: WorkingDay) => day.date.valueOf() > this.dateToEdit!.valueOf()
+//       );
+//       return lowerDays;
+//     }
+//     return [];
+//   }
+//
+//   // specifies the shown columns of the table
+//   get fields() {
+//     return [
+//       {
+//         key: "date",
+//         label: "Datum",
+//         class: "small-column",
+//         formatter: this.formatDate,
+//       },
+//       {
+//         key: "begin",
+//         label: "Beginn",
+//         class: "small-column",
+//         formatter: FormatterService.toGermanTime,
+//       },
+//       {
+//         key: "end",
+//         label: "Ende",
+//         class: "small-column",
+//         formatter: FormatterService.toGermanTime,
+//       },
+//       {
+//         key: "break",
+//         label: "Pause",
+//         class: "small-column",
+//         formatter: this.formatBreak,
+//       },
+//       {
+//         key: "timeOff",
+//         label: "Bemerkung",
+//         formatter: this.formatTimeOff,
+//       },
+//       {
+//         key: "comment",
+//         label: "Anmerkung",
+//       },
+//       {
+//         key: "mobile_working",
+//         label: "Mobiles Arbeiten",
+//         thStyle: { width: "31px" },
+//       },
+//       {
+//         key: "totalTime",
+//         label: "Anwesend",
+//         class: "small-column",
+//       },
+//       {
+//         key: "actualTime",
+//         label: "Ist",
+//         class: "small-column",
+//       },
+//       {
+//         key: "targetTime",
+//         label: "Soll",
+//         class: "small-column",
+//       },
+//       {
+//         key: "saldoTime",
+//         label: "Saldo",
+//         class: ["small-column", "saldo"],
+//       },
+//     ];
+//   }
+//
+//   get finalized() {
+//     return this.$store.state.workingTime.carry.finalized;
+//   }
+//
+//   // adds a class for non-working days
+//   rowClass(day: WorkingDay, type: string) {
+//     if (!day || type !== "row") return;
+//     if (!day.isCommonWorkingDay) return "not-a-working-day";
+//   }
+//
+//   // formats the shown date
+//   formatDate(date: Date, key: string, day: WorkingDay) {
+//     const dateString = FormatterService.toLongGermanDate(date);
+//     const kwString =
+//       date.getDay() !== 1
+//         ? ""
+//         : " " + GermanKwService.getGermanKW(date) + ". KW";
+//     return (
+//       (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
+//       kwString
+//     );
+//   }
+//
+//   formatTimeOff(timeOff: string): string {
+//     const element = timeOffsConfig.find((element) => element.value == timeOff);
+//     return element ? element.text : "";
+//   }
+//
+//   // formats the break column
+//   formatBreak(break_date: Date, key: string, day: WorkingDay): string {
+//     if (day && !day.hasWorkingTime) return "";
+//     return FormatterService.toGermanTime(break_date);
+//   }
+//
+//   rowClickHandler(row: WorkingDay) {
+//     if (!this.finalized) {
+//       // store the date ...
+//       this.dateToEdit = row.date;
+//       this.$store.commit("workingTime/setDayToEdit", this.dateToEdit);
+//       // ... and show the form
+//       if (!this.formShown) {
+//         this.formShown = true;
+//       } else {
+//         // form was already shown for another day
+//         this.formShown = false;
+//         this.$nextTick(() => {
+//           this.formShown = true;
+//         });
+//       }
+//     }
+//   }
+//
+//   onSubmitted() {
+//     this.formShown = false;
+//   }
+// }
 </script>
 
 <!--suppress CssUnusedSymbol -->
