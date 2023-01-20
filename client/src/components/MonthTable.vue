@@ -81,7 +81,7 @@ export default defineComponent({
     }
   },
   computed: {
-    upperDays() {
+    days() {
       let result: Array<TableRowData> = [];
       let row: TableRowData;
       this.month.days.forEach(day => {
@@ -131,6 +131,20 @@ export default defineComponent({
         }
       });
       return result;
+    },
+    upperDays() {
+      if (!this.formShown) {
+        return this.days;
+      } else {
+         return this.days.filter(row => row.day.date.valueOf() < this.dateToEdit.valueOf());
+      }
+    },
+    lowerDays() {
+      if (!this.formShown) {
+        return [];
+      } else {
+        return this.days.filter(row => row.day.date.valueOf() > this.dateToEdit.valueOf());
+      }
     },
     finalized() {
       return this.$store.state.workingTime.carry.finalized;
