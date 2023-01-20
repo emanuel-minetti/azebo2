@@ -77,43 +77,13 @@ export default class WorkingDay {
   // no setter for `date` because it's the primary key and should not be edited
 
   get begin(): Date | undefined {
-    //TODO adapt
-
-    // return this._begin;
+    //TODO remove
     return undefined;
   }
-
-  set begin(value: Date | undefined) {
-    //TODO adapt
-
-    // if (value) {
-    //   this._begin = value;
-    //   this._begin.setUTCSeconds(0);
-    // } else {
-    //   this._begin = undefined;
-    // }
-    this._edited = true;
-  }
-
   get end(): Date | undefined {
-    //TODO adapt
-
-    //return this._end;
+    //TODO remove
     return undefined;
   }
-
-  set end(value: Date | undefined) {
-    //TODO adapt
-
-    // if (value) {
-    //   this._end = value;
-    //   this._end.setUTCSeconds(0);
-    // } else {
-    //   this._end = undefined;
-    // }
-    this._edited = true;
-  }
-
   get break(): Date | undefined {
     //TODO implement `get break()`
     return undefined;
@@ -192,7 +162,9 @@ export default class WorkingDay {
    */
   get totalTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
+    return this.dayParts.reduce((prev, curr) =>
+      curr.totalTime ? Saldo.getSum(prev, curr.totalTime) : prev,
+      Saldo.createFromMillis(0))
   }
 
   /**

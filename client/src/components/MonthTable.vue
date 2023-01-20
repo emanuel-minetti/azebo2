@@ -45,9 +45,6 @@
 </template>
 
 <script lang="ts">
-// import { FormatterService, GermanKwService } from "/src/services";
-// import { WorkingDay, WorkingMonth } from "/src/models";
-// import { timeOffsConfig } from "/src/configs";
 import DayForm from "/src/components/DayForm.vue";
 import { defineComponent } from "vue";
 import { Saldo, WorkingDay, WorkingMonth } from "/src/models";
@@ -89,11 +86,13 @@ export default defineComponent({
       let row: TableRowData;
       this.month.days.forEach(day => {
         row = {
-          day: day,
+          day: day as WorkingDay,
           date: day.date,
-          targetTime: day.targetTime,
+          targetTime: day.targetTime as Saldo,
           timeOff: day.timeOff,
           comment: day.comment,
+          begin: null,
+          end: null,
         }
         if (day.dayParts.length === 0) {
           result.push(row);
@@ -103,18 +102,21 @@ export default defineComponent({
           row.end = day.dayParts[0].end;
           row.mobileWorking = day.dayParts[0].mobileWorking;
           row.hasWorkingTime = day.hasWorkingTime;
+          row.totalTime = day.dayParts[0].totalTime as Saldo;
           result.push(row);
         } else {
+          row.totalTime = day.totalTime as Saldo;
           result.push(row);
           let innerRow: TableRowData;
           day.dayParts.forEach(part => {
             innerRow = {
-              day: day,
+              day: day as WorkingDay,
               date: null,
               begin: part.begin,
               end: part.end,
               mobileWorking: part.mobileWorking,
               hasWorkingTime: day.hasWorkingTime,
+              totalTime: part.totalTime as Saldo,
             }
             result.push(innerRow);
           });

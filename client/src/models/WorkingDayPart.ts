@@ -1,3 +1,5 @@
+import Saldo from "/src/models/Saldo";
+
 export default class WorkingDayPart {
   private readonly _id: number;
   private _workingDayId: number;
@@ -31,6 +33,20 @@ export default class WorkingDayPart {
 
   get mobileWorking(): boolean {
     return this._mobileWorking;
+  }
+
+  get totalTime(): Saldo | undefined {
+    if (!(this._begin && this._end)) {
+      return undefined;
+    } else {
+      let beginDate = new Date();
+      beginDate.setHours(Number(this._begin.substring(0, 2)));
+      beginDate.setMinutes(Number(this._begin.substring(3, 5)));
+      let endDate = new Date();
+      endDate.setHours(Number(this._end.substring(0, 2)));
+      endDate.setMinutes(Number(this._end.substring(3, 5)));
+      return Saldo.createFromDates(beginDate, endDate);
+    }
   }
 
   public toJSON() {
