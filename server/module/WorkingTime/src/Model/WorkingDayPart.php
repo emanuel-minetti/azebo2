@@ -24,7 +24,7 @@ class WorkingDayPart extends ArrayObject {
             DateTime::createFromFormat(self::TIME_FORMAT, $array['begin']) : null;
         $this->end = !empty($array['end']) ?
             DateTime::createFromFormat(self::TIME_FORMAT, $array['end']) : null;
-        $this->mobileWorking = boolval($array['mobile_working']);
+        $this->mobileWorking = $array['mobile_working'] == 1;
         return array($this);
     }
 
@@ -35,7 +35,7 @@ class WorkingDayPart extends ArrayObject {
             'working_day_id' => $this->workingDayId,
             'begin' => isset($this->begin) ? $this->begin->format(self::TIME_FORMAT) : null,
             'end' => isset($this->end) ? $this->end->format(self::TIME_FORMAT) : null,
-            'mobile_working' => $this->mobile_working ? 1 : 0,
+            'mobile_working' => $this->mobileWorking ? 1 : 0,
         ];
     }
 
