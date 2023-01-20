@@ -1,4 +1,5 @@
 import Saldo from "/src/models/Saldo";
+import { timesConfig } from "/src/configs";
 
 export default class WorkingDayPart {
   private readonly _id: number;
@@ -47,6 +48,34 @@ export default class WorkingDayPart {
       endDate.setMinutes(Number(this._end.substring(3, 5)));
       return Saldo.createFromDates(beginDate, endDate);
     }
+  }
+
+  get break(): Saldo | undefined {
+    if (!this.totalTime) {
+      return undefined;
+    }
+    let result: Saldo;
+    const shortBreakFrom = Saldo.createFromMillis(
+      timesConfig.breakRequiredFrom * 60 * 60 * 1000 + 60 * 1000);
+    const longBreakFrom = Saldo.createFromMillis(
+      timesConfig.longBreakRequiredFrom * 60 * 60 * 1000 + 60 * 1000);
+    if (!this.totalTime.biggerOrEqualThan(shortBreakFrom)) {
+      result = Saldo.createFromMillis(0);
+    } else if (!this.totalTime.biggerOrEqualThan(longBreakFrom)) {
+      result =  Saldo.createFromMillis(
+        timesConfig.breakDuration * 60 * 1000);
+    } else {
+      result = Saldo.createFromMillis(
+        timesConfig.longBreakDuration * 60 * 1000);
+    }
+    return result.invert();
+  }
+
+  get actualTime(): Saldo | undefined {
+    if (!this.totalTime) {
+      return undefined;
+    }
+    return Saldo.getSum(this.totalTime, this.break!);
   }
 
   public toJSON() {

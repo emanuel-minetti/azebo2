@@ -84,9 +84,17 @@ export default class WorkingDay {
     //TODO remove
     return undefined;
   }
-  get break(): Date | undefined {
-    //TODO implement `get break()`
-    return undefined;
+  get break(): Saldo | undefined {
+    let result;
+    if (!this.hasWorkingTime) {
+      result = undefined;
+    } else {
+      result = this.dayParts.reduce((prev, curr) =>
+          Saldo.getSum(prev, curr.break ? curr.break : prev),
+        Saldo.createFromMillis(0))
+    }
+    console.log(result);
+    return result;
   }
 
   get timeOff(): string | undefined {
@@ -172,12 +180,9 @@ export default class WorkingDay {
    */
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return this.break
-      ? Saldo.getSum(
-          <Saldo>this.totalTime,
-          Saldo.createFromMillis(this.break.getMinutes() * 60 * 1000, false)
-        )
-      : this.totalTime;
+    return this.dayParts.reduce((prev, curr) =>
+        curr.actualTime ? Saldo.getSum(prev, curr.actualTime) : prev,
+      Saldo.createFromMillis(0))
   }
 
   /**
@@ -214,16 +219,14 @@ export default class WorkingDay {
     if (this.hasWorkingTime) {
       if (this._rule) {
         const targetSaldo = this.targetTime!.clone();
-        targetSaldo.invert();
-        return Saldo.getSum(this.actualTime!, targetSaldo);
+        return Saldo.getSum(this.actualTime!, targetSaldo.invert());
       } else {
         return this.actualTime;
       }
     } else {
       if (this._rule && this._timeOff == "gleitzeit") {
         const targetSaldo = this._rule.target.clone();
-        targetSaldo.invert();
-        return targetSaldo;
+        return targetSaldo.invert();
       } else {
         return undefined;
       }

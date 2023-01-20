@@ -93,6 +93,7 @@ export default defineComponent({
           comment: day.comment,
           begin: null,
           end: null,
+          saldoTime: day.saldoTime as Saldo,
         }
         if (day.dayParts.length === 0) {
           result.push(row);
@@ -100,12 +101,17 @@ export default defineComponent({
         else if (day.dayParts.length === 1) {
           row.begin = day.dayParts[0].begin;
           row.end = day.dayParts[0].end;
+          row.break = day.dayParts[0].break as Saldo;
           row.mobileWorking = day.dayParts[0].mobileWorking;
-          row.hasWorkingTime = day.hasWorkingTime;
+          row.hasWorkingTime = true;
           row.totalTime = day.dayParts[0].totalTime as Saldo;
+          row.actualTime = day.dayParts[0].actualTime as Saldo;
           result.push(row);
         } else {
           row.totalTime = day.totalTime as Saldo;
+          row.break = day.break as Saldo;
+          row.hasWorkingTime = true;
+          row.actualTime = day.actualTime as Saldo;
           result.push(row);
           let innerRow: TableRowData;
           day.dayParts.forEach(part => {
@@ -114,9 +120,11 @@ export default defineComponent({
               date: null,
               begin: part.begin,
               end: part.end,
+              break: part.break as Saldo,
               mobileWorking: part.mobileWorking,
               hasWorkingTime: day.hasWorkingTime,
               totalTime: part.totalTime as Saldo,
+              actualTime: part.actualTime as Saldo,
             }
             result.push(innerRow);
           });
@@ -151,7 +159,7 @@ export default defineComponent({
           key: "break",
           label: "Pause",
           class: "small-column",
-          formatter: this.formatBreak,
+          formatter: this.formatSaldo,
         },
         {
           key: "timeOff",
@@ -220,9 +228,9 @@ export default defineComponent({
       return element ? element.text : "";
     },
     // formats the break column
-    formatBreak(break_date: Date, key: string, day: WorkingDay): string {
+    formatSaldo(saldo: Saldo, key: string, day: TableRowData): string {
       if (day && !day.hasWorkingTime) return "";
-      return FormatterService.toGermanTime(break_date);
+      return saldo.toString(false);
     },
     rowClickHandler(row: WorkingDay) {
       if (!this.finalized) {
