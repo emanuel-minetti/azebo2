@@ -11,7 +11,7 @@ export default class WorkingDayPart {
         this._workingDayId = data.working_day_id;
         this._begin = data.begin ? data.begin  : null;
         this._end = data.end ? data.end  : null;
-        this._mobileWorking = data.mobile_working === 'true';
+        this._mobileWorking = data.mobile_working === 1;
     } else {
       this._id = 0;
       this._workingDayId = 0;
