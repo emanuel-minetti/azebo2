@@ -29,6 +29,10 @@ export default class WorkingDayPart {
     return this._end;
   }
 
+  get mobileWorking(): boolean {
+    return this._mobileWorking;
+  }
+
   public toJSON() {
     //TODO implement!
     return {

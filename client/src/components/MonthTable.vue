@@ -34,7 +34,7 @@
       >
         <template #cell(mobile_working)="data">
           <b-icon-circle-fill
-            v-if="data.item.hasWorkingTime && data.item.mobile_working"
+            v-if="data.item.hasWorkingTime && data.item.mobileWorking"
           ></b-icon-circle-fill>
           <b-icon-circle v-else-if="data.item.hasWorkingTime"></b-icon-circle>
           <div v-else></div>
@@ -57,13 +57,14 @@ import { timeOffsConfig } from "/src/configs";
 
 interface TableRowData {
   day: WorkingDay;
-  date: Date;
+  date: Date | null;
   begin: string | null;
   end: string | null;
   break?: Saldo;
   timeOff?: string;
   comment?: string;
   mobileWorking?: boolean;
+  hasWorkingTime?: boolean;
   totalTime?: Saldo;
   actualTime?: Saldo;
   targetTime?: Saldo;
@@ -91,12 +92,33 @@ export default defineComponent({
           day: day,
           date: day.date,
           targetTime: day.targetTime,
+          timeOff: day.timeOff,
+          comment: day.comment,
         }
-        if (day.dayParts.length === 1) {
+        if (day.dayParts.length === 0) {
+          result.push(row);
+        }
+        else if (day.dayParts.length === 1) {
           row.begin = day.dayParts[0].begin;
           row.end = day.dayParts[0].end;
+          row.mobileWorking = day.dayParts[0].mobileWorking;
+          row.hasWorkingTime = day.hasWorkingTime;
+          result.push(row);
+        } else {
+          result.push(row);
+          let innerRow: TableRowData;
+          day.dayParts.forEach(part => {
+            innerRow = {
+              day: day,
+              date: null,
+              begin: part.begin,
+              end: part.end,
+              mobileWorking: part.mobileWorking,
+              hasWorkingTime: day.hasWorkingTime,
+            }
+            result.push(innerRow);
+          });
         }
-        result.push(row);
       });
       return result;
     },
@@ -176,16 +198,20 @@ export default defineComponent({
     },
 
     // formats the shown date
-    formatDate(date: Date, key: string, day: WorkingDay) {
-      const dateString = FormatterService.toLongGermanDate(date);
-      const kwString =
-          date.getDay() !== 1
-              ? ""
-              : " " + GermanKwService.getGermanKW(date) + ". KW";
-      return (
-          (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
-          kwString
-      );
+    formatDate(date: Date | null, key: string, day: WorkingDay): string {
+      if (date) {
+        const dateString = FormatterService.toLongGermanDate(date);
+        const kwString =
+            date.getDay() !== 1
+                ? ""
+                : " " + GermanKwService.getGermanKW(date) + ". KW";
+        return (
+            (day.isHoliday ? dateString + " " + day.holidayName : dateString) +
+            kwString
+        );
+      } else {
+        return "";
+      }
     },
     formatTimeOff(timeOff: string): string {
       const element = timeOffsConfig.find((element) => element.value == timeOff);

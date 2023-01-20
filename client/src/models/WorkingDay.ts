@@ -183,7 +183,7 @@ export default class WorkingDay {
    * Returns whether begin and end are set for this working day.
    */
   get hasWorkingTime(): boolean {
-    return this.begin !== undefined && this.end !== undefined;
+    return this.dayParts.length !== 0;
   }
 
   /**
