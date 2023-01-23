@@ -4,3 +4,5 @@ module/Application/view/application/
 /server/.idea/server.iml
 /.idea/terminal.xml
 /.idea/webServers.xml
+/.idea/php.xml
+
