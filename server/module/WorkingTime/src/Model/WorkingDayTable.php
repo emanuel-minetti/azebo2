@@ -57,7 +57,17 @@ class WorkingDayTable
     public function upsert(WorkingDay $day) {
         if ($day->id == 0) {
             unset($day->id);
-            $this->tableGateway->insert($day->getArrayCopy());
+            //$dayParts = $day->dayParts;
+            $copy = $day->getArrayCopy();
+            unset($copy['day_parts']);
+            $this->tableGateway->insert($copy);
+            $dayId = $this->tableGateway->getLastInsertValue();
+            $day->id = $dayId;
+            /** @var WorkingDayPart $part */
+            foreach ($day->dayParts as $part) {
+                $part->workingDayId = $dayId;
+                $this->dayPartTable->upsert($part);
+            }
         } else {
             $this->tableGateway->update($day->getArrayCopy(), ['id' => $day->id]);
         }

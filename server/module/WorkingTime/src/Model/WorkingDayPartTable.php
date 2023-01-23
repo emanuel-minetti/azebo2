@@ -33,4 +33,14 @@ class WorkingDayPartTable
         $rowSet = $this->tableGateway->select(['working_day_id' => $dayId]);
         return $rowSet->toArray();
     }
+
+    public function upsert(WorkingDayPart $part): void {
+        if ($part->id === 0) {
+            $copy = $part->getArrayCopy();
+            unset($copy->id);
+            $this->tableGateway->insert($copy);
+            $part->id = $this->tableGateway->getLastInsertValue();
+        }
+    }
+
 }
