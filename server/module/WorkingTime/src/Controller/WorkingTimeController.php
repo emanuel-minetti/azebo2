@@ -46,7 +46,13 @@ class WorkingTimeController extends ApiController
             $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
             $resultArray = [];
             foreach ($arrayOfWorkingDays as $element) {
-                $resultArray[] = $element->getArrayCopy();
+                $copy = $element->getArrayCopy();
+                $partsCopy = [];
+                foreach ($copy['day_parts'] as $part) {
+                    $partsCopy[] = $part->getArrayCopy();
+                }
+                $copy['day_parts'] = $partsCopy;
+                $resultArray[] = $copy;
             }
             return $this->processResult($resultArray, $userId);
         } else {
@@ -65,6 +71,7 @@ class WorkingTimeController extends ApiController
             $id = $post->_id;
             if ($id != 0) {
                 $day = $this->table->find($id);
+                $day->dayParts = [];
                 if (!$day) return $this->invalidRequest;
             } else {
                 if (!isset($post->_date)) return $this->invalidRequest;

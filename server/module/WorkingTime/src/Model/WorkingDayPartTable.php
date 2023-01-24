@@ -30,8 +30,12 @@ class WorkingDayPartTable
     }
 
     public function getBayDayId(int $dayId): array {
+        $result = [];
         $rowSet = $this->tableGateway->select(['working_day_id' => $dayId]);
-        return $rowSet->toArray();
+        foreach ($rowSet as $row) {
+            $result[] = $row;
+        }
+        return $result;
     }
 
     public function upsert(WorkingDayPart $part): void {
@@ -40,7 +44,14 @@ class WorkingDayPartTable
             unset($copy->id);
             $this->tableGateway->insert($copy);
             $part->id = $this->tableGateway->getLastInsertValue();
+        } else {
+            // TODO implement
         }
     }
+
+    public function delete(WorkingDayPart $part):void {
+        $this->tableGateway->delete(['id' => $part->id]);
+    }
+
 
 }

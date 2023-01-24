@@ -69,7 +69,32 @@ class WorkingDayTable
                 $this->dayPartTable->upsert($part);
             }
         } else {
-            $this->tableGateway->update($day->getArrayCopy(), ['id' => $day->id]);
+            $formerDay = $this->find($day->id);
+            $copy = $day->getArrayCopy();
+            unset($copy['day_parts']);
+            $this->tableGateway->update($copy, ['id' => $day->id]);
+            if (isset($day->dayParts)) {
+                if (isset($daybefore->dayParts)) {
+                    if (sizeof($day->dayParts) <= sizeof($formerDay->dayParts)) {
+                        // update existing parts and delete the rest from DB
+                        // TODO implement
+                    } else {
+                        // update existing and insert new to DB
+                        // TODO implement
+                    }
+                } else {
+                    foreach ($day->dayParts as $part) {
+                        $part->workingDayId = $day->id;
+                        $this->dayPartTable->upsert($part->getArrayCopy());
+                    }
+                }
+            } else {
+                if (isset($formerDay->dayParts)) {
+                    foreach ($formerDay->dayParts as $part) {
+                        $this->dayPartTable->delete($part);
+                    }
+                }
+            }
         }
     }
 }

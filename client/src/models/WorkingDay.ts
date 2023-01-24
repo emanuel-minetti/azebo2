@@ -93,7 +93,6 @@ export default class WorkingDay {
           Saldo.getSum(prev, curr.break ? curr.break : prev),
         Saldo.createFromMillis(0))
     }
-    console.log(result);
     return result;
   }
 

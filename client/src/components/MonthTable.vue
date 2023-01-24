@@ -161,13 +161,13 @@ export default defineComponent({
           key: "begin",
           label: "Beginn",
           class: "small-column",
-          formatter: FormatterService.toGermanTime,
+          formatter: this.formatBeginEnd,
         },
         {
           key: "end",
           label: "Ende",
           class: "small-column",
-          formatter: FormatterService.toGermanTime,
+          formatter: this.formatBeginEnd,
         },
         {
           key: "break",
@@ -236,6 +236,9 @@ export default defineComponent({
       } else {
         return "";
       }
+    },
+    formatBeginEnd(value: string | null): string {
+      return value ? value.substring(0,5): '';
     },
     formatTimeOff(timeOff: string): string {
       const element = timeOffsConfig.find((element) => element.value == timeOff);
