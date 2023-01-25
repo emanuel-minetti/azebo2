@@ -2,6 +2,27 @@
   <b-form v-if="show" class="mb-3" @submit="onSubmit" @reset="onReset">
     <fieldset>
       <legend>{{ title }}</legend>
+      <div v-if='day.dayParts.length > 1'>
+        <b-table
+            striped
+            hover
+            bordered
+            :items='tableItems'
+            :fields='tableFields'
+            primary-key='index'
+        >
+          <template #cell(mobileWorking)="data">
+            <b-icon-circle-fill
+                v-if="data.item.mobileWorking"
+            ></b-icon-circle-fill>
+            <b-icon-circle v-else></b-icon-circle>
+          </template>
+          <template #cell(action)="data">
+            <b-button variant='primary' @click='editPart(data.item.index)'>Bearbeiten</b-button>
+            <b-button variant='primary' class='ml-2' @click='deletePart(data.item.index)'>Löschen</b-button>
+          </template>
+        </b-table>
+      </div>
       <div v-if='partToEdit !== -1'>
         <b-form-group label="Arbeitsbeginn:" label-for="begin-input">
           <b-form-input
@@ -36,11 +57,9 @@
           ></b-form-checkbox>
         </b-form-group>
       </div>
-      <div v-else>
-        <b-button variant="primary" :disabled="errors.length !== 0" @click='editPart'>
-          Arbeitszeit hinzufügen
-        </b-button>
-      </div>
+      <b-button variant="primary" :disabled="errors.length !== 0" @click='editPart(-1)'>
+        Arbeitszeit hinzufügen
+      </b-button>
       <b-form-group
         label="Bemerkung:"
         label-for="time-off-input"
@@ -102,6 +121,13 @@ const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
 };
 
+interface TableRowData {
+  index: number;
+  begin: string | null;
+  end: string | null;
+  mobileWorking: boolean;
+}
+
 export default defineComponent({
   name: "DayForm",
   emits: ['submitted'],
@@ -124,7 +150,45 @@ export default defineComponent({
         title += " bearbeiten";
         return title;
     },
-
+    tableFields() {
+      return [
+        {
+          label: '#',
+          key: 'index',
+          formatter: this.formatIndex,
+        },
+        {
+          label: "Beginn",
+          key: 'begin',
+          formatter: this.formatBeginEnd,
+        },
+        {
+          label: "Ende",
+          key: 'end',
+          formatter: this.formatBeginEnd,
+        },
+        {
+          label: "Mobiles Arbeiten",
+          key: 'mobileWorking',
+        },
+        {
+          label: 'Aktion',
+          key: 'action',
+        }
+      ];
+    },
+    tableItems() {
+      let result: Array<TableRowData> = [];
+      this.day.dayParts.forEach((part, index) => {
+        result.push({
+          index: index,
+          begin: part.begin,
+          end: part.end,
+          mobileWorking: part.mobileWorking,
+        });
+      });
+      return result;
+    },
     begin: {
       get() {
         return this.partToEdit !== -1 ? (this.day.dayParts[this.partToEdit].begin ?
@@ -203,8 +267,30 @@ export default defineComponent({
   },
 
   methods: {
-    editPart() {
-      this.partToEdit = 0;
+    editPart(index: number) {
+      if (index === -1) {
+        this.day.dayParts.push(new WorkingDayPart({
+          'working_day_id': this.day.id,
+          'id': 0,
+        }));
+        index = this.day.dayParts.length - 1;
+      }
+      this.partToEdit = index;
+    },
+    deletePart(index: number) {
+      this.day.dayParts.splice(index, 1);
+      if (this.partToEdit === index) {
+        this.partToEdit = -1;
+      }
+      if (this.day.dayParts.length === 1) {
+        this.partToEdit = 0;
+      }
+    },
+    formatIndex(index: string) {
+      return (Number(index) + 1).toString();
+    },
+    formatBeginEnd(value: string | null) {
+      return value ? value.substring(0, 5) : '--:--';
     },
     onSubmit(evt: Event) {
       evt.preventDefault();
