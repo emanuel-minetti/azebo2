@@ -18,8 +18,6 @@ use Laminas\Validator\StringLength;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
-use Validation\BeginBeforeEndValidator;
-use Validation\TimeOffValidator;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayPart;
 use WorkingTime\Model\WorkingDayTable;
@@ -126,13 +124,13 @@ class WorkingTimeController extends ApiController
 //                }
 //            }
             if (isset($post->_timeOff)) {
-                $toValidator = new TimeOffValidator();
-                $value = [
-                    'begin' => $day->begin,
-                    'end' => $day->end,
-                    'timeOff' => $post->_timeOff,
-                ];
-                if (!$toValidator->isValid($value)) return $this->invalidRequest;
+//                $toValidator = new TimeOffValidator();
+//                $value = [
+//                    'begin' => $day->begin,
+//                    'end' => $day->end,
+//                    'timeOff' => $post->_timeOff,
+//                ];
+//                if (!$toValidator->isValid($value)) return $this->invalidRequest;
                 $day->timeOff = $post->_timeOff;
             } else {
                 $day->timeOff = "";
@@ -154,9 +152,9 @@ class WorkingTimeController extends ApiController
                     $dayPart->id = $part->_id;
                     $dayPart->workingDayId = $part->_workingDayId;
                     $dayPart->begin = isset($part->_begin) ?
-                        DateTime::createFromFormat(self::TIME_FORMAT, $part->_begin) : null;;
+                        DateTime::createFromFormat(self::TIME_FORMAT, $part->_begin) : null;
                     $dayPart->end = isset($part->_end) ?
-                        DateTime::createFromFormat(self::TIME_FORMAT, $part->_end) : null;;
+                        DateTime::createFromFormat(self::TIME_FORMAT, $part->_end) : null;
                     $dayPart->mobileWorking = $part->_mobileWorking;
                     $day->dayParts[] = $dayPart;
                 }

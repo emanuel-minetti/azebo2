@@ -54,7 +54,7 @@ class WorkingDayTable
         return $result;
     }
 
-    public function upsert(WorkingDay $day) {
+    public function upsert(WorkingDay $day): void {
         if ($day->id == 0) {
             unset($day->id);
             //$dayParts = $day->dayParts;
@@ -74,18 +74,21 @@ class WorkingDayTable
             unset($copy['day_parts']);
             $this->tableGateway->update($copy, ['id' => $day->id]);
             if (isset($day->dayParts)) {
-                if (isset($daybefore->dayParts)) {
-                    if (sizeof($day->dayParts) <= sizeof($formerDay->dayParts)) {
-                        // update existing parts and delete the rest from DB
-                        // TODO implement
-                    } else {
-                        // update existing and insert new to DB
-                        // TODO implement
+                if (isset($formerDay->dayParts)) {
+                    // upsert the new one and keep track
+                    foreach ($day->dayParts as $part) {
+                        $this->dayPartTable->upsert($part);
+                        $formerDay->dayParts = array_filter($formerDay->dayParts, function ($partBefore) use ($part){
+                            return $partBefore->id !== $part->id;
+                        });
+                    }
+                    // delete remaining old ones
+                    foreach ($formerDay->dayParts as $part) {
+                        $this->dayPartTable->delete($part);
                     }
                 } else {
                     foreach ($day->dayParts as $part) {
-                        $part->workingDayId = $day->id;
-                        $this->dayPartTable->upsert($part->getArrayCopy());
+                        $this->dayPartTable->upsert($part);
                     }
                 }
             } else {

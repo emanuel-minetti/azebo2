@@ -10,9 +10,6 @@
 
 namespace WorkingTime\Model;
 
-use DateTime;
-use Laminas\Db\Sql\Select;
-use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
 
 class WorkingDayPartTable
@@ -45,7 +42,7 @@ class WorkingDayPartTable
             $this->tableGateway->insert($copy);
             $part->id = $this->tableGateway->getLastInsertValue();
         } else {
-            // TODO implement
+            $this->tableGateway->update($part->getArrayCopy(), ['id' => $part->id]);
         }
     }
 
