@@ -4,7 +4,6 @@ import { store } from "/src/store";
 import { timesConfig } from "/src/configs";
 import WorkingDayPart from "/src/models/WorkingDayPart";
 
-// noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
   private readonly _id: number;
   private readonly _date: Date;
@@ -240,6 +239,7 @@ export default class WorkingDay {
     return this._rule !== undefined;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   /**
    * Returns the number week in the year for this day.
    */
@@ -300,6 +300,7 @@ export default class WorkingDay {
     return FormatterService.toGermanTime(this.end) < coreTimeEndString;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   public toJSON() {
     return {
       _id: this.id,
@@ -309,24 +310,6 @@ export default class WorkingDay {
       _day_parts: this._dayParts,
       _edited: this.edited,
     };
-  }
-
-  shortBreakFrom() {
-    return new Date(this.begin!.valueOf()
-      + timesConfig.breakRequiredFrom * 60 * 60 * 1000
-      + 60 * 1000);
-  }
-
-  longBreakFrom() {
-    return new Date(this.begin!.valueOf()
-      + timesConfig.longBreakRequiredFrom * 60 * 60 * 1000
-      + 60 * 1000);
-  }
-
-  longDayFrom() {
-    return new Date(this.begin!.valueOf()
-      + timesConfig.longDayFrom * 60 * 60 * 1000
-      + timesConfig.longBreakDuration * 60 * 1000);
   }
 
   public get mobileWorking(): boolean {

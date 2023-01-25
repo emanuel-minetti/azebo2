@@ -24,16 +24,32 @@ export default class WorkingDayPart {
     }
   }
 
+  set workingDayId(value: number) {
+    this._workingDayId = value;
+  }
+
   get begin(): string | null {
     return this._begin;
+  }
+
+  set begin(value: string | null) {
+    this._begin = value;
   }
 
   get end(): string | null {
     return this._end;
   }
 
+  set end(value: string | null) {
+    this._end = value;
+  }
+
   get mobileWorking(): boolean {
     return this._mobileWorking;
+  }
+
+  set mobileWorking(value: boolean) {
+    this._mobileWorking = value;
   }
 
   get totalTime(): Saldo | undefined {
@@ -78,10 +94,52 @@ export default class WorkingDayPart {
     return Saldo.getSum(this.totalTime, this.break!);
   }
 
-  public toJSON() {
-    //TODO implement!
-    return {
+  shortBreakFrom() {
+    if (this.begin) {
+      const beginDate = new Date();
+      beginDate.setHours(Number(this.begin.substring(0, 2)));
+      beginDate.setMinutes(Number(this.begin.substring(3, 5)));
+      return new Date(beginDate.valueOf()
+        + timesConfig.breakRequiredFrom * 60 * 60 * 1000
+        + 60 * 1000);
+    } else {
+      return null;
+    }
+  }
 
+  longBreakFrom() {
+    if (this.begin) {
+      const beginDate = new Date();
+      beginDate.setHours(Number(this.begin.substring(0, 2)));
+      beginDate.setMinutes(Number(this.begin.substring(3, 5)));
+      return new Date(beginDate.valueOf()
+        + timesConfig.longBreakRequiredFrom * 60 * 60 * 1000
+        + 60 * 1000);
+    } else {
+      return null;
+    }
+  }
+
+  longDayFrom() {
+    if (this.begin) {
+      const beginDate = new Date();
+      beginDate.setHours(Number(this.begin.substring(0, 2)));
+      beginDate.setMinutes(Number(this.begin.substring(3, 5)));
+      return new Date(beginDate.valueOf()
+        + timesConfig.longDayFrom * 60 * 60 * 1000
+        + timesConfig.longBreakDuration * 60 * 1000);
+    } else {
+      return null;
+    }
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  public toJSON() {
+    return {
+      _id: this._id,
+      _begin: this.begin,
+      _end: this.end,
+      _mobileWorking: this.mobileWorking
     }
   }
 }

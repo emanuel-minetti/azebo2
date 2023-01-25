@@ -2,28 +2,45 @@
   <b-form v-if="show" class="mb-3" @submit="onSubmit" @reset="onReset">
     <fieldset>
       <legend>{{ title }}</legend>
-      <b-form-group label="Arbeitsbeginn:" label-for="begin-input">
-        <b-form-input
-          id="begin-input"
-          v-model="begin"
-          type="time"
-          placeholder="Arbeitsbeginn"
-          autofocus
-          @blur="validate"
-        ></b-form-input>
-      <ul>
-        <li v-for='item in compareTimes' :key='item'> {{ item }} </li>
-      </ul>
-      </b-form-group>
-      <b-form-group label="Arbeitsende:" label-for="end-input">
-        <b-form-input
-          id="end-input"
-          v-model="end"
-          type="time"
-          placeholder="Arbeitsende"
-          @blur="validate"
-        ></b-form-input>
-      </b-form-group>
+      <div v-if='partToEdit !== -1'>
+        <b-form-group label="Arbeitsbeginn:" label-for="begin-input">
+          <b-form-input
+              id="begin-input"
+              v-model="begin"
+              type="time"
+              placeholder="Arbeitsbeginn"
+              autofocus
+              @blur="validate"
+          ></b-form-input>
+          <ul>
+            <li v-for='item in compareTimes' :key='item'> {{ item }}</li>
+          </ul>
+        </b-form-group>
+        <b-form-group label="Arbeitsende:" label-for="end-input">
+          <b-form-input
+              id="end-input"
+              v-model="end"
+              type="time"
+              placeholder="Arbeitsende"
+              @blur="validate"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
+          <b-form-checkbox
+              id="mobile-working-input-input"
+              v-model="mobileWorking"
+              value="true"
+              unchecked-value="false"
+              class="left"
+              @blur="validate"
+          ></b-form-checkbox>
+        </b-form-group>
+      </div>
+      <div v-else>
+        <b-button variant="primary" :disabled="errors.length !== 0" @click='editPart'>
+          Arbeitszeit hinzufügen
+        </b-button>
+      </div>
       <b-form-group
         label="Bemerkung:"
         label-for="time-off-input"
@@ -45,25 +62,17 @@
           @blur="validate"
         ></b-form-textarea>
       </b-form-group>
-      <b-form-group label="Mobiles Arbeiten:" label-for="mobile-working-input">
-        <b-form-checkbox
-          id="mobile-working-input-input"
-          v-model="day.mobileWorking"
-          class="left"
-          @blur="validate"
-        ></b-form-checkbox>
-        <div v-if="errors.length">
-          <div v-if="errors.length === 1">
-            Bitte korrigieren Sie den folgenden Fehler:
-          </div>
-          <div v-else>Bitte korrigieren Sie die folgenden Fehler:</div>
-          <div v-for="(error, index) in errors" :key="index">
-            <b-alert show variant="primary">
-              {{ error }}
-            </b-alert>
-          </div>
+      <div v-if="errors.length">
+        <div v-if="errors.length === 1">
+          Bitte korrigieren Sie den folgenden Fehler:
         </div>
-      </b-form-group>
+        <div v-else>Bitte korrigieren Sie die folgenden Fehler:</div>
+        <div v-for="(error, index) in errors" :key="index">
+          <b-alert show variant="primary">
+            {{ error }}
+          </b-alert>
+        </div>
+      </div>
       <b-button type="submit" variant="primary" :disabled="errors.length !== 0">
         Absenden
       </b-button>
@@ -86,7 +95,7 @@
 import { timeOffsConfig, timesConfig } from "/src/configs";
 import { defineComponent } from "vue";
 import { WorkingDay } from "/src/models";
-import DayFormValidator from "/src/validators/DayFormValidator";
+import WorkingDayPart from "/src/models/WorkingDayPart";
 
 const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
   hour: "2-digit",
@@ -102,6 +111,7 @@ export default defineComponent({
       timeOffOptions: timeOffsConfig,
       errors: Array<String>(),
       day: new WorkingDay(),
+      partToEdit: -1,
     }
   },
 
@@ -117,47 +127,57 @@ export default defineComponent({
 
     begin: {
       get() {
-        return this.day.begin ? this.day.begin.toLocaleTimeString('de-DE', localTimeFormatOptions) : '';
+        return this.partToEdit !== -1 ? (this.day.dayParts[this.partToEdit].begin ?
+            this.day.dayParts[this.partToEdit].begin!.substring(0, 5) : '') : '';
       },
       set(newValue: string) {
-        this.day.begin = new Date();
-        this.day.begin.setHours(
-          Number(newValue.substring(0, 2)),
-          Number(newValue.substring(3, 5)),
-        );
+        this.day.dayParts[this.partToEdit].begin = newValue;
       },
     },
 
     end: {
       get() {
-        return this.day.end ? this.day.end.toLocaleTimeString('de-DE', localTimeFormatOptions) : '';
+        return this.partToEdit !== -1 ? (this.day.dayParts[this.partToEdit].end ?
+            this.day.dayParts[this.partToEdit].end!.substring(0, 5) : '') : '';
       },
       set(newValue: string) {
-        this.day.end = new Date();
-        this.day.end.setHours(
-            Number(newValue.substring(0, 2)),
-            Number(newValue.substring(3, 5)),
-        );
+        this.day.dayParts[this.partToEdit].end = newValue;
       },
+    },
+
+    mobileWorking: {
+      get() {
+        return this.partToEdit !== -1 ? this.day.dayParts[this.partToEdit].mobileWorking.toString() : '';
+      },
+      set(newValue: string) {
+        this.day.dayParts[this.partToEdit].mobileWorking = newValue === 'true';
+      }
     },
 
     compareTimes(): Array<String> {
       const result = [];
-      if (this.begin !== "") {
-        const shortBreak = this.day.shortBreakFrom();
-        const longBreak = this.day.longBreakFrom();
-        const longDay = this.day.longDayFrom();
-        result.push(
-            timesConfig.breakDuration +
-            " Minuten Pause ab: " +
-            shortBreak.toLocaleTimeString("de-DE", localTimeFormatOptions));
-        result.push(
-            timesConfig.longBreakDuration +
-            " Minuten Pause ab: " +
-            longBreak.toLocaleTimeString("de-DE", localTimeFormatOptions));
-        result.push(
-            "10 Stunden erreicht ab: " +
-            longDay.toLocaleTimeString("de-DE", localTimeFormatOptions));
+      if (this.begin && this.begin !== "") {
+        const shortBreak = this.day.dayParts[this.partToEdit].shortBreakFrom();
+        const longBreak = this.day.dayParts[this.partToEdit].longBreakFrom();
+        const longDay = this.day.dayParts[this.partToEdit].longDayFrom();
+        if (shortBreak) {
+          result.push(
+              timesConfig.breakDuration +
+              " Minuten Pause ab: " +
+              shortBreak.toLocaleTimeString("de-DE", localTimeFormatOptions));
+        }
+        if (longBreak) {
+          result.push(
+              timesConfig.breakDuration +
+              " Minuten Pause ab: " +
+              longBreak.toLocaleTimeString("de-DE", localTimeFormatOptions));
+        }
+        if (longDay) {
+          result.push(
+              timesConfig.breakDuration +
+              " Minuten Pause ab: " +
+              longDay.toLocaleTimeString("de-DE", localTimeFormatOptions));
+        }
       }
       return result;
     }
@@ -169,6 +189,13 @@ export default defineComponent({
         new WorkingDay(),
         this.$store.state.workingTime.dayToEdit
     ) as WorkingDay;
+    if (this.day.dayParts.length === 0) {
+      this.day.dayParts.push(new WorkingDayPart(['']));
+      this.day.dayParts[0].workingDayId = this.day.id;
+    }
+    if (this.day.dayParts.length === 1) {
+      this.partToEdit = 0;
+    }
     // scroll form to top
     let target = document.getElementById("form") as HTMLElement;
     // `{ behaviour: "smooth" }` is not working!
@@ -176,28 +203,32 @@ export default defineComponent({
   },
 
   methods: {
+    editPart() {
+      this.partToEdit = 0;
+    },
     onSubmit(evt: Event) {
       evt.preventDefault();
-      if (this.errors.length === 0) {
-        this.$store
-            .dispatch("workingTime/setDay", this.day)
-            .then(() =>
-                this.$store.dispatch("workingTime/getMonth", this.day.date)
-            )
-            .then(() => {
-              this.$emit("submitted");
-            });
-      }
+      console.log(this.day);
+      // if (this.errors.length === 0) {
+      //   this.$store
+      //       .dispatch("workingTime/setDay", this.day)
+      //       .then(() =>
+      //           this.$store.dispatch("workingTime/getMonth", this.day.date)
+      //       )
+      //       .then(() => {
+      //         this.$emit("submitted");
+      //       });
+      // }
     },
 
     onReset(evt: Event) {
       evt.preventDefault();
       // Reset our form values
-      this.day.begin = undefined;
-      this.day.end = undefined;
+      this.day.dayParts[this.partToEdit].begin = null;
+      this.day.dayParts[this.partToEdit].end = null;
       this.day.timeOff = undefined;
       this.day.comment = undefined;
-      this.day.mobileWorking = false;
+      this.day.dayParts[this.partToEdit].mobileWorking = false;
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
@@ -210,14 +241,16 @@ export default defineComponent({
     },
 
     validate() {
-      const dfv = new DayFormValidator(
-          new WorkingDay(this.day),
-          this.$store.state.workingTime.holidays,
-          this.$store.state.workingTime.carryResult,
-          this.$store.state.workingTime.month
-      );
-      this.errors = dfv.validate();
-      return this.errors.length === 0;
+      // TODO adapt validation!
+      return true;
+      // const dfv = new DayFormValidator(
+      //     new WorkingDay(this.day),
+      //     this.$store.state.workingTime.holidays,
+      //     this.$store.state.workingTime.carryResult,
+      //     this.$store.state.workingTime.month
+      // );
+      // this.errors = dfv.validate();
+      // return this.errors.length === 0;
     },
   }
 });
