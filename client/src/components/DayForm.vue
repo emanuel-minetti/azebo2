@@ -113,7 +113,7 @@
 <script lang="ts">
 import { timeOffsConfig, timesConfig } from "/src/configs";
 import { defineComponent } from "vue";
-import { WorkingDay } from "/src/models";
+import { Saldo, WorkingDay } from "/src/models";
 import WorkingDayPart from "/src/models/WorkingDayPart";
 
 const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
@@ -125,6 +125,7 @@ interface TableRowData {
   index: number;
   begin: string | null;
   end: string | null;
+  break: Saldo | undefined;
   mobileWorking: boolean;
 }
 
@@ -168,6 +169,11 @@ export default defineComponent({
           formatter: this.formatBeginEnd,
         },
         {
+          label: "Pause",
+          key: 'break',
+          formatter: this.formatBreak,
+        },
+        {
           label: "Mobiles Arbeiten",
           key: 'mobileWorking',
         },
@@ -184,6 +190,7 @@ export default defineComponent({
           index: index,
           begin: part.begin,
           end: part.end,
+          break: part.break as Saldo,
           mobileWorking: part.mobileWorking,
         });
       });
@@ -291,6 +298,9 @@ export default defineComponent({
     },
     formatBeginEnd(value: string | null) {
       return value ? value.substring(0, 5) : '--:--';
+    },
+    formatBreak(value: Saldo | null) {
+      return value ? value.toString(false) : '';
     },
     onSubmit(evt: Event) {
       evt.preventDefault();
