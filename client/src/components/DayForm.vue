@@ -11,6 +11,9 @@
             :fields='tableFields'
             primary-key='index'
         >
+          <template #cell(rowIndex)='data'>
+            {{ data.index + 1}}
+          </template>
           <template #cell(mobileWorking)="data">
             <b-icon-circle-fill
                 v-if="data.item.mobileWorking"
@@ -155,7 +158,7 @@ export default defineComponent({
       return [
         {
           label: '#',
-          key: 'index',
+          key: 'rowIndex',
           formatter: this.formatIndex,
         },
         {
@@ -194,6 +197,22 @@ export default defineComponent({
           mobileWorking: part.mobileWorking,
         });
       });
+      result.sort((a, b) => {
+        if (!a.begin || !b.begin) return 0;
+        if (Number(a.begin.substring(0, 2)) < Number(b.begin.substring(0, 2))) {
+          return -1;
+        } else if (Number(a.begin.substring(0, 2)) > Number(b.begin.substring(0, 2))) {
+          return 1;
+        } else {
+          if (Number(a.begin.substring(3, 5)) < Number(b.begin.substring(3, 5))) {
+            return -1;
+          } else if (Number(a.begin.substring(3, 5)) > Number(b.begin.substring(3, 5))) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }
+      })
       return result;
     },
     begin: {
