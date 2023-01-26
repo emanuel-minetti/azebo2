@@ -142,4 +142,21 @@ export default class WorkingDayPart {
       _mobileWorking: this.mobileWorking
     }
   }
+
+  isEndAfterBegin() {
+    if (!this._begin || !this._end) {
+      return true;
+    }
+    const beginHour = Number(this._begin.substring(0, 2));
+    const endHour = Number(this._end.substring(0, 2));
+    if (beginHour < endHour) {
+      return true;
+    }
+    if (beginHour > endHour) {
+      return false;
+    }
+    const beginMinute = Number(this._begin.substring(3, 5));
+    const endMinute = Number(this._end.substring(3, 5));
+    return beginMinute < endMinute;
+  }
 }

@@ -159,7 +159,16 @@ export default class WorkingDay {
    * Returns whether begin and end are set for this working day.
    */
   get hasWorkingTime(): boolean {
-    return this.dayParts.length !== 0;
+    if (this._dayParts.length === 0) {
+      return false;
+    }
+    let result = false;
+    this._dayParts.forEach(part => {
+      if (part.begin || part.end) {
+        result = true;
+      }
+    })
+    return result;
   }
 
   /**
@@ -247,23 +256,13 @@ export default class WorkingDay {
     return GermanKwService.getGermanKW(this.date);
   }
 
-  public isEndAfterBegin(): boolean {
-    if (this.begin && this.end) {
-      return (
-        FormatterService.toGermanTime(this.begin) <
-        FormatterService.toGermanTime(this.end)
-      );
-    }
-    return true;
-  }
-
   public validateTimeOffWithBeginEnd(): boolean {
     return (
       this.timeOff === undefined ||
       this.timeOff === null ||
       this.timeOff === "zusatz" ||
       this.targetTime !== undefined ||
-      (this.begin === undefined && this.end === undefined)
+      !this.hasWorkingTime
     );
   }
 
@@ -317,8 +316,26 @@ export default class WorkingDay {
     return false;
   }
 
-
   get dayParts(): Array<WorkingDayPart> {
     return this._dayParts;
+  }
+
+  public sortDayParts() {
+    this._dayParts.sort((a, b) => {
+      if (!a.begin || !b.begin) return 0;
+      if (Number(a.begin.substring(0, 2)) < Number(b.begin.substring(0, 2))) {
+        return -1;
+      } else if (Number(a.begin.substring(0, 2)) > Number(b.begin.substring(0, 2))) {
+        return 1;
+      } else {
+        if (Number(a.begin.substring(3, 5)) < Number(b.begin.substring(3, 5))) {
+          return -1;
+        } else if (Number(a.begin.substring(3, 5)) > Number(b.begin.substring(3, 5))) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    });
   }
 }

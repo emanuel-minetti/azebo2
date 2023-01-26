@@ -2,6 +2,17 @@
   <b-form v-if="show" class="mb-3" @submit="onSubmit" @reset="onReset">
     <fieldset>
       <legend>{{ title }}</legend>
+      <div v-if="errors.length">
+        <div v-if="errors.length === 1">
+          Bitte korrigieren Sie den folgenden Fehler:
+        </div>
+        <div v-else>Bitte korrigieren Sie die folgenden Fehler:</div>
+        <div v-for="(error, index) in errors" :key="index">
+          <b-alert show variant="primary">
+            {{ error }}
+          </b-alert>
+        </div>
+      </div>
       <div v-if='day.dayParts.length > 1'>
         <b-table
             striped
@@ -84,17 +95,6 @@
           @blur="validate"
         ></b-form-textarea>
       </b-form-group>
-      <div v-if="errors.length">
-        <div v-if="errors.length === 1">
-          Bitte korrigieren Sie den folgenden Fehler:
-        </div>
-        <div v-else>Bitte korrigieren Sie die folgenden Fehler:</div>
-        <div v-for="(error, index) in errors" :key="index">
-          <b-alert show variant="primary">
-            {{ error }}
-          </b-alert>
-        </div>
-      </div>
       <b-button type="submit" variant="primary" :disabled="errors.length !== 0">
         Absenden
       </b-button>
@@ -118,6 +118,7 @@ import { timeOffsConfig, timesConfig } from "/src/configs";
 import { defineComponent } from "vue";
 import { Saldo, WorkingDay } from "/src/models";
 import WorkingDayPart from "/src/models/WorkingDayPart";
+import DayFormValidator from "/src/validators/DayFormValidator";
 
 const localTimeFormatOptions: Intl.DateTimeFormatOptions = {
   hour: "2-digit",
@@ -212,7 +213,7 @@ export default defineComponent({
             return 0;
           }
         }
-      })
+      });
       return result;
     },
     begin: {
@@ -258,14 +259,13 @@ export default defineComponent({
         }
         if (longBreak) {
           result.push(
-              timesConfig.breakDuration +
+              timesConfig.longBreakDuration +
               " Minuten Pause ab: " +
               longBreak.toLocaleTimeString("de-DE", localTimeFormatOptions));
         }
         if (longDay) {
           result.push(
-              timesConfig.breakDuration +
-              " Minuten Pause ab: " +
+              "Zehn Stunden erreicht ab: " +
               longDay.toLocaleTimeString("de-DE", localTimeFormatOptions));
         }
       }
@@ -356,16 +356,14 @@ export default defineComponent({
     },
 
     validate() {
-      // TODO adapt validation!
-      return true;
-      // const dfv = new DayFormValidator(
-      //     new WorkingDay(this.day),
-      //     this.$store.state.workingTime.holidays,
-      //     this.$store.state.workingTime.carryResult,
-      //     this.$store.state.workingTime.month
-      // );
-      // this.errors = dfv.validate();
-      // return this.errors.length === 0;
+      const dfv = new DayFormValidator(
+          this.day as WorkingDay,
+          this.$store.state.workingTime.holidays,
+          this.$store.state.workingTime.carryResult,
+          this.$store.state.workingTime.month
+      );
+      this.errors = dfv.validate();
+      return this.errors.length === 0;
     },
   }
 });

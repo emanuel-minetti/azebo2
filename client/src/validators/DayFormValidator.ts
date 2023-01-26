@@ -1,5 +1,5 @@
 import { Carry, Holiday, WorkingDay, WorkingMonth } from "/src/models";
-import { timeOffsConfig, timesConfig } from "/src/configs";
+import { timeOffsConfig } from "/src/configs";
 
 export default class DayFormValidator {
   private day: WorkingDay;
@@ -30,9 +30,8 @@ export default class DayFormValidator {
     this.beginAfterEnd();
     this.timeOffWithBeginAndEnd();
     this.moreThanTenHours();
-    this.inCoreTime();
+    // this.inCoreTime();
     this.isWorkingDay();
-    this.negativeRestOfTakenHolidays();
     return this.errors;
   }
 
@@ -41,7 +40,13 @@ export default class DayFormValidator {
    * before the end time.
    */
   beginAfterEnd() {
-    if (!this.day.isEndAfterBegin()) {
+    let error = false;
+    this.day.dayParts.forEach(part => {
+      if (!part.isEndAfterBegin()) {
+        error = true;
+      }
+    });
+    if (error) {
       this.errors.push("Das Ende der Arbeitszeit muss nach dem Beginn liegen!");
     }
   }
@@ -55,7 +60,7 @@ export default class DayFormValidator {
       this.errors.push(
         `Bei Verwendung der Bemerkung \u201E${
           timeOffsConfig.find((value) => value.value === this.day.timeOff)!.text
-        }" darf kein Arbeitsbeginn und -ende angegeben werden!`
+        }" darf kein Arbeitsbeginn oder -ende angegeben werden!`
       );
     }
   }
@@ -86,6 +91,7 @@ export default class DayFormValidator {
    * Tests whether the core time is covered by the working time.
    */
   inCoreTime() {
+    // TODO adapt!
     if (
       this.day.isBeginAfterCore() &&
       !(this.day.timeOff === "ausgleich" || this.day.timeOff === "zusatz")
@@ -151,31 +157,6 @@ export default class DayFormValidator {
       this.errors.push(
         "An einem regulären Arbeitstag darf die Bemerkung" +
           ' \u201Ezusätzlicher Arbeitstag" nicht angegeben werden'
-      );
-    }
-  }
-
-  /**
-   * Tests the 'Time Off' `urlaub`.
-   */
-  negativeRestOfTakenHolidays() {
-    const remainingHolidays =
-      this.month.monthNumber <= timesConfig.previousHolidaysValidTo
-        ? this.carryResult.holidaysPrevious + this.carryResult.holidays
-        : this.carryResult.holidays;
-    if (
-      remainingHolidays <= this.month.takenHolidays &&
-      this.day.timeOff === "urlaub"
-    ) {
-      this.errors.push(
-        'Sie können die Bemerkung \u201EUrlaub" nur eintragen,' +
-          " wenn Sie noch über Urlaubstage verfügen."
-      );
-    }
-    if (!this.day.isActualWorkingDay && this.day.timeOff === "urlaub") {
-      this.errors.push(
-        'Sie können die Bemerkung \u201EUrlaub" nur eintragen,' +
-          " wenn Sie einen Arbeitstag haben."
       );
     }
   }
