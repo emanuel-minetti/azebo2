@@ -198,22 +198,7 @@ export default defineComponent({
           mobileWorking: part.mobileWorking,
         });
       });
-      result.sort((a, b) => {
-        if (!a.begin || !b.begin) return 0;
-        if (Number(a.begin.substring(0, 2)) < Number(b.begin.substring(0, 2))) {
-          return -1;
-        } else if (Number(a.begin.substring(0, 2)) > Number(b.begin.substring(0, 2))) {
-          return 1;
-        } else {
-          if (Number(a.begin.substring(3, 5)) < Number(b.begin.substring(3, 5))) {
-            return -1;
-          } else if (Number(a.begin.substring(3, 5)) > Number(b.begin.substring(3, 5))) {
-            return 1;
-          } else {
-            return 0;
-          }
-        }
-      });
+      result.sort(WorkingDayPart.dayPartsSorter);
       return result;
     },
     begin: {
@@ -358,7 +343,6 @@ export default defineComponent({
     validate() {
       const dfv = new DayFormValidator(
           this.day as WorkingDay,
-          this.$store.state.workingTime.holidays,
           this.$store.state.workingTime.carryResult,
           this.$store.state.workingTime.month
       );

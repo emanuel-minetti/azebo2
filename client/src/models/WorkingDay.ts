@@ -319,23 +319,4 @@ export default class WorkingDay {
   get dayParts(): Array<WorkingDayPart> {
     return this._dayParts;
   }
-
-  public sortDayParts() {
-    this._dayParts.sort((a, b) => {
-      if (!a.begin || !b.begin) return 0;
-      if (Number(a.begin.substring(0, 2)) < Number(b.begin.substring(0, 2))) {
-        return -1;
-      } else if (Number(a.begin.substring(0, 2)) > Number(b.begin.substring(0, 2))) {
-        return 1;
-      } else {
-        if (Number(a.begin.substring(3, 5)) < Number(b.begin.substring(3, 5))) {
-          return -1;
-        } else if (Number(a.begin.substring(3, 5)) > Number(b.begin.substring(3, 5))) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    });
-  }
 }

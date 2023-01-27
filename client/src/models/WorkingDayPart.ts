@@ -24,6 +24,25 @@ export default class WorkingDayPart {
     }
   }
 
+  public static dayPartsSorter(
+    a: {begin: string | null},
+    b: {begin: string | null}) {
+      if (!a.begin || !b.begin) return 0;
+      if (Number(a.begin.substring(0, 2)) < Number(b.begin.substring(0, 2))) {
+        return -1;
+      } else if (Number(a.begin.substring(0, 2)) > Number(b.begin.substring(0, 2))) {
+        return 1;
+      } else {
+        if (Number(a.begin.substring(3, 5)) < Number(b.begin.substring(3, 5))) {
+          return -1;
+        } else if (Number(a.begin.substring(3, 5)) > Number(b.begin.substring(3, 5))) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+  }
+
   set workingDayId(value: number) {
     this._workingDayId = value;
   }
