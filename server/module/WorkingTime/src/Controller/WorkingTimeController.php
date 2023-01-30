@@ -67,6 +67,7 @@ class WorkingTimeController extends ApiController
             $userId = $this->httpRequest->getQuery()->user_id;
             if (!isset($post->_id) || !is_numeric($post->_id)) return $this->invalidRequest;
             $id = $post->_id;
+
             if ($id != 0) {
                 $day = $this->table->find($id);
                 $day->dayParts = [];
@@ -142,6 +143,7 @@ class WorkingTimeController extends ApiController
             } else {
                 $day->comment = "";
             }
+
             if (isset($post->_day_parts)) {
                 if (!is_array($post->_day_parts))
                     return $this->invalidRequest;

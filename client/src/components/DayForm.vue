@@ -265,7 +265,7 @@ export default defineComponent({
         this.$store.state.workingTime.dayToEdit
     ) as WorkingDay;
     if (this.day.dayParts.length === 0) {
-      this.day.dayParts.push(new WorkingDayPart(['']));
+      this.day.dayParts.push(new WorkingDayPart({id: 0}));
       this.day.dayParts[0].workingDayId = this.day.id;
     }
     if (this.day.dayParts.length === 1) {
