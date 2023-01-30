@@ -156,8 +156,8 @@ export default class WorkingDayPart {
   public toJSON() {
     return {
       _id: this._id,
-      _begin: this.begin,
-      _end: this.end,
+      _begin: this.begin ? this.begin.substring(0,5) : null,
+      _end: this.end ? this.end.substring(0, 5) : null,
       _mobileWorking: this.mobileWorking
     }
   }

@@ -308,17 +308,16 @@ export default defineComponent({
     },
     onSubmit(evt: Event) {
       evt.preventDefault();
-      console.log(this.day);
-      // if (this.errors.length === 0) {
-      //   this.$store
-      //       .dispatch("workingTime/setDay", this.day)
-      //       .then(() =>
-      //           this.$store.dispatch("workingTime/getMonth", this.day.date)
-      //       )
-      //       .then(() => {
-      //         this.$emit("submitted");
-      //       });
-      // }
+      if (this.errors.length === 0) {
+        this.$store
+            .dispatch("workingTime/setDay", this.day)
+            .then(() =>
+                this.$store.dispatch("workingTime/getMonth", this.day.date)
+            )
+            .then(() => {
+              this.$emit("submitted");
+            });
+      }
     },
 
     onReset(evt: Event) {

@@ -150,7 +150,7 @@ class WorkingTimeController extends ApiController
                         return $this->invalidRequest;
                     $dayPart = new WorkingDayPart();
                     $dayPart->id = $part->_id;
-                    $dayPart->workingDayId = $part->_workingDayId;
+                    $dayPart->workingDayId = $id;
                     $dayPart->begin = isset($part->_begin) ?
                         DateTime::createFromFormat(self::TIME_FORMAT, $part->_begin) : null;
                     $dayPart->end = isset($part->_end) ?
