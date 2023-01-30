@@ -1,6 +1,7 @@
 <template>
   <div>
     <Title prop-title="Login" />
+    <b-alert variant='danger' show>Azebo wird heute (30.1.2023) zwischen 18:00 und 19:00 wegen eines Updates nicht erreichbar sein.</b-alert>
     <b-form @submit="onSubmit" @reset="onReset">
       <b-form-group label="Benutzername:" label-for="username">
         <b-form-input
