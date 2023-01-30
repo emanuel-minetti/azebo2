@@ -1,13 +1,19 @@
 <template>
   <b-form v-if="show" @submit="onSubmit" @reset="onReset">
+    <div v-if="loading" class="d-flex justify-content-center mb-3">
+      <b-spinner id="spinner" label="Loading..."></b-spinner>
+    </div>
+    <div v-if='error.length > 0' class='alert-danger alert'>
+      {{ error }}
+    </div>
     <!--TODO Should be shown to non new users with a warning (See #30)-->
     <b-form-group label="Saldo Übertrag:" label-for="carry-over-input">
       <SaldoInput
         v-if="showSaldoInput"
         :prop-disabled="propDisabled"
-        :prop-saldo="getFormSaldo()"
+        :prop-saldo="carry.saldo"
         :prop-sign="true"
-        @update-saldo="setFormSaldo"
+        @update-saldo="updateSaldo"
       />
     </b-form-group>
     <div v-if="!propDisabled">
@@ -28,68 +34,64 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { Carry, Saldo } from "/src/models";
 import SaldoInput from "/src/components/SaldoInput.vue";
-import { mapState } from "vuex";
+import { defineComponent } from "vue";
 
-@Component({
+export default  defineComponent({
+  name: "CarryForm",
+  components: {
+    SaldoInput
+  },
   props: {
     propDisabled: Boolean,
   },
-  components: {
-    SaldoInput,
+  emits: [
+      'submitted',
+  ],
+  data() {
+      return {
+        loading: true,
+        error: '',
+        show: true,
+        showSaldoInput: true,
+        carry: new Carry(),
+      };
   },
-  computed: { ...mapState("workingTime", ["carry"]) },
-})
-export default class CarryForm extends Vue {
-  carry!: Carry;
-  private _formSaldo: Saldo | undefined;
-  private _formHolidays: number | undefined;
-  private _formHolidaysPrevious: number | undefined;
+  mounted() {
+    this.loading = this.$store.state.loading;
+    this.$store.dispatch("workingTime/getCarry").then(() =>
+        this.carry = this.$store.state.workingTime.carry
+    ).catch((reason) => {
+      this.error = "Es gab ein Problem beim Laden des Übertrags:<br/>" + reason;
+      this.$store.commit("cancelLoading");
+    });
 
-  //Fields to support updating the view
-  private show = true;
-  private showSaldoInput = true;
-
-  getFormSaldo() {
-    if (!this._formSaldo && this.carry.saldo) {
-      this._formSaldo = this.carry.saldo.clone();
-    }
-    return this._formSaldo;
-  }
-  setFormSaldo(saldo: Saldo | undefined) {
-    this._formSaldo = saldo;
-    this.showSaldoInput = false;
-    this.$nextTick().then(() => (this.showSaldoInput = true));
-  }
-  onSubmit(evt: Event) {
-    evt.preventDefault();
-    this.carry.saldo = this._formSaldo ? this._formSaldo : this.carry.saldo;
-    this.carry.holidays = this._formHolidays
-      ? this._formHolidays
-      : this.carry.holidays;
-    this.carry.holidaysPrevious = this._formHolidaysPrevious
-      ? this._formHolidaysPrevious
-      : this.carry.holidaysPrevious;
-    this.$store
-      .dispatch("workingTime/setCarry", this.carry)
-      .then(() => this.$store.dispatch("workingTime/getCarry"))
-      .then(() => this.$emit("submitted"));
-  }
-  onReset(evt: Event) {
-    evt.preventDefault();
-    this._formSaldo = this.carry.saldo;
-    this._formHolidays = this.carry.holidays;
-    this._formHolidaysPrevious = this.carry.holidaysPrevious;
-    this.show = false;
-    this.$nextTick().then(() => (this.show = true));
-  }
-  onCancel(evt: Event) {
-    this.onReset(evt);
-    this.$emit("submitted");
-  }
-}
+  },
+  methods: {
+    updateSaldo(saldo: Saldo) {
+      this.carry.saldo = saldo;
+      this.showSaldoInput = false;
+      this.$nextTick().then(() => (this.showSaldoInput = true));
+    },
+    onSubmit(evt: Event) {
+      evt.preventDefault();
+      this.$store
+          .dispatch("workingTime/setCarry", this.carry)
+          .then(() => this.$store.dispatch("workingTime/getCarry"))
+          .then(() => this.$emit("submitted"));
+    },
+    onReset(evt: Event) {
+      evt.preventDefault();
+      this.show = false;
+      this.$nextTick().then(() => (this.show = true));
+    },
+    onCancel(evt: Event) {
+      this.onReset(evt);
+      this.$emit("submitted");
+    },
+  },
+});
 </script>
 
 <style scoped>

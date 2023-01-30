@@ -2,7 +2,7 @@ import { WorkingDay } from "/src/models";
 
 export default class WorkingMonth {
   monthDate: Date;
-  days: Array<WorkingDay>;
+  private readonly _days: Array<WorkingDay>;
 
   /**
    * Constructs a new `WorkingMonth` for the given date and merges in the given days.
@@ -11,7 +11,7 @@ export default class WorkingMonth {
    */
   constructor(monthDate: Date, days: Array<WorkingDay>) {
     this.monthDate = monthDate;
-    this.days = new Array<WorkingDay>();
+    this._days = new Array<WorkingDay>();
     // get first and last day of this month
     const firstOfMonth = new Date(
       monthDate.getFullYear(),
@@ -23,7 +23,7 @@ export default class WorkingMonth {
       monthDate.getMonth() + 1,
       0
     );
-    // iterate over the days of the month to setup an array of working days
+    // iterate over the days of the month to set up an array of working days
     const currentDay = firstOfMonth;
     while (currentDay <= lastOfMonth) {
       // look for current day in given `days`
@@ -32,20 +32,24 @@ export default class WorkingMonth {
       );
       if (found) {
         // take the given day
-        this.days.push(found);
+        this._days.push(found);
       } else {
         // take fresh created (empty) day
-        this.days.push(
+        this._days.push(
           new WorkingDay({
             date: new Date(currentDay),
-            mobile_working: false,
-            afternoon: false,
+            day_parts: [],
+            edited: false,
           })
         );
       }
       // update current day for next loop iteration
       currentDay.setDate(currentDay.getDate() + 1);
     }
+  }
+
+  get days(): Array<WorkingDay> {
+    return this._days;
   }
 
   /**
@@ -64,11 +68,11 @@ export default class WorkingMonth {
   }
 
   get takenHolidays() {
-    return this.days.filter((day) => day.timeOff === "urlaub").length;
+    return this._days.filter((day) => day.timeOff === "urlaub").length;
   }
 
   getDayByDate(date: Date) {
-    return this.days.filter(
+    return this._days.filter(
       (day) =>
         day.date.getMonth() === date.getMonth() &&
         day.date.getDate() === date.getDate()

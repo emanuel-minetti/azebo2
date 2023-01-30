@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div v-if="loading" class="d-flex justify-content-center mb-3">
-      <b-spinner id="spinner" label="Loading..."></b-spinner>
-    </div>
-    <Title :prop-title="title" />
+    <Title prop-title="Übertrage" />
     <div id="intro">
       <div v-if="editing">
         Hier können Sie Ihre Überträge bearbeiten:
@@ -21,39 +18,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { CarryForm, Title } from "/src/components";
-import { mapState } from "vuex";
+import { defineComponent } from "vue";
 
-@Component({
+export default  defineComponent({
+  name: "CarryOver",
   components: {
     Title,
     CarryForm,
   },
-  computed: {
-    ...mapState(["loading"]),
+  data() {
+    return {
+      editing: false,
+    }
   },
-})
-export default class CarryOver extends Vue {
-  loading!: boolean;
-  title = "Überträge";
-  error = "";
-  editing = false;
-
-  setEditing() {
-    this.editing = true;
-  }
-  submitted() {
-    this.editing = false;
-  }
-  // noinspection JSUnusedGlobalSymbols
-  mounted() {
-    this.$store.dispatch("workingTime/getCarry").catch((reason) => {
-      this.error = "Es gab ein Problem beim Laden des Übertrags:<br/>" + reason;
-      this.$store.commit("cancelLoading");
-    });
-  }
-}
+  methods: {
+    setEditing() {
+      this.editing = true;
+    },
+    submitted() {
+      this.editing = false;
+    }
+  },
+});
 </script>
 
 <style scoped>

@@ -11,15 +11,11 @@
 namespace WorkingTime\Model;
 
 use ArrayObject;
-use DateInterval;
 use DateTime;
-use Exception;
 
 class WorkingDay extends ArrayObject
 {
-    public const TIME_FORMAT = 'H:i:s';
     public const DATE_FORMAT = 'Y-m-d';
-    public const INTERVAL_FORMAT = '%H:%I:%S';
 
     /** @var int the primary key of `WorkingDay` */
     public int $id;
@@ -27,51 +23,21 @@ class WorkingDay extends ArrayObject
     public int $userId;
     /** @var DateTime the date of the working day */
     public DateTime $date;
-    /** @var ?DateTime start of working time */
-    public ?DateTime $begin;
-    /** @var ?DateTime end of working time */
-    public ?DateTime $end;
-    /** @var DateInterval the break to subtract */
-    public DateInterval $break;
     /** @var string an enumerated value */
     public string $timeOff;
     /** @var string a free text field */
     public string $comment;
-    /** @var bool whether a break was counted */
-    public bool $mobile_working;
-    /** @var bool whether the working day was split */
-    public bool $afternoon;
-    /** @var ?DateTime start of second part of working day */
-    public ?DateTime $afternoonBegin;
-    /** @var ?DateTime end of second part of working day */
-    public ?DateTime $afternoonEnd;
+    public array $dayParts;
 
-    public function exchangeArray($array)
-    {
+
+    public function exchangeArray($array): array {
         $this->id = (int)$array['id'] ?? 0;
         $this->userId = (int)$array['user_id'] ?? 0;
         $this->date = !empty($array['date']) ?
             DateTime::createFromFormat(self::DATE_FORMAT, $array['date']) : null;
-        $this->begin = !empty($array['begin']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $array['begin']) : null;
-        $this->end = !empty($array['end']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $array['end']) : null;
-        try {
-            if (!empty($array['break'])) {
-                list($hours, $minutes, $seconds) = sscanf($array['break'], '%d:%d:%d');
-                $this->break = new DateInterval(sprintf('PT%dH%dM%dS', $hours, $minutes, $seconds));
-            } else {
-                $this->break = new DateInterval('PT0S');
-            }
-        } catch (Exception $ignored) {}
         $this->timeOff = $array['time_off'] ?? "";
         $this->comment = $array['comment'] ?? "";
-        $this->mobile_working = (bool)$array['mobile_working'];
-        $this->afternoon = (bool)$array['afternoon'] ?? false;
-        $this->afternoonBegin = !empty($array['afternoon_begin']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $array['afternoon_begin']) : null;
-        $this->afternoonEnd = !empty($array['afternoon_end']) ?
-            DateTime::createFromFormat(self::TIME_FORMAT, $array['afternoon_end']) : null;
+        return array($this);
     }
 
     public function getArrayCopy(): array
@@ -80,15 +46,9 @@ class WorkingDay extends ArrayObject
             'id' => $this->id ?? null,
             'user_id' => $this->userId,
             'date' => $this->date->format(self::DATE_FORMAT),
-            'begin' => isset($this->begin) ? $this->begin->format(self::TIME_FORMAT) : null,
-            'end' => isset($this->end) ? $this->end->format(self::TIME_FORMAT) : null,
-            'break' => isset($this->break) ? $this->break->format(self::INTERVAL_FORMAT) : '00:00:00',
             'time_off' => $this->timeOff == "" ? null : $this->timeOff,
             'comment' => $this->comment == "" ? null: $this->comment,
-            'mobile_working' => $this->mobile_working ? 1 : 0,
-            'afternoon' => $this->afternoon ? 1 : 0,
-            'afternoon_begin' => isset($this->afternoonBegin) ? $this->afternoonBegin->format(self::TIME_FORMAT) : null,
-            'afternoon_end' => isset($this->afternoonEnd) ? $this->afternoonEnd->format(self::TIME_FORMAT) : null,
+            'day_parts' => $this->dayParts,
         ];
     }
 

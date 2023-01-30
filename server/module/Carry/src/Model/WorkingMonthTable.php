@@ -35,6 +35,7 @@ class WorkingMonthTable
      * @param DateTime $month
      * @param bool $includeEarlier whether to include earlier months into array
      * @return WorkingMonth[]
+     * @noinspection PhpParamsInspection
      */
     public function getByUserIdAndMonth($userId, DateTime $month, bool $includeEarlier = true): array
     {

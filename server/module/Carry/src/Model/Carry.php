@@ -43,15 +43,15 @@ class Carry extends ArrayObject
      */
     public $saldo;
 
-    /**
-     * @var int the number of holidays left for the following year
-     */
-    public $holidays;
-
-    /**
-     * @var int the number of holidays left from this year
-     */
-    public $holidaysPreviousYear;
+//    /**
+//     * @var int the number of holidays left for the following year
+//     */
+//    public $holidays;
+//
+//    /**
+//     * @var int the number of holidays left from this year
+//     */
+//    public $holidaysPreviousYear;
 
     public function exchangeArray($array)
     {
@@ -62,8 +62,8 @@ class Carry extends ArrayObject
         $this->saldo = !(empty($array['saldo_hours']) && empty($array['saldo_minutes']) && empty($array['saldo_positive']))
             ? Saldo::createFromHoursAndMinutes($array['saldo_hours'], $array['saldo_minutes'], $array['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();
-        $this->holidays = (int)$array['holidays'] ?? 0;
-        $this->holidaysPreviousYear = (int)$array['holidays_previous_year'] ?? 0;
+//        $this->holidays = (int)$array['holidays'] ?? 0;
+//        $this->holidaysPreviousYear = (int)$array['holidays_previous_year'] ?? 0;
     }
 
     public function getArrayCopy()
@@ -75,8 +75,8 @@ class Carry extends ArrayObject
             'saldo_hours' => $this->saldo->getHours(),
             'saldo_minutes' => $this->saldo->getMinutes(),
             'saldo_positive' => $this->saldo->isPositive(),
-            'holidays' => $this->holidays,
-            'holidays_previous_year' => $this->holidaysPreviousYear,
+//            'holidays' => $this->holidays,
+//            'holidays_previous_year' => $this->holidaysPreviousYear,
         ];
     }
 

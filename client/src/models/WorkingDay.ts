@@ -1,34 +1,20 @@
 import { Holiday, Saldo, WorkingRule } from "/src/models";
 import { FormatterService, GermanKwService } from "/src/services";
 import { store } from "/src/store";
-import { timesConfig } from "/src/configs";
+import WorkingDayPart from "/src/models/WorkingDayPart";
 
-// noinspection JSUnusedGlobalSymbols
 export default class WorkingDay {
   private readonly _id: number;
   private readonly _date: Date;
   private readonly _rule?: WorkingRule;
-  private readonly _break?: Date;
-
-  private _begin?: Date;
-  private _end?: Date;
   private _timeOff?: string;
   private _comment?: string;
-  private _mobileWorking: boolean;
-  private _afternoon: boolean;
-  private _afternoonBegin?: Date;
-  private _afternoonEnd?: Date;
-
+  private readonly _dayParts: Array<WorkingDayPart> = [];
   private _holiday?: Holiday;
   private _edited: boolean;
 
   constructor(data?: any) {
-    if (
-      data &&
-      data.date &&
-      data.mobile_working != undefined &&
-      data.afternoon != undefined
-    ) {
+    if (data && data.date) {
       this._id = data.id ? data.id : 0;
 
       this._date = FormatterService.convertToDate(data.date);
@@ -69,46 +55,15 @@ export default class WorkingDay {
         }
       }
 
-      this._mobileWorking = Boolean(data.mobile_working);
-      this._afternoon = Boolean(data.afternoon);
+      data.day_parts.forEach((dayPart: any) => {
+        this._dayParts.push(new WorkingDayPart(dayPart));
+      });
 
-      this._begin = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.begin
-      );
-      this._end = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.end
-      );
-      this._break = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.break
-      );
       this._timeOff = data.time_off;
       this._comment = data.comment;
-      this._afternoonBegin = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.afternoon_begin
-      );
-      this._afternoonEnd = FormatterService.convertToTime(
-        year,
-        monthIndex,
-        date,
-        data.afternoon_end
-      );
     } else {
       this._id = 0;
       this._date = new Date();
-      this._mobileWorking = false;
-      this._afternoon = false;
     }
     this._edited = false;
   }
@@ -117,50 +72,16 @@ export default class WorkingDay {
     return this._date;
   }
 
-  // no setter for `date` because it's the primary key and should not be edited
-
-  get begin(): Date | undefined {
-    return this._begin;
-  }
-
-  set begin(value: Date | undefined) {
-    if (value) {
-      this._begin = value;
-      this._begin.setUTCSeconds(0);
+  get break(): Saldo | undefined {
+    let result;
+    if (!this.hasWorkingTime) {
+      result = undefined;
     } else {
-      this._begin = undefined;
+      result = this.dayParts.reduce((prev, curr) =>
+          Saldo.getSum(prev, curr.break ? curr.break : prev),
+        Saldo.createFromMillis(0))
     }
-    this._edited = true;
-  }
-
-  get end(): Date | undefined {
-    return this._end;
-  }
-
-  set end(value: Date | undefined) {
-    if (value) {
-      this._end = value;
-      this._end.setUTCSeconds(0);
-    } else {
-      this._end = undefined;
-    }
-    this._edited = true;
-  }
-
-  get break(): Date | undefined {
-    if (!this._edited) return this._break;
-    if (!this.hasWorkingTime) return undefined;
-    const breakRequiredFrom = new Saldo(
-      timesConfig.breakRequiredFrom * 60 * 1000
-    );
-    const longBreakRequiredFrom = new Saldo(
-      timesConfig.longBreakRequiredFrom * 60 * 1000
-    );
-    if (this.totalTime!.biggerThan(longBreakRequiredFrom))
-      return new Date(timesConfig.longBreakDuration * 60 * 1000);
-    else if (this.totalTime!.biggerThan(breakRequiredFrom))
-      return new Date(timesConfig.breakRequiredFrom * 60 * 1000);
-    else return undefined;
+    return result;
   }
 
   get timeOff(): string | undefined {
@@ -187,46 +108,6 @@ export default class WorkingDay {
       this._comment = undefined;
     }
     this._edited = true;
-  }
-
-  get mobileWorking(): boolean {
-    return this._mobileWorking;
-  }
-
-  set mobileWorking(value: boolean) {
-    this._mobileWorking = value;
-    this._edited = true;
-  }
-
-  get afternoon(): boolean {
-    return this._afternoon;
-  }
-
-  set afternoon(value: boolean) {
-    this._afternoon = value;
-    this._edited = true;
-  }
-
-  get afternoonBegin(): Date | undefined {
-    return this._afternoonBegin;
-  }
-
-  set afternoonBegin(value: Date | undefined) {
-    if (value) {
-      this._afternoonBegin = value;
-      this._edited = true;
-    }
-  }
-
-  get afternoonEnd(): Date | undefined {
-    return this._afternoonEnd;
-  }
-
-  set afternoonEnd(value: Date | undefined) {
-    if (value) {
-      this._afternoonEnd = value;
-      this._edited = true;
-    }
   }
 
   get isHoliday(): boolean {
@@ -267,7 +148,16 @@ export default class WorkingDay {
    * Returns whether begin and end are set for this working day.
    */
   get hasWorkingTime(): boolean {
-    return this.begin !== undefined && this.end !== undefined;
+    if (this._dayParts.length === 0) {
+      return false;
+    }
+    let result = false;
+    this._dayParts.forEach(part => {
+      if (part.begin || part.end) {
+        result = true;
+      }
+    })
+    return result;
   }
 
   /**
@@ -276,7 +166,9 @@ export default class WorkingDay {
    */
   get totalTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return Saldo.createFromDates(<Date>this.begin, <Date>this.end);
+    return this.dayParts.reduce((prev, curr) =>
+      curr.totalTime ? Saldo.getSum(prev, curr.totalTime) : prev,
+      Saldo.createFromMillis(0))
   }
 
   /**
@@ -284,12 +176,9 @@ export default class WorkingDay {
    */
   get actualTime(): Saldo | undefined {
     if (!this.hasWorkingTime) return undefined;
-    return this.break
-      ? Saldo.getSum(
-          <Saldo>this.totalTime,
-          Saldo.createFromMillis(this.break.getMinutes() * 60 * 1000, false)
-        )
-      : this.totalTime;
+    return this.dayParts.reduce((prev, curr) =>
+        curr.actualTime ? Saldo.getSum(prev, curr.actualTime) : prev,
+      Saldo.createFromMillis(0))
   }
 
   /**
@@ -326,16 +215,14 @@ export default class WorkingDay {
     if (this.hasWorkingTime) {
       if (this._rule) {
         const targetSaldo = this.targetTime!.clone();
-        targetSaldo.invert();
-        return Saldo.getSum(this.actualTime!, targetSaldo);
+        return Saldo.getSum(this.actualTime!, targetSaldo.invert());
       } else {
         return this.actualTime;
       }
     } else {
       if (this._rule && this._timeOff == "gleitzeit") {
         const targetSaldo = this._rule.target.clone();
-        targetSaldo.invert();
-        return targetSaldo;
+        return targetSaldo.invert();
       } else {
         return undefined;
       }
@@ -350,21 +237,12 @@ export default class WorkingDay {
     return this._rule !== undefined;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   /**
    * Returns the number week in the year for this day.
    */
   public get calendarWeek(): number {
     return GermanKwService.getGermanKW(this.date);
-  }
-
-  public isEndAfterBegin(): boolean {
-    if (this.begin && this.end) {
-      return (
-        FormatterService.toGermanTime(this.begin) <
-        FormatterService.toGermanTime(this.end)
-      );
-    }
-    return true;
   }
 
   public validateTimeOffWithBeginEnd(): boolean {
@@ -373,7 +251,7 @@ export default class WorkingDay {
       this.timeOff === null ||
       this.timeOff === "zusatz" ||
       this.targetTime !== undefined ||
-      (this.begin === undefined && this.end === undefined)
+      !this.hasWorkingTime
     );
   }
 
@@ -385,62 +263,30 @@ export default class WorkingDay {
     return false;
   }
 
-  isBeginAfterCore() {
-    if (!this.hasWorkingTime) return false;
-    return (
-      FormatterService.toGermanTime(this.begin) > timesConfig.coreTimeBegin
-    );
-  }
-
-  isEndAfterCore(holidays: Holiday[]) {
-    if (!this.hasWorkingTime) return false;
-    let coreTimeEndString = timesConfig.coreTimeEndShort;
-    if (this.date.getDay() !== 5) {
-      let nextDayIsHoliday = false;
-      const nextDay = new Date(this.date.getTime());
-      nextDay.setDate(this.date.getDate() + 1);
-      for (const holiday of holidays) {
-        if (holiday.date.getTime() == nextDay.getTime()) {
-          nextDayIsHoliday = true;
-          break;
-        }
-      }
-      if (!nextDayIsHoliday) coreTimeEndString = timesConfig.coreTimeEnd;
-    }
-    return FormatterService.toGermanTime(this.end) < coreTimeEndString;
-  }
-
+  // noinspection JSUnusedGlobalSymbols
   public toJSON() {
     return {
       _id: this.id,
       _date: this.date.toDateString(),
-      _afternoon: this.afternoon,
-      _begin: this.begin?.toTimeString(),
-      _end: this.end?.toTimeString(),
       _timeOff: this.timeOff,
       _comment: this.comment,
-      _mobile_working: this.mobileWorking,
-      _afternoonBegin: this.afternoonBegin?.toTimeString(),
-      _afternoonEnd: this.afternoonEnd?.toTimeString(),
+      _day_parts: this._dayParts,
       _edited: this.edited,
     };
   }
 
-  shortBreakFrom() {
-    return new Date(this.begin!.valueOf()
-      + timesConfig.breakRequiredFrom * 60 * 60 * 1000
-      + 60 * 1000);
+  public get mobileWorking(): Saldo {
+    let result = Saldo.createFromMillis(0);
+    if (this._dayParts.length > 0) {
+      result =
+        this._dayParts.filter(part => part.mobileWorking && part.actualTime)
+          .map(part => part.actualTime)
+          .reduce((prev, curr) => Saldo.getSum(prev!, curr!), Saldo.createFromMillis(0))!;
+    }
+    return result;
   }
 
-  longBreakFrom() {
-    return new Date(this.begin!.valueOf()
-      + timesConfig.longBreakRequiredFrom * 60 * 60 * 1000
-      + 60 * 1000);
-  }
-
-  longDayFrom() {
-    return new Date(this.begin!.valueOf()
-      + timesConfig.longDayFrom * 60 * 60 * 1000
-      + timesConfig.longBreakDuration * 60 * 1000);
+  get dayParts(): Array<WorkingDayPart> {
+    return this._dayParts;
   }
 }

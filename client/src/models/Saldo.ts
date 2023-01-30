@@ -148,9 +148,14 @@ export default class Saldo {
    */
   invert() {
     this._positive = !this._positive;
+    return this;
   }
 
   biggerThan(other: Saldo): boolean {
     return this.getMillis() > other.getMillis();
+  }
+
+  biggerOrEqualThan(other: Saldo): boolean {
+    return this.getMillis() >= other.getMillis();
   }
 }

@@ -9,3 +9,5 @@ phpunit.xml
 /config/ldap.config.php
 /data/log/azebo.log
 Scratches
+/assets/sql/dump_2023_01_17.sql
+/assets/sql/dump-prod-18-01-2023.sql

@@ -16,6 +16,7 @@ use ArrayObject;
 
 use AzeboLib\Saldo;
 use DateTime;
+use ReturnTypeWillChange;
 use WorkingTime\Model\WorkingDay;
 
 class WorkingMonth extends ArrayObject
@@ -23,45 +24,34 @@ class WorkingMonth extends ArrayObject
     /**
      * @var int the primary key of the table
      */
-    public $id;
+    public int $id;
 
     /**
      * @var int foreign key to `User.php`
      */
-    public $userId;
+    public int $userId;
 
     /**
      * @var DateTime date of the month
      */
-    public $month;
+    public DateTime $month;
 
     /**
      * @var Saldo the saldo of this month
      */
-    public $saldo;
-
-    /**
-     * @var int the number of holidays taken in this month
-     */
-    public $holidays;
-
-    /**
-     * @var int the number of 'working time reduction' (AZV) days taken this month
-     */
-    public $workingTimeReduction;
+    public Saldo $saldo;
 
     /**
      * @var boolean whether the working time sheet for this month is archived
      */
-    public $archived;
+    public bool $archived;
 
     /**
      * @var boolean whether this month is already carried over to table carry
      */
-    public $carried;
+    public bool $carried;
 
-    public function exchangeArray($array)
-    {
+    #[ReturnTypeWillChange] public function exchangeArray($array): void {
         $this->id = (int) $array['id'] ?? 0;
         $this->userId = (int) $array['user_id'] ?? 0;
         $this->month = !empty($array['month'])
@@ -69,13 +59,11 @@ class WorkingMonth extends ArrayObject
         $this->saldo = !(empty($array['saldo_hours']) && empty($array['saldo_minutes']) && empty($array['saldo_positive']))
             ? Saldo::createFromHoursAndMinutes($array['saldo_hours'], $array['saldo_minutes'], $array['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();
-        $this->holidays = (int) $array['holidays'] ?? 0;
-        $this->workingTimeReduction = (int) $array['working_time_reduction'];
         $this->archived = (int) $array['archived'] ?? 0;
         $this->carried = (int) $array['carried'] ?? 0;
     }
 
-    public function getArrayCopy()
+    public function getArrayCopy(): array
     {
         return [
             'id' => $this->id,
@@ -84,8 +72,6 @@ class WorkingMonth extends ArrayObject
             'saldo_hours' => $this->saldo->getHours(),
             'saldo_minutes' => $this->saldo->getMinutes(),
             'saldo_positive' => $this->saldo->isPositive(),
-            'holidays' => $this->holidays,
-            'working_time_reduction' => $this->workingTimeReduction,
             'archived' => $this->archived,
             'carried' => $this->carried,
         ];

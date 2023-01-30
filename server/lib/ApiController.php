@@ -43,11 +43,16 @@ class ApiController extends AbstractActionController
         $this->httpResponse = $this->response;
     }
 
-    protected function processResult($result, $userId) {
+    protected function processResult($result, $userId): JsonModel {
         // refresh jwt ...
         $expire = time() + AuthorizationService::EXPIRE_TIME;
         $jwt = AuthorizationService::getJwt($expire, $userId);
         // ... and return response
+        if (isset($result['day_parts']) && is_array($result['day_parts']) && sizeof($result['day_parts']) > 0) {
+            $result['day_parts'] = array_map(function ($part) {
+                return $part->getArrayCopy();
+            }, $result['day_parts']);
+        }
         return new JsonModel([
             'success' => true,
             'data' => [

@@ -19,6 +19,7 @@ use Carry\Model\WorkingMonthTable;
 use DateTime;
 use IntlDateFormatter;
 use Laminas\Config\Factory;
+use Laminas\Stdlib\ResponseInterface;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
@@ -27,9 +28,9 @@ use WorkingRule\Model\WorkingRuleTable;
 
 class CarryController extends ApiController
 {
-    private $monthTable;
-    private $carryTable;
-    private $ruleTable;
+    private WorkingMonthTable $monthTable;
+    private CarryTable $carryTable;
+    private WorkingRuleTable $ruleTable;
 
     public function __construct(AzeboLog $log,
                                 WorkingMonthTable $monthTable,
@@ -43,10 +44,9 @@ class CarryController extends ApiController
         $this->ruleTable = $ruleTable;
     }
 
-    public function carryResultAction()
-    {
+    public function carryResultAction(): JsonModel | ResponseInterface {
         $this->prepare();
-        if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+        if (AuthorizationService::authorize($this->request, $this->response)) {
             $userId = $this->httpRequest->getQuery()->user_id;
             $yearId = $this->params('year');
             $monthId = $this->params('month');
@@ -70,8 +70,8 @@ class CarryController extends ApiController
                 $monthToTest = date_create($monthToTest->format("y-$nextMonth-1"));
             }
             $saldo = $resultCarry->saldo;
-            $holidaysPrevious = $resultCarry->holidaysPreviousYear;
-            $holidaysLeft = $resultCarry->holidays;
+//            $holidaysPrevious = $resultCarry->holidaysPreviousYear;
+//            $holidaysLeft = $resultCarry->holidays;
             $finalized = false;
             foreach ($resultMonths as $workingMonth) {
                 // set finalized and continue if this month is already in the table
@@ -80,27 +80,27 @@ class CarryController extends ApiController
                     continue;
                 }
                 $saldo = Saldo::getSum($saldo, $workingMonth->saldo);
-                $holidays = $workingMonth->holidays;
-                //if month can have holidays from previous year
-                if ($workingMonth->month->format('n') <= Carry::PREVIOUS_HOLIDAYS_VALID_TO_MONTH) {
-                    if ($holidaysPrevious >= $holidays) {
-                        $holidaysPrevious -= $holidays;
-                    } else {
-                        $holidays -= $holidaysPrevious;
-                        $holidaysPrevious = 0;
-                        $holidaysLeft -= $holidays;
-                    }
-                } else {
-                    $holidaysLeft -= $holidays;
-                }
+//                $holidays = $workingMonth->holidays;
+//                //if month can have holidays from previous year
+//                if ($workingMonth->month->format('n') <= Carry::PREVIOUS_HOLIDAYS_VALID_TO_MONTH) {
+//                    if ($holidaysPrevious >= $holidays) {
+//                        $holidaysPrevious -= $holidays;
+//                    } else {
+//                        $holidays -= $holidaysPrevious;
+//                        $holidaysPrevious = 0;
+//                        $holidaysLeft -= $holidays;
+//                    }
+//                } else {
+//                    $holidaysLeft -= $holidays;
+//                }
             }
 
             $resultArray = [
                 'saldo_hours' => $saldo ? $saldo->getHours() : '0',
                 'saldo_minutes' => $saldo ? $saldo->getMinutes() : '0',
                 'saldo_positive' => $saldo ? $saldo->isPositive() : '0',
-                'holidays_previous_year' => $holidaysPrevious,
-                'holidays' => $holidaysLeft,
+//                'holidays_previous_year' => $holidaysPrevious,
+//                'holidays' => $holidaysLeft,
                 'finalized' => $finalized,
                 'missing' => $missing,
             ];
@@ -110,20 +110,20 @@ class CarryController extends ApiController
         }
     }
 
-    public function carryAction()
+    public function carryAction(): JsonModel | ResponseInterface
     {
         $this->prepare();
-        if (AuthorizationService::authorize($this->request, $this->response, ['GET',])) {
+        if (AuthorizationService::authorize($this->request, $this->response)) {
             $userId = $this->httpRequest->getQuery()->user_id;
             $carry = $this->carryTable->getByUserId($userId);
-            $resultArray = $carry ? $carry->getArrayCopy() : null;
+            $resultArray = $carry?->getArrayCopy();
             return $this->processResult($resultArray, $userId);
         } else {
             return $this->response;
         }
     }
 
-    public function setCarryAction()
+    public function setCarryAction(): JsonModel | ResponseInterface
     {
         $config = Factory::fromFile(__DIR__ . '/../../../../config/autoload/local.php');
         $secEvent = $config['log']['securityEventPrefix'];
