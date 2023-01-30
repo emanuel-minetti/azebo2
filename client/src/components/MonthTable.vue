@@ -15,7 +15,7 @@
         <b-icon-circle-fill
           v-if="data.item.hasWorkingTime && data.item.mobileWorking"
         ></b-icon-circle-fill>
-        <b-icon-circle v-else-if="data.item.hasWorkingTime"></b-icon-circle>
+        <b-icon-circle v-else-if="data.item.hasWorkingTime && data.item.mobileWorking !== undefined"></b-icon-circle>
         <div v-else></div>
       </template>
     </b-table>

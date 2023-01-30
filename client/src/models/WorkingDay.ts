@@ -1,7 +1,6 @@
 import { Holiday, Saldo, WorkingRule } from "/src/models";
 import { FormatterService, GermanKwService } from "/src/services";
 import { store } from "/src/store";
-import { timesConfig } from "/src/configs";
 import WorkingDayPart from "/src/models/WorkingDayPart";
 
 export default class WorkingDay {
@@ -73,16 +72,6 @@ export default class WorkingDay {
     return this._date;
   }
 
-  // no setter for `date` because it's the primary key and should not be edited
-
-  get begin(): Date | undefined {
-    //TODO remove
-    return undefined;
-  }
-  get end(): Date | undefined {
-    //TODO remove
-    return undefined;
-  }
   get break(): Saldo | undefined {
     let result;
     if (!this.hasWorkingTime) {
@@ -274,31 +263,6 @@ export default class WorkingDay {
     return false;
   }
 
-  isBeginAfterCore() {
-    if (!this.hasWorkingTime) return false;
-    return (
-      FormatterService.toGermanTime(this.begin) > timesConfig.coreTimeBegin
-    );
-  }
-
-  isEndAfterCore(holidays: Holiday[]) {
-    if (!this.hasWorkingTime) return false;
-    let coreTimeEndString = timesConfig.coreTimeEndShort;
-    if (this.date.getDay() !== 5) {
-      let nextDayIsHoliday = false;
-      const nextDay = new Date(this.date.getTime());
-      nextDay.setDate(this.date.getDate() + 1);
-      for (const holiday of holidays) {
-        if (holiday.date.getTime() == nextDay.getTime()) {
-          nextDayIsHoliday = true;
-          break;
-        }
-      }
-      if (!nextDayIsHoliday) coreTimeEndString = timesConfig.coreTimeEnd;
-    }
-    return FormatterService.toGermanTime(this.end) < coreTimeEndString;
-  }
-
   // noinspection JSUnusedGlobalSymbols
   public toJSON() {
     return {
@@ -311,9 +275,15 @@ export default class WorkingDay {
     };
   }
 
-  public get mobileWorking(): boolean {
-    //TODO adapt!
-    return false;
+  public get mobileWorking(): Saldo {
+    let result = Saldo.createFromMillis(0);
+    if (this._dayParts.length > 0) {
+      result =
+        this._dayParts.filter(part => part.mobileWorking && part.actualTime)
+          .map(part => part.actualTime)
+          .reduce((prev, curr) => Saldo.getSum(prev!, curr!), Saldo.createFromMillis(0))!;
+    }
+    return result;
   }
 
   get dayParts(): Array<WorkingDayPart> {
