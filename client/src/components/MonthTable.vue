@@ -247,7 +247,7 @@ export default defineComponent({
     // formats the break column
     formatSaldo(saldo: Saldo, key: string, day: TableRowData): string {
       if (day && !day.hasWorkingTime) return "";
-      return saldo.toString(false);
+      return saldo ? saldo.toString(false) : '';
     },
     rowClickHandler(row: WorkingDay) {
       if (!this.finalized && row.date) {

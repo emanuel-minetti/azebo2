@@ -72,7 +72,7 @@
         </b-form-group>
       </div>
       <b-button variant="primary" :disabled="errors.length !== 0" @click='editPart(-1)'>
-        Arbeitszeit hinzufügen
+        Weitere Arbeitszeit hinzufügen
       </b-button>
       <b-form-group
         label="Bemerkung:"
