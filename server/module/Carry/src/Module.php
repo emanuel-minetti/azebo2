@@ -51,7 +51,8 @@ class Module
                 WorkingRuleTable::class => function(ServiceManager $container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new WorkingRule());
+                    // TODO chage 'get' to 'set' and adapt!
+                    $resultSetPrototype->getArrayObjectPrototype(new WorkingRule());
                     $ruleGateway = new TableGateway('working_rule', $dbAdapter, null, $resultSetPrototype);
                     $weekdayGateway = new TableGateway('working_rule_weekday', $dbAdapter);
                     return new WorkingRuleTable($ruleGateway, $weekdayGateway);
