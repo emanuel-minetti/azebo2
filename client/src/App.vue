@@ -191,6 +191,8 @@
         </ul>
       </nav>
     </header>
+
+      <b-alert :variant='message.variant' :show='message.text.trim().length !== 0'>{{message.text}}</b-alert>
     <router-view />
     <footer>
       &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.2.3
@@ -202,15 +204,21 @@
 import { LoginService } from "/src/services";
 import { BvEvent } from "bootstrap-vue";
 import { defineComponent } from "vue";
+import MessageService from "/src/services/MessageService";
 
 export default defineComponent({
-  name: "APP",
+  name: "App",
   data() {
     return {
       lastYearShowString: "Vorjahr einblenden",
       lastYearString: new Date().getFullYear() - 1,
       lastYearShown: false,
       noHide: false,
+      // TODO workaround for vue 2.7 use crateApp later
+      message: {
+        text: '',
+        variant: 'danger',
+      },
     }
   },
   computed: {
@@ -223,6 +231,11 @@ export default defineComponent({
     loggedIn() {
       return this.$store.state.user.user.fullName !== "";
     },
+  },
+  mounted() {
+    MessageService.getMessage().then((data) => {
+      this.message = data.result;
+    })
   },
   methods: {
     onLogout() {

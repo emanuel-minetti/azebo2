@@ -47,8 +47,6 @@ export default class CarryService extends ApiService {
       saldo_hours: carry.saldo.hours,
       saldo_minutes: carry.saldo.minutes,
       saldo_positive: carry.saldo.positive,
-      holidays: carry.holidays,
-      holidays_previous_year: carry.holidaysPrevious,
     };
     const requestOptions = {
       method: "POST",
