@@ -44,22 +44,29 @@ class ApiController extends AbstractActionController
     }
 
     protected function processResult($result, $userId): JsonModel {
-        // refresh jwt ...
-        $expire = time() + AuthorizationService::EXPIRE_TIME;
-        $jwt = AuthorizationService::getJwt($expire, $userId);
-        // ... and return response
-        if (isset($result['day_parts']) && is_array($result['day_parts']) && sizeof($result['day_parts']) > 0) {
-            $result['day_parts'] = array_map(function ($part) {
-                return $part->getArrayCopy();
-            }, $result['day_parts']);
+        if ($userId != 0) {// refresh jwt ...
+            $expire = time() + AuthorizationService::EXPIRE_TIME;
+            $jwt = AuthorizationService::getJwt($expire, $userId);// ... and return response
+            if (isset($result['day_parts']) && is_array($result['day_parts']) && sizeof($result['day_parts']) > 0) {
+                $result['day_parts'] = array_map(function ($part) {
+                    return $part->getArrayCopy();
+                }, $result['day_parts']);
+            }
+            return new JsonModel([
+                'success' => true,
+                'data' => [
+                    'jwt' => $jwt,
+                    'expire' => $expire,
+                    'result' => $result,
+                ],
+            ]);
+        } else {
+            return new JsonModel([
+               'success' => true,
+               'data' => [
+                    'result' => $result,
+               ],
+            ]);
         }
-        return new JsonModel([
-            'success' => true,
-            'data' => [
-                'jwt' => $jwt,
-                'expire' => $expire,
-                'result' => $result,
-            ],
-        ]);
     }
 }
