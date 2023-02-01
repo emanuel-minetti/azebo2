@@ -193,69 +193,58 @@
     </header>
     <router-view />
     <footer>
-      &copy; {{ copyrightyear }} Emanuel Minetti, UdK Berlin Version:
-      {{ version }}
+      &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.2.3
     </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { LoginService } from "/src/services";
 import { BvEvent } from "bootstrap-vue";
+import { defineComponent } from "vue";
 
-@Component
-export default class App extends Vue {
-  copyrightyear = "";
-  version = "";
-  lastYearShowString = "Vorjahr einblenden";
-  lastYearString = new Date().getFullYear() - 1;
-  lastYearShown = false;
-  noHide = false;
-
-  get name() {
-    return this.$store.state.user.user.fullName;
-  }
-
-  get isDev() {
-    return import.meta.env.DEV;
-  }
-
-  get loggedIn() {
-    return this.$store.state.user.user.fullName !== "";
-  }
-
-  //noinspection JSUnusedGlobalSymbols
-  mounted() {
-    // copyright and version from `package.json`
-    // TODO adapt
-    // this.version = config.version;
-    // this.copyrightyear = config.copyright;
-    this.version = "2.2.2";
-    this.copyrightyear = "2019-2023";
-  }
-
-  onLogout() {
-    LoginService.logout();
-    this.$store.state.user.user.fullName = '';
-    this.$router.push({ name: "login" });
-  }
-
-  onShowLastYear() {
-    this.lastYearShown = !this.lastYearShown;
-    this.lastYearShowString = this.lastYearShown
-      ? "Vorjahr ausblenden"
-      : "Vorjahr einblenden";
-    this.noHide = true;
-  }
-
-  cancelHide(evt: BvEvent) {
-    if (this.noHide) {
-      evt.preventDefault();
-      this.noHide = false;
+export default defineComponent({
+  name: "APP",
+  data() {
+    return {
+      lastYearShowString: "Vorjahr einblenden",
+      lastYearString: new Date().getFullYear() - 1,
+      lastYearShown: false,
+      noHide: false,
     }
-  }
-}
+  },
+  computed: {
+    name() {
+      return this.$store.state.user.user.fullName;
+    },
+    isDev() {
+      return import.meta.env.DEV;
+    },
+    loggedIn() {
+      return this.$store.state.user.user.fullName !== "";
+    },
+  },
+  methods: {
+    onLogout() {
+      LoginService.logout();
+      this.$store.state.user.user.fullName = '';
+      this.$router.push({ name: "login" });
+    },
+    onShowLastYear() {
+      this.lastYearShown = !this.lastYearShown;
+      this.lastYearShowString = this.lastYearShown
+          ? "Vorjahr ausblenden"
+          : "Vorjahr einblenden";
+      this.noHide = true;
+    },
+    cancelHide(evt: BvEvent) {
+      if (this.noHide) {
+        evt.preventDefault();
+        this.noHide = false;
+      }
+    },
+  },
+});
 </script>
 
 <!--suppress CssInvalidFunction -->
