@@ -34,6 +34,7 @@
             "Service\\": "service/",
             "WorkingRule\\": "module/WorkingRule/src/",
             "Carry\\": "module/Carry/src",
+            "Message\\": "module/Message/src",
             "AzeboLib\\": "lib",
             "Validation\\": "validation/"
         }

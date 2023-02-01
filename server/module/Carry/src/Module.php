@@ -31,8 +31,7 @@ class Module
         return include __DIR__ . '/../config/module.config.php';
     }
 
-    public function getServiceConfig()
-    {
+    public function getServiceConfig(): array {
         return [
             'factories' => [
                 WorkingMonthTable::class => function (ServiceManager $container) {
@@ -52,7 +51,7 @@ class Module
                 WorkingRuleTable::class => function(ServiceManager $container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->getArrayObjectPrototype(new WorkingRule());
+                    $resultSetPrototype->setArrayObjectPrototype(new WorkingRule());
                     $ruleGateway = new TableGateway('working_rule', $dbAdapter, null, $resultSetPrototype);
                     $weekdayGateway = new TableGateway('working_rule_weekday', $dbAdapter);
                     return new WorkingRuleTable($ruleGateway, $weekdayGateway);
@@ -62,8 +61,7 @@ class Module
         ];
     }
 
-    public function getControllerConfig()
-    {
+    public function getControllerConfig(): array {
         return [
             'factories' => [
                 CarryController::class => function (ServiceManager $container) {
