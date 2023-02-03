@@ -5,4 +5,4 @@ module/Application/view/application/
 /.idea/terminal.xml
 /.idea/webServers.xml
 /.idea/php.xml
-
+/.idea/httpRequests
