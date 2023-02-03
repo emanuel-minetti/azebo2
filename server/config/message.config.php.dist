@@ -25,6 +25,7 @@
 // Copy this file to `local.php` and fill in your settings
 
 return [
-    'text' => "Die erste Nachricht",
+    'title' => "Ein Titel",
+    'text' => "Die Nachricht",
     'variant' => 'danger'
 ];
