@@ -192,7 +192,15 @@
       </nav>
     </header>
 
-      <b-alert :variant='message.variant' :show='message.text.trim().length !== 0'>{{message.text}}</b-alert>
+      <b-alert
+          id='message'
+          :variant='message.variant'
+          :show='message.text.trim().length !== 0'
+          class='text-center mx-auto mt-4'
+      >
+        <h4>{{message.title}}</h4>
+        {{message.text}}
+      </b-alert>
     <router-view />
     <footer>
       &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.2.3
@@ -216,6 +224,7 @@ export default defineComponent({
       noHide: false,
       // TODO workaround for vue 2.7 use crateApp later
       message: {
+        title: '',
         text: '',
         variant: 'danger',
       },
@@ -344,6 +353,10 @@ export default defineComponent({
   border-color: theme-color("text");
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
     0 0 8px theme-color-level("text", -0.4);
+}
+
+#message {
+  width: 60%;
 }
 
 footer {
