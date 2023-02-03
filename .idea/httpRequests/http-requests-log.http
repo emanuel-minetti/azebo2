@@ -1,0 +1,1005 @@
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T165130.200.json
+
+###
+
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T164032.200.json
+
+###
+
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T164013.200.html
+
+###
+
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T164007.200.html
+
+###
+
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T163555.200.html
+
+###
+
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T163536.200.html
+
+###
+
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T162545.200.html
+
+###
+
+GET https://azebo-dev.udk-berlin.de/api/message
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-02-01T162248.200.html
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTI5MDUsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjU0NzA1LCJkYXRhIjp7InVzZXJfaWQiOjExM319.QljW8NP2wZPJxRPvn-4bv9BSsG9f8qwveWKjyKTKRPF0izuZkJCfsQ8INNmpbFqF2kSLjrjzOjdsDhieH1nGQQ
+Accept: application/json
+Content-Type: application/json
+Content-Length: 121
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Siebtes Edit",
+  "_timeOff": "urlaub",
+  "_day_parts": []
+}
+
+<> 2023-01-25T142202.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T142145.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTI2NTIsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjU0NDUyLCJkYXRhIjp7InVzZXJfaWQiOjExM319.lJR5Ad0RvTIlae84Wapz2iRLd23yawZIbqbM9Fk41wIXM_q4KjufLhSh-QyOADhS4_KVswFsq95awfRQfr9LVg
+Accept: application/json
+Content-Type: application/json
+Content-Length: 122
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Siebtes Edit",
+  "_time_off": "urlaub",
+  "_day_parts": []
+}
+
+<> 2023-01-25T141743.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T141732.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTIzOTgsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjU0MTk4LCJkYXRhIjp7InVzZXJfaWQiOjExM319.OD5jKz1lgPvCuBYqEuum8Ugvnqm1M-BpWDUWJJZqkcNykCsCwonwFtpP2vRzZrEcj5TpbcsTlT9Q-wKL12fKiQ
+Accept: application/json
+Content-Type: application/json
+Content-Length: 122
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Siebtes Edit",
+  "_time_off": "urlaub",
+  "_day_parts": []
+}
+
+<> 2023-01-25T141401.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T141318.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTIxMjcsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjUzOTI3LCJkYXRhIjp7InVzZXJfaWQiOjExM319.yOaAMjXdfOkC4G5jimq6qV3hS-X0sNQlntXTe8yDY1J0SkpiUrxUlGK_1t5K71JXhvU8G2Yu9WF_-GhmqbBSWA
+Accept: application/json
+Content-Type: application/json
+Content-Length: 238
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Sechstes Edit",
+  "_day_parts": [
+    {
+      "_id": 2066,
+      "_workingDayId": 2429,
+      "_begin": "14:00",
+      "_end": "18:00",
+      "_mobileWorking": true
+    }
+  ]
+}
+
+<> 2023-01-25T141031.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T140847.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTE2NjksImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjUzNDY5LCJkYXRhIjp7InVzZXJfaWQiOjExM319.7qsTXJVmSQZeAeOBEXyyElkWyYNyPV-C1TNlDkhizzr-qNMT6XpeChbSdKWPjufgtBuHUkNwcJ6ijG_W2exW6Q
+Accept: application/json
+Content-Type: application/json
+Content-Length: 374
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Fünftes Edit",
+  "_day_parts": [
+    {
+      "_id": 2065,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "11:00",
+      "_mobileWorking": true
+    },
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "03:00",
+      "_end": "17:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-25T140401.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T140109.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTExNzMsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjUyOTczLCJkYXRhIjp7InVzZXJfaWQiOjExM319.1tD2rSMJd9Po2URktVmjtiX6Upb-t8Vw3AkK7wzgmViu13Mm1bN2bb6ugZ1AH8iVchVuHwWAtBLFDoW4ZxQ5Ig
+Accept: application/json
+Content-Type: application/json
+Content-Length: 235
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Viertes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-25T135622.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T135253.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTA5NzMsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjUyNzczLCJkYXRhIjp7InVzZXJfaWQiOjExM319.EbGlureLIdzXjEhoinDK4_AxZ2GIR3yqRUubycMnOQxT8qzaU-dLKY3jf2myIZsoCTz5XLo2uHMrSe53DtPlZA
+Accept: application/json
+Content-Type: application/json
+Content-Length: 235
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Drittes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T134933.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ2NTA0ODQsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NjUyMjg0LCJkYXRhIjp7InVzZXJfaWQiOjExM319.bsGKeejasljj5CfgwTWPllZ9SvOQsYNwnqivhcro3rFlbHREJuNmp7wDBZRCW4Ki1gGt2lNOiJzxTRUrU-dvVg
+Accept: application/json
+Content-Type: application/json
+Content-Length: 235
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Zweites Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-25T134131.500.html
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-25T134124.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NzE4NTcsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTczNjU3LCJkYXRhIjp7InVzZXJfaWQiOjExM319.cWxNMSKtn3YLiMWN6ALV7y8Oer3oRw694CtI5LdrvgIOJfGHRQfQmijucOcvw57HxgjdTSGw5ZroY_dmROAbOw
+Accept: application/json
+Content-Type: application/json
+Content-Length: 234
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T155101-1.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T155101.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NzE3NzIsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTczNTcyLCJkYXRhIjp7InVzZXJfaWQiOjExM319.Pf0Z8ndCVvHtM2llUZaSA119gqIoDvclt0nmUVnbXK-KLfr27wYdzGVviam9N95RQ48-ahc99camRujcKPWfYw
+Accept: application/json
+Content-Type: application/json
+Content-Length: 234
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T154942.500.html
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T154936.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NzE0ODcsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTczMjg3LCJkYXRhIjp7InVzZXJfaWQiOjExM319.2AD1N1Bd1-0wIa0HkN726KqIITnN6RMkxp7wxUO5Fb1KtCSii5vASGn0rSINTkqQkC_Fe1uTpjOe7PyVXxCdZQ
+Accept: application/json
+Content-Type: application/json
+Content-Length: 234
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T154741.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T154451.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NzEzMTEsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTczMTExLCJkYXRhIjp7InVzZXJfaWQiOjExM319.EPvZZt_5R0JWC1NBRHI3WwMmdJKewXb4IyFynE50MRVL8n9bDdnJ0JeKOEhsehuBGyX0E3ycBS1xNnx6FC1KNQ
+Accept: application/json
+Content-Type: application/json
+Content-Length: 234
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T154436.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T154154.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NzEwNzMsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTcyODczLCJkYXRhIjp7InVzZXJfaWQiOjExM319.O0CYGymefRZfEC5u7YVy_AYJgZwEPlAHKHUZUNbgDOBQ6jIDHcaL0Ke6RCgkVHeQ8KB8OipMlerqHfMafviIxA
+Accept: application/json
+Content-Type: application/json
+Content-Length: 234
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T154146.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T153756.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NzA5ODgsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTcyNzg4LCJkYXRhIjp7InVzZXJfaWQiOjExM319.btZr4YFOCNeKVeGNr7Wp_5Qqv8sveGw_7Z8F0p96Ai_rDoTZFH7Z701zmJWJ2wN8Llxv-Dp4d7l5NmcfGmRVkw
+Accept: application/json
+Content-Type: application/json
+Content-Length: 234
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T153749.500.html
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T153632.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T152714.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NTM4MTksImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTU1NjE5LCJkYXRhIjp7InVzZXJfaWQiOjExM319.-cVapFgY4nHlGZWqy7DEO6upUtpXwCAFCzMzJDiJ4kR__Qyp9UYwETjXqHbN3840cUfhJB0qC_kfMnHhWSisiQ
+Accept: application/json
+Content-Type: application/json
+Content-Length: 234
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 2429,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T105023.500.html
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T105023.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NTE4ODgsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTUzNjg4LCJkYXRhIjp7InVzZXJfaWQiOjExM319.60G7Y_uPBDvmHtWtibqc5mqIaQlLX2gidAdj9sEuI-7Xw4lo1NzbATJ9qlMvfBmiLRbwnvXPQdSpITKmMukzfg
+Accept: application/json
+Content-Type: application/json
+Content-Length: 231
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 0,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T101812.500.html
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T101812.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NTE4MTIsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTUzNjEyLCJkYXRhIjp7InVzZXJfaWQiOjExM319.DwuF9Ox9H6R00bdUnjuQ6a491hjsQGKeLjXg65Q-c_4Hcjos0IjS4qlT1EO6uT9mYvZJwTZss2iipZhc0Etwbg
+Accept: application/json
+Content-Type: application/json
+Content-Length: 231
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Tue Jan 17 2023",
+  "_id": 2429,
+  "_comment": "Erstes Edit",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 0,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T101656.500.html
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T101656.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ1NTA3NDcsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NTUyNTQ3LCJkYXRhIjp7InVzZXJfaWQiOjExM319.z-twuctZimC08XyYA2e0C1-7Mk2xFKKJn9FDSKVGQT_rXVgNaB4K7ZfvMyvIMLOM1pqo11a_1424QoF9-KHTMw
+Accept: application/json
+Content-Type: application/json
+Content-Length: 364
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Fri Jan 20 2023",
+  "_id": 0,
+  "_comment": "Zweiter Versuch",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 0,
+      "_begin": "09:00",
+      "_end": "12:00",
+      "_mobileWorking": true
+    },
+    {
+      "_id": 0,
+      "_workingDayId": 0,
+      "_begin": "13:00",
+      "_end": "18:00",
+      "_mobileWorking": false
+    }
+  ]
+}
+
+<> 2023-01-24T095911-1.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-24T095911.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ0OTQzNDUsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NDk2MTQ1LCJkYXRhIjp7InVzZXJfaWQiOjExM319.Kar_xc8PavJSgfFjhBbwjUBbuTnyrkGxpmewZcIHDnWCpQnczHXMNz3PUZkztHY7u5L2K2cakgYVjgY4rF1MnA
+Accept: application/json
+Content-Type: application/json
+Content-Length: 230
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Thu Jan 19 2023",
+  "_id": 0,
+  "_comment": "Erster Versuch",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 0,
+      "_begin": "09:00",
+      "_end": "18:00",
+      "_mobileWorking": true
+    }
+  ]
+}
+
+<> 2023-01-23T181913.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-23T181908.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/working-time?XDEBUG_SESSION=PHPSTORM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NzQ0OTQxNTUsImlzcyI6ImF6ZWJvLmRtei51ZGstYmVybGluLmRlIiwiZXhwIjoxNjc0NDk1OTU1LCJkYXRhIjp7InVzZXJfaWQiOjExM319.mTL7qbzBEyvlzfWcJQUf4LU2SlOxXTs55-HJpBXFz4SJSFy3WeYNJaiBC5cyqkgZVKAGtiHUtlg0eItnaxiFdg
+Accept: application/json
+Content-Type: application/json
+Content-Length: 230
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "_date": "Thu Jan 19 2023",
+  "_id": 0,
+  "_comment": "Erster Versuch",
+  "_day_parts": [
+    {
+      "_id": 0,
+      "_workingDayId": 0,
+      "_begin": "09:00",
+      "_end": "18:00",
+      "_mobileWorking": true
+    }
+  ]
+}
+
+<> 2023-01-23T181651.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-23T181558.200.json
+
+###
+
+POST https://azebo-dev.udk-berlin.de/api/login
+Content-Type: application/json
+Accept: application/json
+Content-Length: 53
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "username": "dvorg22",
+  "password": "1hg6Bg+G"
+}
+
+<> 2023-01-23T180610.200.json
+
+###
+

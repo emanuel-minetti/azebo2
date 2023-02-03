@@ -203,16 +203,15 @@
       </b-alert>
     <router-view />
     <footer>
-      &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.2.3
+      &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.2.4
     </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { LoginService } from "/src/services";
+import { LoginService, MessageService } from "/src/services";
 import { BvEvent } from "bootstrap-vue";
 import { defineComponent } from "vue";
-import MessageService from "/src/services/MessageService";
 
 export default defineComponent({
   name: "App",
@@ -242,7 +241,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    MessageService.getMessage().then((data) => {
+    MessageService.getMessage().then((data: any) => {
       this.message = data.result;
     })
   },
