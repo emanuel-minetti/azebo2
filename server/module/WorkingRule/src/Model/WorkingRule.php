@@ -102,7 +102,7 @@ class WorkingRule extends ArrayObject
         return json_encode($arrayCopy);
     }
 
-    private function getTarget(): int {
+    public function getTarget(): int {
         if (!isset($this->config)) {
             $this->config = Factory::fromFile('./../server/config/times.config.php', true);
         }
@@ -110,5 +110,27 @@ class WorkingRule extends ArrayObject
                 : $this->config->get('workingMinutesPerWeekOfficer');
         return floor($minutesPerWeek * 60 * 1000 * $this->percentage / 100 / sizeof($this->weekdays));
     }
+
+    public function isValid(DateTime $date): bool {
+        if ($this->validFrom <= $date) {
+            if ($this->validTo) {
+                if ($date <= $this->validTo) {
+                    if (!$this->hasWeekdays) {
+                        return true;
+                    } else {
+                        return in_array($date->format('w'), $this->weekdays);
+                    }
+                }
+            } else {
+                if (!$this->hasWeekdays) {
+                    return true;
+                } else {
+                    return in_array($date->format('w'), $this->weekdays);
+                }
+            }
+        }
+        return false;
+    }
+
 
 }

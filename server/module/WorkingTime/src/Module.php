@@ -17,6 +17,7 @@ use Laminas\Db\TableGateway\TableGateway;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Service\log\AzeboLog;
+use WorkingRule\Model\WorkingRuleTable;
 use WorkingTime\Model\WorkingDayPartTable;
 use WorkingTime\Model\WorkingDayTable;
 
@@ -56,7 +57,8 @@ class Module {
                     $logger = $sm->get(AzeboLog::class);
                     $dayTable = $sm->get(WorkingDayTable::class);
                     $monthTable = $sm->get(WorkingMonthTable::class);
-                    return new Controller\WorkingTimeController($logger, $dayTable, $monthTable);
+                    $ruleTable = $sm->get(WorkingRuleTable::class);
+                    return new Controller\WorkingTimeController($logger, $dayTable, $monthTable,$ruleTable);
                 },
             ],
         ];

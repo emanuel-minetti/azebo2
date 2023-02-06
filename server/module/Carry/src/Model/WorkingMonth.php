@@ -51,11 +51,16 @@ class WorkingMonth extends ArrayObject
      */
     public bool $carried;
 
+    public function __construct(object|array $array = [], int $flags = 0, string $iteratorClass = "ArrayIterator") {
+        parent::__construct($array, $flags, $iteratorClass);
+        $this->exchangeArray($array);
+    }
+
     #[ReturnTypeWillChange] public function exchangeArray($array): void {
         $this->id = (int) $array['id'] ?? 0;
         $this->userId = (int) $array['user_id'] ?? 0;
         $this->month = !empty($array['month'])
-            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $array['month']) : null;
+            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $array['month']) : new DateTime();
         $this->saldo = !(empty($array['saldo_hours']) && empty($array['saldo_minutes']) && empty($array['saldo_positive']))
             ? Saldo::createFromHoursAndMinutes($array['saldo_hours'], $array['saldo_minutes'], $array['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();

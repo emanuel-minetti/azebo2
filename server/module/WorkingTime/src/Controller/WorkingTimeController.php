@@ -12,6 +12,7 @@
 namespace WorkingTime\Controller;
 
 use AzeboLib\ApiController;
+use AzeboLib\Saldo;
 use Carry\Model\WorkingMonth;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
@@ -20,6 +21,8 @@ use Laminas\Validator\StringLength;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
 use Service\log\AzeboLog;
+use WorkingRule\Model\WorkingRule;
+use WorkingRule\Model\WorkingRuleTable;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayPart;
 use WorkingTime\Model\WorkingDayTable;
@@ -30,12 +33,17 @@ class WorkingTimeController extends ApiController
 
     private WorkingDayTable $dayTable;
     private WorkingMonthTable $monthTable;
+    private WorkingRuleTable $ruleTable;
 
-    public function __construct(AzeboLog $logger, WorkingDayTable $dayTable, WorkingMonthTable $monthTable)
+    public function __construct(AzeboLog $logger,
+                                WorkingDayTable $dayTable,
+                                WorkingMonthTable $monthTable,
+                                WorkingRuleTable $ruleTable)
     {
         parent::__construct($logger);
         $this->dayTable = $dayTable;
         $this->monthTable = $monthTable;
+        $this->ruleTable = $ruleTable;
     }
 
     public function monthAction(): JsonModel|Response {
@@ -180,9 +188,55 @@ class WorkingTimeController extends ApiController
             $yearParam = $this->params('year');
             $monthParam = $this->params('month');
             $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
+            $workingMonth =  $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]
+                ?? new WorkingMonth();
+            $workingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
+            $saldo = array_reduce($workingDays, function (Saldo $prev, WorkingDay $curr) use ($userId, $month) {
+                $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
+                $dayRule = null;
+                /** @var WorkingRule $rule */
+                foreach ($rules as $rule) {
+                    if ($rule->isValid($curr->date)) {
+                        $dayRule = $rule;
+                        break;
+                    }
+                }
+                $timeOff = $curr->timeOff;
+                if (!($timeOff === 'urlaub' ||
+                    $timeOff === 'azv' ||
+                    $timeOff === 'krank' ||
+                    $timeOff === 'kind' ||
+                    $timeOff === 'da_krank' ||
+                    $timeOff === 'reise' ||
+                    $timeOff === 'befr' ||
+                    $timeOff === 'sonder' ||
+                    $timeOff === 'da_befr' ||
+                    $timeOff === 'bildung_url' ||
+                    $timeOff === 'bildung')) {
+                    $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
+                    $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                    $dayParts = $curr->dayParts;
+                    $daySaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
+                        return Saldo::getSum($prev, $curr->getActualSaldo());
+                    }, Saldo::createFromHoursAndMinutes());
+                    $currentSaldo = Saldo::getSum($daySaldo, $targetSaldo);
+                } elseif ($timeOff === 'gleitzeit') {
+                    $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
+                    $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                } elseif ($timeOff === 'zusatz') {
+                    $dayParts = $curr->dayParts;
+                    $currentSaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
+                        return Saldo::getSum($prev, $curr->getActualSaldo());
+                    }, Saldo::createFromHoursAndMinutes());
+                } else {
+                    $currentSaldo = Saldo::createFromHoursAndMinutes();
+                }
+                return Saldo::getSum($prev, $currentSaldo);
+            }, Saldo::createFromHoursAndMinutes());
             $result = [
                 'text' => 'Hallo Welt!',
-                'db' => $this->monthTable->getByUserIdAndMonth($userId, $month)[0]->getArrayCopy(),
+                'db' => $workingMonth->getArrayCopy(),
+                'saldo' =>  (string) $saldo,
             ];
             return $this->processResult($result, $userId);
         } else {

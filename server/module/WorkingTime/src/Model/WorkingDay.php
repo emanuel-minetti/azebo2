@@ -11,6 +11,7 @@
 namespace WorkingTime\Model;
 
 use ArrayObject;
+use AzeboLib\Saldo;
 use DateTime;
 
 class WorkingDay extends ArrayObject
