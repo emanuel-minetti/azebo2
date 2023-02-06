@@ -168,4 +168,18 @@ class WorkingTimeController extends ApiController
             return $this->httpResponse;
         }
     }
+
+    public function closeMonthAction(): JsonModel|Response {
+        $this->prepare();
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
+            $userId = $this->httpRequest->getQuery()->user_id;
+            $result = [
+                'text' => 'Hallo Welt!',
+            ];
+            return $this->processResult($result, $userId);
+        } else {
+            // `httpResponse` was set in the call to `AuthorizationService::authorize`
+            return $this->httpResponse;
+        }
+    }
 }
