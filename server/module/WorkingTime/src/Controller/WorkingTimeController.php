@@ -12,6 +12,8 @@
 namespace WorkingTime\Controller;
 
 use AzeboLib\ApiController;
+use Carry\Model\WorkingMonth;
+use Carry\Model\WorkingMonthTable;
 use DateTime;
 use Laminas\Http\Response;
 use Laminas\Validator\StringLength;
@@ -26,12 +28,14 @@ class WorkingTimeController extends ApiController
 {
     public const TIME_FORMAT = 'H:i';
 
-    private WorkingDayTable $table;
+    private WorkingDayTable $dayTable;
+    private WorkingMonthTable $monthTable;
 
-    public function __construct(AzeboLog $logger, WorkingDayTable $table)
+    public function __construct(AzeboLog $logger, WorkingDayTable $dayTable, WorkingMonthTable $monthTable)
     {
         parent::__construct($logger);
-        $this->table = $table;
+        $this->dayTable = $dayTable;
+        $this->monthTable = $monthTable;
     }
 
     public function monthAction(): JsonModel|Response {
@@ -41,7 +45,7 @@ class WorkingTimeController extends ApiController
         $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse)) {
             $userId = $this->httpRequest->getQuery()->user_id;
-            $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
+            $arrayOfWorkingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
             $resultArray = [];
             foreach ($arrayOfWorkingDays as $element) {
                 $copy = $element->getArrayCopy();
@@ -69,7 +73,7 @@ class WorkingTimeController extends ApiController
             $id = $post->_id;
 
             if ($id != 0) {
-                $day = $this->table->find($id);
+                $day = $this->dayTable->find($id);
                 $day->dayParts = [];
                 if (!$day) return $this->invalidRequest;
             } else {
@@ -161,7 +165,7 @@ class WorkingTimeController extends ApiController
                     $day->dayParts[] = $dayPart;
                 }
             }
-            $this->table->upsert($day);
+            $this->dayTable->upsert($day);
             return $this->processResult($day->getArrayCopy(), $userId);
         } else {
             // `httpResponse` was set in the call to `AuthorizationService::authorize`
@@ -173,8 +177,12 @@ class WorkingTimeController extends ApiController
         $this->prepare();
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
             $userId = $this->httpRequest->getQuery()->user_id;
+            $yearParam = $this->params('year');
+            $monthParam = $this->params('month');
+            $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
             $result = [
                 'text' => 'Hallo Welt!',
+                'db' => $this->monthTable->getByUserIdAndMonth($userId, $month)[0]->getArrayCopy(),
             ];
             return $this->processResult($result, $userId);
         } else {

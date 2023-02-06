@@ -10,6 +10,7 @@
 
 namespace WorkingTime;
 
+use Carry\Model\WorkingMonthTable;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
@@ -54,7 +55,8 @@ class Module {
                 Controller\WorkingTimeController::class => function (ServiceManager $sm) {
                     $logger = $sm->get(AzeboLog::class);
                     $dayTable = $sm->get(WorkingDayTable::class);
-                    return new Controller\WorkingTimeController($logger, $dayTable);
+                    $monthTable = $sm->get(WorkingMonthTable::class);
+                    return new Controller\WorkingTimeController($logger, $dayTable, $monthTable);
                 },
             ],
         ];
