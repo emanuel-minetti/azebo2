@@ -15,6 +15,8 @@ use AzeboLib\ApiController;
 use AzeboLib\Saldo;
 use Carry\Model\WorkingMonth;
 use Carry\Model\WorkingMonthTable;
+use DateInterval;
+use DatePeriod;
 use DateTime;
 use Laminas\Http\Response;
 use Laminas\Validator\StringLength;
@@ -184,6 +186,7 @@ class WorkingTimeController extends ApiController
     public function closeMonthAction(): JsonModel|Response {
         $this->prepare();
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
+            // gather data
             $userId = $this->httpRequest->getQuery()->user_id;
             $yearParam = $this->params('year');
             $monthParam = $this->params('month');
@@ -191,47 +194,99 @@ class WorkingTimeController extends ApiController
             $workingMonth =  $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]
                 ?? new WorkingMonth();
             $workingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
-            $saldo = array_reduce($workingDays, function (Saldo $prev, WorkingDay $curr) use ($userId, $month) {
-                $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
-                $dayRule = null;
-                /** @var WorkingRule $rule */
+            $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
+
+            // set working day rules
+            /** @var WorkingDay $day */
+            foreach ($workingDays as $day) {
                 foreach ($rules as $rule) {
-                    if ($rule->isValid($curr->date)) {
+                    if ($rule->isValid($day->date)) {
+                        $day->rule = $rule;
+                        break;
+                    }
+                }
+            }
+
+            // validate month
+            $missing = [];
+            $firstOfMonth = new DateTime();
+            $firstOfNextMonth = new DateTime();
+            $firstOfMonth->setDate($month->format('Y'), $month->format('n'), 1);
+            $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
+            $firstOfNextMonth->add(new DateInterval('P1M'));
+            $oneDay = new DateInterval('P1D');
+            $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
+            foreach ($allMonthDays as $monthDay) {
+                // TODO test for weekend and holiday
+                $dayRule = null;
+                foreach ($rules as $rule) {
+                    if ($rule->isValid($monthDay)) {
                         $dayRule = $rule;
                         break;
                     }
                 }
+                if ($dayRule) {
+                    $dayWorkingDay = null;
+                    foreach ($workingDays as $workingDay) {
+                        if ($workingDay->date->format('j') === $monthDay->format('j')) {
+                            $dayWorkingDay = $workingDay;
+                            break;
+                        }
+                    }
+                    if ($dayWorkingDay) {
+                        switch ($dayWorkingDay->timeOff) {
+                            case '':
+                            case "ausgleich":
+                            case 'lang':
+                            case 'zusatz':
+                                $dayParts = $dayWorkingDay->dayParts;
+                                $dayWorkingDay->saldo = array_reduce(
+                                    $dayParts,
+                                    function (Saldo $prev, WorkingDayPart $curr) {
+                                        return Saldo::getSum($prev, $curr->getActualSaldo());
+                                    },
+                                    Saldo::createFromHoursAndMinutes());
+                                if ($dayWorkingDay->saldo->getHours() === 0 &&
+                                    $dayWorkingDay->saldo->getMinutes() === 0) {
+                                    $missing[] = $monthDay->format('j');
+                                }
+                        }
+                    } else {
+                        $missing[] = $monthDay->format('j');
+                    }
+                }
+            }
+            // compute month saldo
+            $saldo = array_reduce($workingDays, function (Saldo $prev, WorkingDay $curr) use ($userId, $month) {
                 switch ($curr->timeOff) {
                     case '':
                     case "ausgleich":
                     case 'lang':
-                        $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
+                        $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
                         $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                        $dayParts = $curr->dayParts;
-                        $daySaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
-                            return Saldo::getSum($prev, $curr->getActualSaldo());
-                        }, Saldo::createFromHoursAndMinutes());
-                        $currentSaldo = Saldo::getSum($daySaldo, $targetSaldo);
+                        $currentSaldo = Saldo::getSum($curr->saldo, $targetSaldo);
                         break;
                     case 'gleitzeit':
-                        $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
+                        $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
                         $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
                         break;
                     case 'zusatz':
-                        $dayParts = $curr->dayParts;
-                        $currentSaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
-                            return Saldo::getSum($prev, $curr->getActualSaldo());
-                        }, Saldo::createFromHoursAndMinutes());
+                        $currentSaldo = $curr->saldo;
                         break;
                     default:
                         $currentSaldo = Saldo::createFromHoursAndMinutes();
                 }
                 return Saldo::getSum($prev, $currentSaldo);
             }, Saldo::createFromHoursAndMinutes());
+            // update db
+            // TODO implement
+
+            // send result
             $result = [
                 'text' => 'Hallo Welt!',
                 'db' => $workingMonth->getArrayCopy(),
                 'saldo' =>  (string) $saldo,
+                'missing' => $missing,
             ];
             return $this->processResult($result, $userId);
         } else {
