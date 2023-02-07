@@ -201,35 +201,30 @@ class WorkingTimeController extends ApiController
                         break;
                     }
                 }
-                $timeOff = $curr->timeOff;
-                if (!($timeOff === 'urlaub' ||
-                    $timeOff === 'azv' ||
-                    $timeOff === 'krank' ||
-                    $timeOff === 'kind' ||
-                    $timeOff === 'da_krank' ||
-                    $timeOff === 'reise' ||
-                    $timeOff === 'befr' ||
-                    $timeOff === 'sonder' ||
-                    $timeOff === 'da_befr' ||
-                    $timeOff === 'bildung_url' ||
-                    $timeOff === 'bildung')) {
-                    $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
-                    $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                    $dayParts = $curr->dayParts;
-                    $daySaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
-                        return Saldo::getSum($prev, $curr->getActualSaldo());
-                    }, Saldo::createFromHoursAndMinutes());
-                    $currentSaldo = Saldo::getSum($daySaldo, $targetSaldo);
-                } elseif ($timeOff === 'gleitzeit') {
-                    $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
-                    $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                } elseif ($timeOff === 'zusatz') {
-                    $dayParts = $curr->dayParts;
-                    $currentSaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
-                        return Saldo::getSum($prev, $curr->getActualSaldo());
-                    }, Saldo::createFromHoursAndMinutes());
-                } else {
-                    $currentSaldo = Saldo::createFromHoursAndMinutes();
+                switch ($curr->timeOff) {
+                    case '':
+                    case "ausgleich":
+                    case 'lang':
+                        $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
+                        $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                        $dayParts = $curr->dayParts;
+                        $daySaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
+                            return Saldo::getSum($prev, $curr->getActualSaldo());
+                        }, Saldo::createFromHoursAndMinutes());
+                        $currentSaldo = Saldo::getSum($daySaldo, $targetSaldo);
+                        break;
+                    case 'gleitzeit':
+                        $target = $dayRule ? $dayRule->getTarget() / 1000 / 60 : 0;
+                        $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                        break;
+                    case 'zusatz':
+                        $dayParts = $curr->dayParts;
+                        $currentSaldo = array_reduce($dayParts, function (Saldo $prev, WorkingDayPart $curr) {
+                            return Saldo::getSum($prev, $curr->getActualSaldo());
+                        }, Saldo::createFromHoursAndMinutes());
+                        break;
+                    default:
+                        $currentSaldo = Saldo::createFromHoursAndMinutes();
                 }
                 return Saldo::getSum($prev, $currentSaldo);
             }, Saldo::createFromHoursAndMinutes());
