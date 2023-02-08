@@ -96,20 +96,6 @@ class WorkingTimeController extends ApiController
                 $day->userId = $userId;
                 $day->id = 0;
             }
-//            if (isset($post->_begin)) {
-//                $begin = DateTime::createFromFormat("H:i:s+", $post->_begin);
-//                if (!$begin) return $this->invalidRequest;
-//                $day->begin = $begin;
-//            } else {
-//                $day->begin = null;
-//            }
-//            if (isset($post->_end)) {
-//                $end = DateTime::createFromFormat("H:i:s+", $post->_end);
-//                if (!$end) return $this->invalidRequest;
-//                $day->end = $end;
-//            } else {
-//                $day->end = null;
-//            }
 
 //            if (isset($post->_begin) && isset($post->_end)) {
 //                // validate
@@ -193,7 +179,10 @@ class WorkingTimeController extends ApiController
             $monthParam = $this->params('month');
             $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
             $workingMonth =  $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]
-                ?? new WorkingMonth();
+                ?? new WorkingMonth([
+                    'user_id' => $userId,
+                    'month' => $month->format(WorkingDay::DATE_FORMAT),
+                ]);
             $workingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
             $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
             try {
@@ -274,38 +263,44 @@ class WorkingTimeController extends ApiController
                     }
                 }
             }
-            // compute month saldo
-            $saldo = array_reduce($workingDays, function (Saldo $prev, WorkingDay $curr) use ($userId, $month) {
-                switch ($curr->timeOff) {
-                    case '':
-                    case "ausgleich":
-                    case 'lang':
-                        $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
-                        $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                        $currentSaldo = Saldo::getSum($curr->saldo, $targetSaldo);
-                        break;
-                    case 'gleitzeit':
-                        $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
-                        $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                        break;
-                    case 'zusatz':
-                        $currentSaldo = $curr->saldo;
-                        break;
-                    default:
-                        $currentSaldo = Saldo::createFromHoursAndMinutes();
-                }
-                return Saldo::getSum($prev, $currentSaldo);
-            }, Saldo::createFromHoursAndMinutes());
-            // update db
-            // TODO implement
+
+            if (sizeof($missing) === 0) {
+                // compute month saldo
+                $saldo = array_reduce($workingDays, function (Saldo $prev, WorkingDay $curr) use ($userId, $month) {
+                    switch ($curr->timeOff) {
+                        case '':
+                        case "ausgleich":
+                        case 'lang':
+                            $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
+                            $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                            $currentSaldo = Saldo::getSum($curr->saldo, $targetSaldo);
+                            break;
+                        case 'gleitzeit':
+                            $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
+                            $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                            break;
+                        case 'zusatz':
+                            $currentSaldo = $curr->saldo;
+                            break;
+                        default:
+                            $currentSaldo = Saldo::createFromHoursAndMinutes();
+                    }
+                    return Saldo::getSum($prev, $currentSaldo);
+                }, Saldo::createFromHoursAndMinutes());// update db
+                $workingMonth->saldo = $saldo;
+                $newMonth = $this->monthTable->upsert($workingMonth);
+                $result = [
+                    'ok' => true,
+                    'month' => $newMonth->getArrayCopy(),
+                ];
+            } else {
+                $result = [
+                    'ok' => false,
+                    'missing' => $missing,
+                ];
+            }
 
             // send result
-            $result = [
-                'text' => 'Hallo Welt!',
-                'db' => $workingMonth->getArrayCopy(),
-                'saldo' =>  (string) $saldo,
-                'missing' => $missing,
-            ];
             return $this->processResult($result, $userId);
         } else {
             // `httpResponse` was set in the call to `AuthorizationService::authorize`
