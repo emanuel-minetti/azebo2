@@ -4,6 +4,8 @@ import { FormatterService } from "/src/services";
 export default class WorkingMonth {
   private readonly _monthDate: Date;
   private readonly _days: Array<WorkingDay>;
+  private readonly _closed: boolean;
+  //private readonly _finalized: boolean;
 
 
   /**
@@ -49,6 +51,8 @@ export default class WorkingMonth {
       // update current day for next loop iteration
       currentDay.setDate(currentDay.getDate() + 1);
     }
+    this._closed = 'id' in serverMonth;
+    //this._finalized = this._closed && serverMonth.finalized!;
   }
 
   get days(): Array<WorkingDay> {
