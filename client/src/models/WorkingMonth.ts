@@ -1,4 +1,5 @@
-import { WorkingDay } from "/src/models";
+import { WorkingDay, ServerWorkingMonth } from "/src/models";
+import { FormatterService } from "/src/services";
 
 export default class WorkingMonth {
   monthDate: Date;
@@ -6,10 +7,12 @@ export default class WorkingMonth {
 
   /**
    * Constructs a new `WorkingMonth` for the given date and merges in the given days.
-   * @param monthDate the month to create a `WorkingMonth` for
+   * @param serverMonth the month from the api, if any
    * @param days the days to merge in
    */
-  constructor(monthDate: Date, days: Array<WorkingDay>) {
+  constructor(serverMonth: ServerWorkingMonth | {'month': string}, days: Array<WorkingDay>) {
+    console.log(serverMonth);
+    const monthDate = FormatterService.convertToDate(serverMonth.month);
     this.monthDate = monthDate;
     this._days = new Array<WorkingDay>();
     // get first and last day of this month
@@ -52,24 +55,20 @@ export default class WorkingMonth {
     return this._days;
   }
 
-  /**
-   * Returns a string representation of this month
-   */
-  get monthName() {
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-    } as const;
-    return this.monthDate.toLocaleString("de-DE", options);
-  }
-
-  get monthNumber() {
-    return this.monthDate.getMonth() + 1;
-  }
-
-  get takenHolidays() {
-    return this._days.filter((day) => day.timeOff === "urlaub").length;
-  }
+  // /**
+  //  * Returns a string representation of this month
+  //  */
+  // get monthName() {
+  //   const options = {
+  //     year: "numeric",
+  //     month: "2-digit",
+  //   } as const;
+  //   return this.monthDate.toLocaleString("de-DE", options);
+  // }
+  //
+  // get monthNumber() {
+  //   return this.monthDate.getMonth() + 1;
+  // }
 
   getDayByDate(date: Date) {
     return this._days.filter(

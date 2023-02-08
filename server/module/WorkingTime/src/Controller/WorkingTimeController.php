@@ -58,7 +58,7 @@ class WorkingTimeController extends ApiController
             $userId = $this->httpRequest->getQuery()->user_id;
             $arrayOfWorkingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
             $workingMonth = $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0] ?
-                $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]->getArrayCopy() : [];
+                $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]->getArrayCopy()  : null;
             $resultArray = [
                 'days' => [],
                 'month' => $workingMonth,

@@ -77,7 +77,7 @@ export default defineComponent({
     return {
       formShown: false,
       dateToEdit: new Date(),
-      month: new WorkingMonth(new Date(), []),
+      month: new WorkingMonth({month: FormatterService.toServiceString(new Date())}, []),
     }
   },
   computed: {

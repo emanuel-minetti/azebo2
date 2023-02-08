@@ -8,7 +8,7 @@ import {
   WorkingRule,
 } from "/src/models";
 import {
-  CarryService,
+  CarryService, FormatterService,
   HolidayService,
   WorkingRuleService,
   WorkingTimeService,
@@ -108,7 +108,10 @@ const WorkingTimeModule: Module<any, any> = {
             const workingDays = data.result.days.map(
               (day: any) => new WorkingDay(day)
             );
-            state.month = new WorkingMonth(monthDate, workingDays);
+            const month = data.result.month ?
+              data.result.month :
+              { 'month': FormatterService.toServiceString(monthDate)};
+            state.month = new WorkingMonth(month, workingDays);
           })
         )
         .then(() =>
@@ -116,7 +119,10 @@ const WorkingTimeModule: Module<any, any> = {
             const workingDays = data.result.days.map(
               (day: any) => new WorkingDay(day)
             );
-            state.previous = new WorkingMonth(prevMonthDate, workingDays);
+            const month = data.result.month ?
+              data.result.month :
+              { 'month': FormatterService.toServiceString(prevMonthDate)};
+            state.previous = new WorkingMonth(month, workingDays);
           })
         )
         .then(() =>
