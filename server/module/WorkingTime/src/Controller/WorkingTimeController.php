@@ -57,7 +57,12 @@ class WorkingTimeController extends ApiController
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse)) {
             $userId = $this->httpRequest->getQuery()->user_id;
             $arrayOfWorkingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
-            $resultArray = [];
+            $workingMonth = $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0] ?
+                $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]->getArrayCopy() : [];
+            $resultArray = [
+                'days' => [],
+                'month' => $workingMonth,
+            ];
             foreach ($arrayOfWorkingDays as $element) {
                 $copy = $element->getArrayCopy();
                 $partsCopy = [];
@@ -65,7 +70,7 @@ class WorkingTimeController extends ApiController
                     $partsCopy[] = $part->getArrayCopy();
                 }
                 $copy['day_parts'] = $partsCopy;
-                $resultArray[] = $copy;
+                $resultArray['days'][] = $copy;
             }
             return $this->processResult($resultArray, $userId);
         } else {

@@ -105,7 +105,7 @@ const WorkingTimeModule: Module<any, any> = {
         )
         .then(() =>
           WorkingTimeService.getMonth(params).then((data) => {
-            const workingDays = data.result.map(
+            const workingDays = data.result.days.map(
               (day: any) => new WorkingDay(day)
             );
             state.month = new WorkingMonth(monthDate, workingDays);
@@ -113,7 +113,7 @@ const WorkingTimeModule: Module<any, any> = {
         )
         .then(() =>
           WorkingTimeService.getMonth(paramsOfPrev).then((data) => {
-            const workingDays = data.result.map(
+            const workingDays = data.result.days.map(
               (day: any) => new WorkingDay(day)
             );
             state.previous = new WorkingMonth(prevMonthDate, workingDays);
