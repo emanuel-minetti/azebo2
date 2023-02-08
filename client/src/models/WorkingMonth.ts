@@ -71,4 +71,12 @@ export default class WorkingMonth {
   get monthDate(): Date {
     return this._monthDate;
   }
+
+  get closed(): boolean {
+    return this._closed;
+  }
+
+  get finalized(): boolean {
+    return this._finalized;
+  }
 }

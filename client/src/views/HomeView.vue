@@ -8,12 +8,13 @@
       <Title :prop-title="monthName" />
       <MonthTable />
       <MonthAggregate />
+      <MonthForm />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Title, MonthTable, MonthAggregate } from "/src/components";
+import { Title, MonthTable, MonthAggregate, MonthForm } from "/src/components";
 import { defineComponent } from "vue";
 import { Route } from "vue-router";
 import { mapState } from "vuex";
@@ -23,6 +24,7 @@ export default  defineComponent({
     Title,
     MonthTable,
     MonthAggregate,
+    MonthForm,
   },
   data() {
     return {
