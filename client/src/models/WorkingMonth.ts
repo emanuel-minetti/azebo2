@@ -2,8 +2,9 @@ import { WorkingDay, ServerWorkingMonth } from "/src/models";
 import { FormatterService } from "/src/services";
 
 export default class WorkingMonth {
-  monthDate: Date;
+  private readonly _monthDate: Date;
   private readonly _days: Array<WorkingDay>;
+
 
   /**
    * Constructs a new `WorkingMonth` for the given date and merges in the given days.
@@ -11,9 +12,8 @@ export default class WorkingMonth {
    * @param days the days to merge in
    */
   constructor(serverMonth: ServerWorkingMonth | {'month': string}, days: Array<WorkingDay>) {
-    console.log(serverMonth);
     const monthDate = FormatterService.convertToDate(serverMonth.month);
-    this.monthDate = monthDate;
+    this._monthDate = monthDate;
     this._days = new Array<WorkingDay>();
     // get first and last day of this month
     const firstOfMonth = new Date(
@@ -55,26 +55,15 @@ export default class WorkingMonth {
     return this._days;
   }
 
-  // /**
-  //  * Returns a string representation of this month
-  //  */
-  // get monthName() {
-  //   const options = {
-  //     year: "numeric",
-  //     month: "2-digit",
-  //   } as const;
-  //   return this.monthDate.toLocaleString("de-DE", options);
-  // }
-  //
-  // get monthNumber() {
-  //   return this.monthDate.getMonth() + 1;
-  // }
-
   getDayByDate(date: Date) {
     return this._days.filter(
       (day) =>
         day.date.getMonth() === date.getMonth() &&
         day.date.getDate() === date.getDate()
     )[0];
+  }
+
+  get monthDate(): Date {
+    return this._monthDate;
   }
 }
