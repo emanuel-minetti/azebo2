@@ -79,4 +79,12 @@ export default class WorkingMonth {
   get finalized(): boolean {
     return this._finalized;
   }
+
+  get year(): string {
+    return '' + this._monthDate.getFullYear();
+  }
+
+  get month(): string {
+    return '' + (this._monthDate.getMonth() + 1);
+  }
 }

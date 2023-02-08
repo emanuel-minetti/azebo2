@@ -214,6 +214,10 @@ const WorkingTimeModule: Module<any, any> = {
     setCarry({ state }, carry: Carry) {
       return CarryService.setCarry(carry).then(() => {});
     },
+    // eslint-disable-next-line no-unused-vars
+    closeMonth({ state }, month: WorkingMonth) {
+      return WorkingTimeService.closeMonth(month);
+    }
   },
 };
 
