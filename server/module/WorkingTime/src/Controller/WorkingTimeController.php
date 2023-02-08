@@ -18,12 +18,13 @@ use Carry\Model\WorkingMonthTable;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Exception;
 use Laminas\Http\Response;
 use Laminas\Validator\StringLength;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
+use Service\HolidayService;
 use Service\log\AzeboLog;
-use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayPart;
@@ -195,6 +196,12 @@ class WorkingTimeController extends ApiController
                 ?? new WorkingMonth();
             $workingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
             $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
+            try {
+                $holidays = HolidayService::getHolidays($month->format('Y'));
+            } catch (Exception $e) {
+                $this->httpResponse->setContent($e->getMessage());
+                return $this->httpResponse;
+            }
 
             // set working day rules
             /** @var WorkingDay $day */
@@ -217,42 +224,53 @@ class WorkingTimeController extends ApiController
             $oneDay = new DateInterval('P1D');
             $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
             foreach ($allMonthDays as $monthDay) {
-                // TODO test for weekend and holiday
-                $dayRule = null;
-                foreach ($rules as $rule) {
-                    if ($rule->isValid($monthDay)) {
-                        $dayRule = $rule;
+                // test for weekend and holiday
+                $weekday = $monthDay->format('N');
+                $monthDayDateString = $monthDay->format(WorkingDay::DATE_FORMAT);
+                $monthDayHoliday = null;
+                foreach ($holidays as $holiday) {
+                    if ($holiday['date'] === $monthDayDateString) {
+                        $monthDayHoliday = $holiday;
                         break;
                     }
                 }
-                if ($dayRule) {
-                    $dayWorkingDay = null;
-                    foreach ($workingDays as $workingDay) {
-                        if ($workingDay->date->format('j') === $monthDay->format('j')) {
-                            $dayWorkingDay = $workingDay;
+                if (!($weekday == 6 || $weekday == 7 || $monthDayHoliday)) {
+                    $dayRule = null;
+                    foreach ($rules as $rule) {
+                        if ($rule->isValid($monthDay)) {
+                            $dayRule = $rule;
                             break;
                         }
                     }
-                    if ($dayWorkingDay) {
-                        switch ($dayWorkingDay->timeOff) {
-                            case '':
-                            case "ausgleich":
-                            case 'lang':
-                            case 'zusatz':
-                                $dayParts = $dayWorkingDay->dayParts;
-                                $dayWorkingDay->saldo = array_reduce(
-                                    $dayParts,
-                                    function (Saldo $prev, WorkingDayPart $curr) {
-                                        return Saldo::getSum($prev, $curr->getActualSaldo());
-                                    },
-                                    Saldo::createFromHoursAndMinutes());
-                                if ($dayWorkingDay->saldo->getHours() === 0 &&
-                                    $dayWorkingDay->saldo->getMinutes() === 0) {
-                                    $missing[] = $monthDay->format('j');
-                                }
+                    if ($dayRule) {
+                        $dayWorkingDay = null;
+                        foreach ($workingDays as $workingDay) {
+                            if ($workingDay->date->format('j') === $monthDay->format('j')) {
+                                $dayWorkingDay = $workingDay;
+                                break;
+                            }
                         }
-                    } else {
-                        $missing[] = $monthDay->format('j');
+                        if ($dayWorkingDay) {
+                            switch ($dayWorkingDay->timeOff) {
+                                case '':
+                                case "ausgleich":
+                                case 'lang':
+                                case 'zusatz':
+                                    $dayParts = $dayWorkingDay->dayParts;
+                                    $dayWorkingDay->saldo = array_reduce(
+                                        $dayParts,
+                                        function (Saldo $prev, WorkingDayPart $curr) {
+                                            return Saldo::getSum($prev, $curr->getActualSaldo());
+                                        },
+                                        Saldo::createFromHoursAndMinutes());
+                                    if ($dayWorkingDay->saldo->getHours() === 0 &&
+                                        $dayWorkingDay->saldo->getMinutes() === 0) {
+                                        $missing[] = $monthDay->format('j');
+                                    }
+                            }
+                        } else {
+                            $missing[] = $monthDay->format('j');
+                        }
                     }
                 }
             }
