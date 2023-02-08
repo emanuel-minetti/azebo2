@@ -5,6 +5,7 @@ export default interface ServerWorkingMonth {
   'saldo_hours': number;
   'saldo_minutes': number;
   'saldo_positive': boolean;
+  'finalized': boolean;
   'archived': boolean;
   'carried': boolean;
 }

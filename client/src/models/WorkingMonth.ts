@@ -5,7 +5,7 @@ export default class WorkingMonth {
   private readonly _monthDate: Date;
   private readonly _days: Array<WorkingDay>;
   private readonly _closed: boolean;
-  //private readonly _finalized: boolean;
+  private readonly _finalized: boolean;
 
 
   /**
@@ -52,7 +52,8 @@ export default class WorkingMonth {
       currentDay.setDate(currentDay.getDate() + 1);
     }
     this._closed = 'id' in serverMonth;
-    //this._finalized = this._closed && serverMonth.finalized!;
+    this._finalized =
+      this._closed && (serverMonth as ServerWorkingMonth).finalized;
   }
 
   get days(): Array<WorkingDay> {
