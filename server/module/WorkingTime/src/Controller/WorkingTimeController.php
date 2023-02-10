@@ -183,11 +183,20 @@ class WorkingTimeController extends ApiController
             $yearParam = $this->params('year');
             $monthParam = $this->params('month');
             $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
-            $workingMonth =  $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]
-                ?? new WorkingMonth([
+            $workingMonth =  $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0];
+            if ($workingMonth) {
+                $this->monthTable->delete($workingMonth);
+                $result = [
+                    'ok' => true,
+                    'month' => null,
+                ];
+                return $this->processResult($result, $userId);
+            } else {
+                $workingMonth = new WorkingMonth([
                     'user_id' => $userId,
                     'month' => $month->format(WorkingDay::DATE_FORMAT),
                 ]);
+            }
             $workingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
             $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
             try {
@@ -293,7 +302,7 @@ class WorkingTimeController extends ApiController
                     return Saldo::getSum($prev, $currentSaldo);
                 }, Saldo::createFromHoursAndMinutes());// update db
                 $workingMonth->saldo = $saldo;
-                $newMonth = $this->monthTable->upsert($workingMonth);
+                $newMonth = $this->monthTable->insert($workingMonth);
                 $result = [
                     'ok' => true,
                     'month' => $newMonth->getArrayCopy(),

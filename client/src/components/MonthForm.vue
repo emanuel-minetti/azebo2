@@ -40,15 +40,17 @@ export default defineComponent({
       return firstPart + missingDates.join(', ') + " eine Bemerkung oder eine Arbeitszeit an.";
     },
     successText() {
-      return this.month.monthDate
-          ?  "Sie haben den Monat "
+      return !this.month.saldo
+          ? "Sie haben den Monatsabschluss erfolgreich zurückgenommen."
+          : "Sie haben den Monat "
           + this.month.monthDate.toLocaleString('de-DE', {month: 'long'})
           + " erfolgreich abgeschlossen."
-          : '';
+          ;
     },
   },
   methods: {
     onSubmit() {
+      this.success = false;
       this.$store
           .dispatch("workingTime/closeMonth", this.month)
           .then((data) => {

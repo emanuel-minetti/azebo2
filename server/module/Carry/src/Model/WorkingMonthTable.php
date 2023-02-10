@@ -68,17 +68,17 @@ class WorkingMonthTable
         return $result;
     }
 
-    public function upsert(WorkingMonth $month): WorkingMonth {
+    public function insert(WorkingMonth $month): WorkingMonth {
         $copy = $month->getArrayCopy();
-        if ($month->id === 0) {
-            unset($copy['id']);
-            $this->tableGateway->insert($copy);
-            $monthId = $this->tableGateway->getLastInsertValue();
-        } else {
-            $monthId = $month->id;
-            $this->tableGateway->update($copy, ['id' => $monthId]);
-        }
+        unset($copy['id']);
+        $this->tableGateway->insert($copy);
+        $monthId = $this->tableGateway->getLastInsertValue();
         return $this->find($monthId);
     }
+
+    public function delete(WorkingMonth $month): void {
+        $this->tableGateway->delete(['id' => $month->id]);
+    }
+
 
 }

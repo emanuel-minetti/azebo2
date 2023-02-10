@@ -102,12 +102,12 @@ export default class WorkingMonth {
   get saldo(): Saldo | null {
     return this._saldo;
   }
-  set serverMonth(month: ServerWorkingMonth) {
-    this._closed = true;
-    this._finalized = month.finalized;
-    this._saldo = WorkingMonth.createSaldo(
+  set serverMonth(month: ServerWorkingMonth | null) {
+    this._closed = month !== null;
+    this._finalized = month && month.finalized ? month.finalized : false;
+    this._saldo = month ? WorkingMonth.createSaldo(
       month.saldo_hours, month.saldo_minutes, month.saldo_positive
-    );
+    ) : null;
   }
   private static createSaldo(hours:number, minutes:number, positive:boolean) {
     const millis = (hours * 60 + minutes) * 60 * 1000;
