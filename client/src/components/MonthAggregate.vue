@@ -63,7 +63,7 @@ export default class MonthAggregate extends Vue {
       carryResult: this.carryResult.saldo
         ? this.carryResult.saldo.toString()
         : "",
-      month: this.$store.getters["workingTime/saldo"],
+      month: this.month.saldo ?? this.$store.getters["workingTime/saldo"],
       total: this.$store.getters["workingTime/saldoTotal"],
     };
     if (this.carryResult.hasMissing) {

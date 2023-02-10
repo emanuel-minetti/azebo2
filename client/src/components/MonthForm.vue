@@ -3,6 +3,7 @@
   <b-alert v-if='missing.length' variant='danger' show>
     {{ missingText }}
   </b-alert>
+  <b-alert v-if='success' variant='success' show='5'> {{ successText }} </b-alert>
   <b-button
       v-if='!month.finalized'
       variant='primary'
@@ -24,6 +25,7 @@ export default defineComponent({
     return {
       missing: new Array<string>(),
       month: this.$store.state.workingTime.month as WorkingMonth,
+      success: false,
     };
   },
   computed: {
@@ -36,7 +38,14 @@ export default defineComponent({
           ? "Bitte geben Sie für das Datum "
           : "Bitte geben Sie für die Daten ";
       return firstPart + missingDates.join(', ') + " eine Bemerkung oder eine Arbeitszeit an.";
-    }
+    },
+    successText() {
+      return this.month.monthDate
+          ?  "Sie haben den Monat "
+          + this.month.monthDate.toLocaleString('de-DE', {month: 'long'})
+          + " erfolgreich abgeschlossen."
+          : '';
+    },
   },
   methods: {
     onSubmit() {
@@ -45,9 +54,12 @@ export default defineComponent({
           .then((data) => {
                 if (!data.result.ok) {
                   this.missing = data.result.missing;
+                } else {
+                  this.success = true;
+                  this.month.serverMonth = data.result.month;
                 }
               }
-          )
+          );
     },
   },
 });

@@ -120,8 +120,7 @@ const WorkingTimeModule: Module<any, any> = {
               (day: any) => new WorkingDay(day)
             );
             const month = data.result.month ?
-              data.result.month :
-              { 'month': FormatterService.toServiceString(prevMonthDate)};
+              data.result.month : null;
             state.previous = new WorkingMonth(month, workingDays);
           })
         )
