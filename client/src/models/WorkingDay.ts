@@ -258,6 +258,7 @@ export default class WorkingDay {
       this.timeOff === "zusatz" ||
       this.timeOff === "da_krank" ||
       this.timeOff === "da_befr" ||
+      this.timeOff === "ausgleich" ||
       this.targetTime !== undefined ||
       !this.hasWorkingTime
     );
