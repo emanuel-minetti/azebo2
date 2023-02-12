@@ -8,6 +8,7 @@ export default class WorkingMonth {
   private _closed: boolean;
   private _finalized: boolean;
   private _saldo: Saldo | null;
+  private _cappedSaldo: boolean;
 
 
   /**
@@ -65,6 +66,9 @@ export default class WorkingMonth {
         serverMonth.saldo_positive
       )
       : null;
+    // this._cappedSaldo = serverMonth && 'id' in serverMonth
+    //   ? serverMonth.cappedSaldo : false;
+    this._cappedSaldo = false;
   }
 
   get days(): Array<WorkingDay> {
@@ -112,5 +116,13 @@ export default class WorkingMonth {
   private static createSaldo(hours:number, minutes:number, positive:boolean) {
     const millis = (hours * 60 + minutes) * 60 * 1000;
     return Saldo.createFromMillis(millis, positive);
+  }
+
+  get cappedSaldo(): boolean {
+    return this._cappedSaldo;
+  }
+
+  set cappedSaldo(value: boolean) {
+    this._cappedSaldo = value;
   }
 }

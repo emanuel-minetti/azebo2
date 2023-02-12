@@ -13,6 +13,7 @@ import {
   WorkingRuleService,
   WorkingTimeService,
 } from "/src/services";
+import { timesConfig } from "/src/configs";
 
 const WorkingTimeModule: Module<any, any> = {
   namespaced: true,
@@ -50,7 +51,7 @@ const WorkingTimeModule: Module<any, any> = {
     },
     saldo(state) {
       if (state.month.days) {
-        return state.month.days
+        let saldo = state.month.days
           .map((day: WorkingDay) => day.saldoTime)
           .reduce(
             (previousValue: Saldo, currentValue: Saldo | undefined) =>
@@ -59,6 +60,22 @@ const WorkingTimeModule: Module<any, any> = {
                 : previousValue,
             Saldo.createFromMillis(0)
           );
+        if (state.carryResult.saldo) {
+          const cappingLimit = Saldo.createFromMillis(timesConfig.cappingLimit * 60 * 1000);
+          cappingLimit.invert();
+          const totalSaldo = Saldo.getSum(saldo, state.carryResult.saldo);
+          console.log(saldo);
+          console.log(totalSaldo);
+          console.log(cappingLimit);
+          const difference = Saldo.getSum(totalSaldo, cappingLimit);
+          console.log(difference);
+          if (difference.positive) {
+            difference.invert();
+            saldo = Saldo.getSum(saldo, difference);
+            state.month.cappedSaldo = true;
+          }
+        }
+        return saldo;
       }
       return "";
     },

@@ -8,4 +8,5 @@ export default interface ServerWorkingMonth {
   'finalized': boolean;
   'archived': boolean;
   'carried': boolean;
+  'cappedSaldo': boolean;
 }
