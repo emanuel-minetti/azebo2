@@ -10,6 +10,7 @@
 
 namespace WorkingTime;
 
+use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
@@ -58,7 +59,8 @@ class Module {
                     $dayTable = $sm->get(WorkingDayTable::class);
                     $monthTable = $sm->get(WorkingMonthTable::class);
                     $ruleTable = $sm->get(WorkingRuleTable::class);
-                    return new Controller\WorkingTimeController($logger, $dayTable, $monthTable,$ruleTable);
+                    $carryTable = $sm->get(CarryTable::class);
+                    return new Controller\WorkingTimeController($logger, $dayTable, $monthTable,$ruleTable, $carryTable);
                 },
             ],
         ];

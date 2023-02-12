@@ -13,12 +13,14 @@ namespace WorkingTime\Controller;
 
 use AzeboLib\ApiController;
 use AzeboLib\Saldo;
+use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonth;
 use Carry\Model\WorkingMonthTable;
 use DateInterval;
 use DatePeriod;
 use DateTime;
 use Exception;
+use Laminas\Config\Factory;
 use Laminas\Http\Response;
 use Laminas\Validator\StringLength;
 use Laminas\View\Model\JsonModel;
@@ -37,16 +39,19 @@ class WorkingTimeController extends ApiController
     private WorkingDayTable $dayTable;
     private WorkingMonthTable $monthTable;
     private WorkingRuleTable $ruleTable;
+    private CarryTable $carryTable;
 
     public function __construct(AzeboLog $logger,
                                 WorkingDayTable $dayTable,
                                 WorkingMonthTable $monthTable,
-                                WorkingRuleTable $ruleTable)
+                                WorkingRuleTable $ruleTable,
+                                CarryTable $carryTable)
     {
         parent::__construct($logger);
         $this->dayTable = $dayTable;
         $this->monthTable = $monthTable;
         $this->ruleTable = $ruleTable;
+        $this->carryTable = $carryTable;
     }
 
     public function monthAction(): JsonModel|Response {
@@ -300,7 +305,30 @@ class WorkingTimeController extends ApiController
                             $currentSaldo = Saldo::createFromHoursAndMinutes();
                     }
                     return Saldo::getSum($prev, $currentSaldo);
-                }, Saldo::createFromHoursAndMinutes());// update db
+                }, Saldo::createFromHoursAndMinutes());
+
+                // use capping limit
+                $config = Factory::fromFile('./../server/config/times.config.php', true);
+                $cappingLimitMinutes = $config->get('cappingLimit');
+                $cappingLimit = Saldo::createFromHoursAndMinutes(0, $cappingLimitMinutes, false);
+                $workingMonths = $this->monthTable->getByUserIdAndMonth($userId, $month);
+                $carry = $this->carryTable->getByUserIdAndYear($userId, $month);
+                $oldSaldo = array_reduce($workingMonths, function (Saldo $prev,WorkingMonth $curr) {
+                    return Saldo::getSum($prev, $curr->saldo);
+                }, $carry->saldo);
+                $totalSaldo = Saldo::getSum($oldSaldo, $saldo);
+                $difference = Saldo::getSum($totalSaldo, $cappingLimit);
+                if ($difference->isPositive()) {
+                    $difference = Saldo::createFromHoursAndMinutes(
+                        $difference->getHours(), $difference->getMinutes(), false
+                    );
+                    $saldo = Saldo::getSum($saldo, $difference);
+                    $workingMonth->saldoCapped = true;
+                } else {
+                    $workingMonth->saldoCapped = false;
+                }
+
+                // update db
                 $workingMonth->saldo = $saldo;
                 $newMonth = $this->monthTable->insert($workingMonth);
                 $result = [

@@ -66,9 +66,8 @@ export default class WorkingMonth {
         serverMonth.saldo_positive
       )
       : null;
-    // this._cappedSaldo = serverMonth && 'id' in serverMonth
-    //   ? serverMonth.cappedSaldo : false;
-    this._cappedSaldo = false;
+    this._cappedSaldo = serverMonth && 'id' in serverMonth
+      ? serverMonth.saldo_capped : false;
   }
 
   get days(): Array<WorkingDay> {
