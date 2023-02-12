@@ -64,11 +64,7 @@ const WorkingTimeModule: Module<any, any> = {
           const cappingLimit = Saldo.createFromMillis(timesConfig.cappingLimit * 60 * 1000);
           cappingLimit.invert();
           const totalSaldo = Saldo.getSum(saldo, state.carryResult.saldo);
-          console.log(saldo);
-          console.log(totalSaldo);
-          console.log(cappingLimit);
           const difference = Saldo.getSum(totalSaldo, cappingLimit);
-          console.log(difference);
           if (difference.positive) {
             difference.invert();
             saldo = Saldo.getSum(saldo, difference);
