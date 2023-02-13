@@ -6,3 +6,4 @@ module/Application/view/application/
 /.idea/webServers.xml
 /.idea/php.xml
 /.idea/httpRequests/
+/server/assets/sql/dump-prod-12-2-2023.sql
