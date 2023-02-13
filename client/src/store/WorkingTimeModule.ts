@@ -8,11 +8,12 @@ import {
   WorkingRule,
 } from "/src/models";
 import {
-  CarryService,
+  CarryService, FormatterService,
   HolidayService,
   WorkingRuleService,
   WorkingTimeService,
 } from "/src/services";
+import { timesConfig } from "/src/configs";
 
 const WorkingTimeModule: Module<any, any> = {
   namespaced: true,
@@ -50,7 +51,7 @@ const WorkingTimeModule: Module<any, any> = {
     },
     saldo(state) {
       if (state.month.days) {
-        return state.month.days
+        let saldo = state.month.days
           .map((day: WorkingDay) => day.saldoTime)
           .reduce(
             (previousValue: Saldo, currentValue: Saldo | undefined) =>
@@ -59,6 +60,18 @@ const WorkingTimeModule: Module<any, any> = {
                 : previousValue,
             Saldo.createFromMillis(0)
           );
+        if (state.carryResult.saldo) {
+          const cappingLimit = Saldo.createFromMillis(timesConfig.cappingLimit * 60 * 1000);
+          cappingLimit.invert();
+          const totalSaldo = Saldo.getSum(saldo, state.carryResult.saldo);
+          const difference = Saldo.getSum(totalSaldo, cappingLimit);
+          if (difference.positive) {
+            difference.invert();
+            saldo = Saldo.getSum(saldo, difference);
+            state.month.cappedSaldo = true;
+          }
+        }
+        return saldo;
       }
       return "";
     },
@@ -105,18 +118,23 @@ const WorkingTimeModule: Module<any, any> = {
         )
         .then(() =>
           WorkingTimeService.getMonth(params).then((data) => {
-            const workingDays = data.result.map(
+            const workingDays = data.result.days.map(
               (day: any) => new WorkingDay(day)
             );
-            state.month = new WorkingMonth(monthDate, workingDays);
+            const month = data.result.month ?
+              data.result.month :
+              { 'month': FormatterService.toServiceString(monthDate)};
+            state.month = new WorkingMonth(month, workingDays);
           })
         )
         .then(() =>
           WorkingTimeService.getMonth(paramsOfPrev).then((data) => {
-            const workingDays = data.result.map(
+            const workingDays = data.result.days.map(
               (day: any) => new WorkingDay(day)
             );
-            state.previous = new WorkingMonth(prevMonthDate, workingDays);
+            const month = data.result.month ?
+              data.result.month : null;
+            state.previous = new WorkingMonth(month, workingDays);
           })
         )
         .then(() =>
@@ -208,6 +226,10 @@ const WorkingTimeModule: Module<any, any> = {
     setCarry({ state }, carry: Carry) {
       return CarryService.setCarry(carry).then(() => {});
     },
+    // eslint-disable-next-line no-unused-vars
+    closeMonth({ state }, month: WorkingMonth) {
+      return WorkingTimeService.closeMonth(month);
+    }
   },
 };
 

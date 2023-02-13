@@ -41,6 +41,10 @@ class WorkingMonth extends ArrayObject
      */
     public Saldo $saldo;
 
+    public bool $saldoCapped;
+
+    public bool $finalized;
+
     /**
      * @var boolean whether the working time sheet for this month is archived
      */
@@ -51,14 +55,21 @@ class WorkingMonth extends ArrayObject
      */
     public bool $carried;
 
+    public function __construct(object|array $array = [], int $flags = 0, string $iteratorClass = "ArrayIterator") {
+        parent::__construct($array, $flags, $iteratorClass);
+        $this->exchangeArray($array);
+    }
+
     #[ReturnTypeWillChange] public function exchangeArray($array): void {
         $this->id = (int) $array['id'] ?? 0;
         $this->userId = (int) $array['user_id'] ?? 0;
         $this->month = !empty($array['month'])
-            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $array['month']) : null;
+            ? DateTime::createFromFormat(WorkingDay::DATE_FORMAT, $array['month']) : new DateTime();
         $this->saldo = !(empty($array['saldo_hours']) && empty($array['saldo_minutes']) && empty($array['saldo_positive']))
             ? Saldo::createFromHoursAndMinutes($array['saldo_hours'], $array['saldo_minutes'], $array['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();
+        $this->saldoCapped = (int) $array['finalized'] ?? 0;
+        $this->finalized = (int) $array['finalized'] ?? 0;
         $this->archived = (int) $array['archived'] ?? 0;
         $this->carried = (int) $array['carried'] ?? 0;
     }
@@ -72,6 +83,8 @@ class WorkingMonth extends ArrayObject
             'saldo_hours' => $this->saldo->getHours(),
             'saldo_minutes' => $this->saldo->getMinutes(),
             'saldo_positive' => $this->saldo->isPositive(),
+            'saldo_capped' => $this->saldoCapped,
+            'finalized' => $this->finalized,
             'archived' => $this->archived,
             'carried' => $this->carried,
         ];

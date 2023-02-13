@@ -12,6 +12,7 @@ namespace WorkingTime;
 
 use Laminas\Router\Http\Method;
 use Laminas\Router\Http\Segment;
+use WorkingTime\Controller\WorkingTimeController;
 
 return array(
     'router' => [
@@ -25,7 +26,7 @@ return array(
                         'month' => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => Controller\WorkingTimeController::class,
+                        'controller' => WorkingTimeController::class,
                     ],
                 ],
                 'child_routes' => [
@@ -50,6 +51,20 @@ return array(
                         'may_terminate' => true,
                     ],
                 ]
+            ],
+            'month-close' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/month-close/:year/:month',
+                    'constraints' => [
+                        'year' => '[0-9]+',
+                        'month' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => WorkingTimeController::class,
+                        'action' => 'closeMonth',
+                    ],
+                ],
             ],
         ],
     ],

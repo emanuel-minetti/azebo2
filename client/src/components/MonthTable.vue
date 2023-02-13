@@ -77,7 +77,7 @@ export default defineComponent({
     return {
       formShown: false,
       dateToEdit: new Date(),
-      month: new WorkingMonth(new Date(), []),
+      month: new WorkingMonth(null, []),
     }
   },
   computed: {
@@ -145,9 +145,6 @@ export default defineComponent({
       } else {
         return this.days.filter(row => row.day.date.valueOf() > this.dateToEdit.valueOf());
       }
-    },
-    finalized() {
-      return this.$store.state.workingTime.carry.finalized;
     },
     fields(): any {
       return [
@@ -250,7 +247,7 @@ export default defineComponent({
       return saldo ? saldo.toString(false) : '';
     },
     rowClickHandler(row: WorkingDay) {
-      if (!this.finalized && row.date) {
+      if (!this.month.closed && row.date) {
         // store the date ...
         this.dateToEdit = row.date;
         this.$store.commit("workingTime/setDayToEdit", this.dateToEdit);

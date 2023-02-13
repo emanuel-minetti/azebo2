@@ -12,12 +12,22 @@
 namespace WorkingTime\Controller;
 
 use AzeboLib\ApiController;
+use AzeboLib\Saldo;
+use Carry\Model\CarryTable;
+use Carry\Model\WorkingMonth;
+use Carry\Model\WorkingMonthTable;
+use DateInterval;
+use DatePeriod;
 use DateTime;
+use Exception;
+use Laminas\Config\Factory;
 use Laminas\Http\Response;
 use Laminas\Validator\StringLength;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
+use Service\HolidayService;
 use Service\log\AzeboLog;
+use WorkingRule\Model\WorkingRuleTable;
 use WorkingTime\Model\WorkingDay;
 use WorkingTime\Model\WorkingDayPart;
 use WorkingTime\Model\WorkingDayTable;
@@ -26,12 +36,22 @@ class WorkingTimeController extends ApiController
 {
     public const TIME_FORMAT = 'H:i';
 
-    private WorkingDayTable $table;
+    private WorkingDayTable $dayTable;
+    private WorkingMonthTable $monthTable;
+    private WorkingRuleTable $ruleTable;
+    private CarryTable $carryTable;
 
-    public function __construct(AzeboLog $logger, WorkingDayTable $table)
+    public function __construct(AzeboLog $logger,
+                                WorkingDayTable $dayTable,
+                                WorkingMonthTable $monthTable,
+                                WorkingRuleTable $ruleTable,
+                                CarryTable $carryTable)
     {
         parent::__construct($logger);
-        $this->table = $table;
+        $this->dayTable = $dayTable;
+        $this->monthTable = $monthTable;
+        $this->ruleTable = $ruleTable;
+        $this->carryTable = $carryTable;
     }
 
     public function monthAction(): JsonModel|Response {
@@ -41,8 +61,13 @@ class WorkingTimeController extends ApiController
         $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
         if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse)) {
             $userId = $this->httpRequest->getQuery()->user_id;
-            $arrayOfWorkingDays = $this->table->getByUserIdAndMonth($userId, $month);
-            $resultArray = [];
+            $arrayOfWorkingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
+            $workingMonth = $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0] ?
+                $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0]->getArrayCopy()  : null;
+            $resultArray = [
+                'days' => [],
+                'month' => $workingMonth,
+            ];
             foreach ($arrayOfWorkingDays as $element) {
                 $copy = $element->getArrayCopy();
                 $partsCopy = [];
@@ -50,7 +75,7 @@ class WorkingTimeController extends ApiController
                     $partsCopy[] = $part->getArrayCopy();
                 }
                 $copy['day_parts'] = $partsCopy;
-                $resultArray[] = $copy;
+                $resultArray['days'][] = $copy;
             }
             return $this->processResult($resultArray, $userId);
         } else {
@@ -69,7 +94,7 @@ class WorkingTimeController extends ApiController
             $id = $post->_id;
 
             if ($id != 0) {
-                $day = $this->table->find($id);
+                $day = $this->dayTable->find($id);
                 $day->dayParts = [];
                 if (!$day) return $this->invalidRequest;
             } else {
@@ -81,20 +106,6 @@ class WorkingTimeController extends ApiController
                 $day->userId = $userId;
                 $day->id = 0;
             }
-//            if (isset($post->_begin)) {
-//                $begin = DateTime::createFromFormat("H:i:s+", $post->_begin);
-//                if (!$begin) return $this->invalidRequest;
-//                $day->begin = $begin;
-//            } else {
-//                $day->begin = null;
-//            }
-//            if (isset($post->_end)) {
-//                $end = DateTime::createFromFormat("H:i:s+", $post->_end);
-//                if (!$end) return $this->invalidRequest;
-//                $day->end = $end;
-//            } else {
-//                $day->end = null;
-//            }
 
 //            if (isset($post->_begin) && isset($post->_end)) {
 //                // validate
@@ -161,8 +172,178 @@ class WorkingTimeController extends ApiController
                     $day->dayParts[] = $dayPart;
                 }
             }
-            $this->table->upsert($day);
+            $this->dayTable->upsert($day);
             return $this->processResult($day->getArrayCopy(), $userId);
+        } else {
+            // `httpResponse` was set in the call to `AuthorizationService::authorize`
+            return $this->httpResponse;
+        }
+    }
+
+    public function closeMonthAction(): JsonModel|Response {
+        $this->prepare();
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ['POST'])) {
+            // gather data
+            $userId = $this->httpRequest->getQuery()->user_id;
+            $yearParam = $this->params('year');
+            $monthParam = $this->params('month');
+            $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
+            $workingMonth =  $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0];
+            if ($workingMonth) {
+                $this->monthTable->delete($workingMonth);
+                $result = [
+                    'ok' => true,
+                    'month' => null,
+                ];
+                return $this->processResult($result, $userId);
+            } else {
+                $workingMonth = new WorkingMonth([
+                    'user_id' => $userId,
+                    'month' => $month->format(WorkingDay::DATE_FORMAT),
+                ]);
+            }
+            $workingDays = $this->dayTable->getByUserIdAndMonth($userId, $month);
+            $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
+            try {
+                $holidays = HolidayService::getHolidays($month->format('Y'));
+            } catch (Exception $e) {
+                $this->httpResponse->setContent($e->getMessage());
+                return $this->httpResponse;
+            }
+
+            // set working day rules
+            /** @var WorkingDay $day */
+            foreach ($workingDays as $day) {
+                foreach ($rules as $rule) {
+                    if ($rule->isValid($day->date)) {
+                        $day->rule = $rule;
+                        break;
+                    }
+                }
+            }
+
+            // validate month
+            $missing = [];
+            $firstOfMonth = new DateTime();
+            $firstOfNextMonth = new DateTime();
+            $firstOfMonth->setDate($month->format('Y'), $month->format('n'), 1);
+            $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
+            $firstOfNextMonth->add(new DateInterval('P1M'));
+            $oneDay = new DateInterval('P1D');
+            $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
+            foreach ($allMonthDays as $monthDay) {
+                // test for weekend and holiday
+                $weekday = $monthDay->format('N');
+                $monthDayDateString = $monthDay->format(WorkingDay::DATE_FORMAT);
+                $monthDayHoliday = null;
+                foreach ($holidays as $holiday) {
+                    if ($holiday['date'] === $monthDayDateString) {
+                        $monthDayHoliday = $holiday;
+                        break;
+                    }
+                }
+                if (!($weekday == 6 || $weekday == 7 || $monthDayHoliday)) {
+                    $dayRule = null;
+                    foreach ($rules as $rule) {
+                        if ($rule->isValid($monthDay)) {
+                            $dayRule = $rule;
+                            break;
+                        }
+                    }
+                    if ($dayRule) {
+                        $dayWorkingDay = null;
+                        foreach ($workingDays as $workingDay) {
+                            if ($workingDay->date->format('j') === $monthDay->format('j')) {
+                                $dayWorkingDay = $workingDay;
+                                break;
+                            }
+                        }
+                        if ($dayWorkingDay) {
+                            switch ($dayWorkingDay->timeOff) {
+                                case '':
+                                case "ausgleich":
+                                case 'lang':
+                                case 'zusatz':
+                                    $dayParts = $dayWorkingDay->dayParts;
+                                    $dayWorkingDay->saldo = array_reduce(
+                                        $dayParts,
+                                        function (Saldo $prev, WorkingDayPart $curr) {
+                                            return Saldo::getSum($prev, $curr->getActualSaldo());
+                                        },
+                                        Saldo::createFromHoursAndMinutes());
+                                    if ($dayWorkingDay->saldo->getHours() === 0 &&
+                                        $dayWorkingDay->saldo->getMinutes() === 0) {
+                                        $missing[] = $monthDay->format('j');
+                                    }
+                            }
+                        } else {
+                            $missing[] = $monthDay->format('j');
+                        }
+                    }
+                }
+            }
+
+            if (sizeof($missing) === 0) {
+                // compute month saldo
+                $saldo = array_reduce($workingDays, function (Saldo $prev, WorkingDay $curr) use ($userId, $month) {
+                    switch ($curr->timeOff) {
+                        case '':
+                        case "ausgleich":
+                        case 'lang':
+                            $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
+                            $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                            $currentSaldo = Saldo::getSum($curr->saldo, $targetSaldo);
+                            break;
+                        case 'gleitzeit':
+                            $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
+                            $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                            break;
+                        case 'zusatz':
+                            $currentSaldo = $curr->saldo;
+                            break;
+                        default:
+                            $currentSaldo = Saldo::createFromHoursAndMinutes();
+                    }
+                    return Saldo::getSum($prev, $currentSaldo);
+                }, Saldo::createFromHoursAndMinutes());
+
+                // use capping limit
+                $config = Factory::fromFile('./../server/config/times.config.php', true);
+                $cappingLimitMinutes = $config->get('cappingLimit');
+                $cappingLimit = Saldo::createFromHoursAndMinutes(0, $cappingLimitMinutes, false);
+                $workingMonths = $this->monthTable->getByUserIdAndMonth($userId, $month);
+                $carry = $this->carryTable->getByUserIdAndYear($userId, $month);
+                $oldSaldo = array_reduce($workingMonths, function (Saldo $prev,WorkingMonth $curr) {
+                    return Saldo::getSum($prev, $curr->saldo);
+                }, $carry->saldo);
+                $totalSaldo = Saldo::getSum($oldSaldo, $saldo);
+                $difference = Saldo::getSum($totalSaldo, $cappingLimit);
+                if ($difference->isPositive()) {
+                    $difference = Saldo::createFromHoursAndMinutes(
+                        $difference->getHours(), $difference->getMinutes(), false
+                    );
+                    $saldo = Saldo::getSum($saldo, $difference);
+                    $workingMonth->saldoCapped = true;
+                } else {
+                    $workingMonth->saldoCapped = false;
+                }
+
+                // update db
+                $workingMonth->saldo = $saldo;
+                $newMonth = $this->monthTable->insert($workingMonth);
+                $result = [
+                    'ok' => true,
+                    'month' => $newMonth->getArrayCopy(),
+                ];
+            } else {
+                $result = [
+                    'ok' => false,
+                    'missing' => $missing,
+                ];
+            }
+
+            // send result
+            return $this->processResult($result, $userId);
         } else {
             // `httpResponse` was set in the call to `AuthorizationService::authorize`
             return $this->httpResponse;

@@ -30,6 +30,11 @@ class WorkingMonthTable
         $this->sql = $this->tableGateway->getSql();
     }
 
+    public function find($id): ?WorkingMonth {
+        $rowSet = $this->tableGateway->select(['id' => $id]);
+        return $rowSet->current();
+    }
+
     /**
      * @param $userId
      * @param DateTime $month
@@ -62,4 +67,18 @@ class WorkingMonthTable
         }
         return $result;
     }
+
+    public function insert(WorkingMonth $month): WorkingMonth {
+        $copy = $month->getArrayCopy();
+        unset($copy['id']);
+        $this->tableGateway->insert($copy);
+        $monthId = $this->tableGateway->getLastInsertValue();
+        return $this->find($monthId);
+    }
+
+    public function delete(WorkingMonth $month): void {
+        $this->tableGateway->delete(['id' => $month->id]);
+    }
+
+
 }

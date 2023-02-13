@@ -11,7 +11,9 @@
 namespace WorkingTime\Model;
 
 use ArrayObject;
+use AzeboLib\Saldo;
 use DateTime;
+use WorkingRule\Model\WorkingRule;
 
 class WorkingDay extends ArrayObject
 {
@@ -28,6 +30,8 @@ class WorkingDay extends ArrayObject
     /** @var string a free text field */
     public string $comment;
     public array $dayParts;
+    public WorkingRule | null $rule;
+    public Saldo | null $saldo;
 
 
     public function exchangeArray($array): array {

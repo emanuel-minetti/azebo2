@@ -3,7 +3,9 @@
 namespace WorkingTime\Model;
 
 use ArrayObject;
+use AzeboLib\Saldo;
 use DateTime;
+use Laminas\Config\Factory;
 
 class WorkingDayPart extends ArrayObject {
     public const TIME_FORMAT = 'H:i:s';
@@ -41,5 +43,38 @@ class WorkingDayPart extends ArrayObject {
 
     public function __toString() {
         return json_encode($this->getArrayCopy());
+    }
+
+    public function getSaldo(): Saldo {
+        if ($this->begin && $this->end) {
+            return Saldo::createFromBeginAndEnd($this->begin, $this->end);
+        } else {
+            return Saldo::createFromHoursAndMinutes();
+        }
+    }
+
+    public function getActualSaldo(): Saldo {
+        $config = Factory::fromFile('./../server/config/times.config.php', true);
+        $saldo = $this->getSaldo();
+        if ($saldo->getHours() < $config->get('breakRequiredFromHours')) {
+            return $saldo;
+        } elseif ($saldo->getHours() == $config->get('breakRequiredFromHours')) {
+            if ($saldo->getMinutes() <= $config->get('breakRequiredFromMinutes')) {
+                return $saldo;
+            }
+        }
+        // break required
+        $break = Saldo::createFromHoursAndMinutes(0, $config->get('breakDuration'), false);
+        $newSaldo = Saldo::getSum($saldo, $break);
+        if ($saldo->getHours() < $config->get('longBreakRequiredFromHours')) {
+            return $newSaldo;
+        } elseif ($saldo->getHours() == $config->get('longBreakRequiredFromHours')) {
+            if ($saldo->getMinutes() <= $config->get('longBreakRequiredFromMinutes')) {
+                return $newSaldo;
+            }
+        }
+        // long break required
+        $longBreak = Saldo::createFromHoursAndMinutes(0, $config->get('longBreakDuration'), false);
+        return Saldo::getSum($saldo, $longBreak);
     }
 }

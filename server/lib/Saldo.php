@@ -11,11 +11,14 @@
 
 namespace AzeboLib;
 
-class Saldo
+use DateTime;
+use Stringable;
+
+class Saldo implements Stringable
 {
-    private $hours;
-    private $minutes;
-    private $positive;
+    private int $hours;
+    private int $minutes;
+    private bool $positive;
 
     private function __construct($seconds = 0, $positive = true)
     {
@@ -51,7 +54,7 @@ class Saldo
         return $this;
     }
 
-    private function fix() {
+    private function fix(): void {
         if ($this->minutes < 0) {
             $this->minutes += 60;
             $this->hours--;
@@ -71,9 +74,20 @@ class Saldo
      * @param bool $positive
      * @return Saldo
      */
-    public static function createFromHoursAndMinutes($hours = 0, $minutes = 0, $positive = true) {
+    public static function createFromHoursAndMinutes(int $hours = 0, int $minutes = 0, bool $positive = true): Saldo {
         $seconds = $hours * 3600 + $minutes * 60;
         return new Saldo($seconds, $positive);
+    }
+
+    public static function createFromBeginAndEnd(DateTime $begin, DateTime $end): Saldo {
+        $hours = $end->format('G') - $begin->format('G');
+        if ($end->format('i') - $begin->format('i') >= 0) {
+            $minutes = $end->format('i') - $begin->format('i');
+        } else {
+            $minutes = 60 - ($begin->format('i') - $end->format('i'));
+            $hours--;
+        }
+        return self::createFromHoursAndMinutes($hours, $minutes);
     }
 
     /**
@@ -105,10 +119,13 @@ class Saldo
      * @param Saldo $second
      * @return Saldo
      */
-    public static function getSum(Saldo $first, Saldo $second)
-    {
+    public static function getSum(Saldo $first, Saldo $second): Saldo {
         $result = clone $first;
         return $result->add($second);
+    }
+
+    public function __toString(): string {
+        return ($this->positive ? '' : '-') . $this->hours . ':' . $this->minutes;
     }
 
 }

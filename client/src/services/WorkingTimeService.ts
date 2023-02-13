@@ -1,5 +1,5 @@
 import { ApiService } from "/src/services";
-import { WorkingDay } from "/src/models";
+import { WorkingDay, WorkingMonth } from "/src/models";
 
 export default class WorkingTimeService extends ApiService {
   /**
@@ -27,6 +27,17 @@ export default class WorkingTimeService extends ApiService {
       method: "POST",
       headers: headers,
       body: JSON.stringify(day),
+    };
+    return fetch(url, requestOptions).then(this.handleResponse);
+  }
+
+  static closeMonth(month: WorkingMonth) {
+    const url = this.getBaseUrl() + "month-close" + '/' + month.year + '/' + month.month;
+    let headers = this.getHeaders();
+    headers = { ...headers, ...this.getAuthHeader() };
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
     };
     return fetch(url, requestOptions).then(this.handleResponse);
   }

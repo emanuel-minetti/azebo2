@@ -213,9 +213,15 @@ export default class WorkingDay {
 
   get saldoTime(): Saldo | undefined {
     if (this.hasWorkingTime) {
-      if (this._rule) {
+      if (
+        this._rule
+        && this._timeOff !== 'da_krank'
+        && this._timeOff !== 'da_befr'
+      ) {
         const targetSaldo = this.targetTime!.clone();
         return Saldo.getSum(this.actualTime!, targetSaldo.invert());
+      } else if (this._timeOff === 'da_krank' || this._timeOff === 'da_befr') {
+        return Saldo.createFromMillis(0);
       } else {
         return this.actualTime;
       }
@@ -250,6 +256,9 @@ export default class WorkingDay {
       this.timeOff === undefined ||
       this.timeOff === null ||
       this.timeOff === "zusatz" ||
+      this.timeOff === "da_krank" ||
+      this.timeOff === "da_befr" ||
+      this.timeOff === "ausgleich" ||
       this.targetTime !== undefined ||
       !this.hasWorkingTime
     );

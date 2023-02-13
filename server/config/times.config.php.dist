@@ -9,4 +9,5 @@ return [
     'longBreakRequiredFromMinutes' => 30, // in hours
     'workingMinutesPerWeek' => 2360, // "Vollzeit" working minutes per week
     'workingMinutesPerWeekOfficer' => 2400, // "Vollzeit" working minutes per week
+    'cappingLimit' => 1200, // "Kappungsgrenze" in minutes
 ];
