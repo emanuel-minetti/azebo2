@@ -51,7 +51,7 @@ export default defineComponent({
       return !this.month.saldo
           ? "Sie haben den Monatsabschluss erfolgreich zurückgenommen."
           : "Sie haben den Monat "
-          + this.month.monthDate.toLocaleString('de-DE', {month: 'long'})
+          + this.month.monthDate.toLocaleString('de-DE', { month: 'long' })
           + " erfolgreich abgeschlossen."
           ;
     },

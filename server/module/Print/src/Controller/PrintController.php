@@ -5,6 +5,7 @@ namespace Print\Controller;
 use AzeboLib\ApiController;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
+use Fpdf\Fpdf;
 use Laminas\Http\Response;
 use Laminas\View\Model\JsonModel;
 use Service\AuthorizationService;
@@ -29,8 +30,14 @@ class PrintController extends ApiController {
                 $workingMonth->finalized = true;
                 $this->monthTable->update($workingMonth);
             }
+
+            $pdf = new FPDF();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial','B',16);
+            $pdf->Cell(40,10,'Hello World!');
+            $pdf->Output('F', 'public/files/test.pdf');
             $result = [
-                'file' => "kurz.pdf",
+                'file' => "test.pdf",
             ];
             return $this->processResult($result, 0);
         } else {
