@@ -1,23 +1,31 @@
 <template>
-<div id='month-form' class='mx-auto'>
-  <b-alert v-if='missing.length' variant='danger' show>
-    {{ missingText }}
-  </b-alert>
-  <b-alert v-if='success' variant='success' show='5'> {{ successText }} </b-alert>
-  <b-button
-      v-if='!month.finalized'
-      variant='primary'
-      @click='onSubmit'
-  >
-    {{ closeButtonText }}
-  </b-button>
-<!--  <b-button v-if='month.closed' class='ml-2' variant='primary'>Monat ausdrucken</b-button>-->
-</div>
+  <div id='month-form' class='mx-auto'>
+    <b-alert v-if='missing.length' variant='danger' show>
+      {{ missingText }}
+    </b-alert>
+    <b-alert v-if='success' variant='success' show='5'> {{ successText }}</b-alert>
+    <b-button
+        v-if='!month.finalized'
+        variant='primary'
+        @click='onSubmit'
+    >
+      {{ closeButtonText }}
+    </b-button>
+    <b-button
+        v-if='month.closed'
+        class='ml-2'
+        variant='primary'
+        @click='onPrint'
+    >
+      Monat ausdrucken
+    </b-button>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { WorkingMonth } from "/src/models";
+import { PrintService } from "/src/services";
 export default defineComponent({
   name: "MonthForm",
   emits: ['submitted'],
@@ -62,6 +70,12 @@ export default defineComponent({
                 }
               }
           );
+    },
+    onPrint() {
+      PrintService.printMonth(this.month.monthDate)
+          .then(data => {
+              console.log(data);
+          });
     },
   },
 });

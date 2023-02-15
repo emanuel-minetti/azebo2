@@ -7,6 +7,7 @@ import WorkingRuleService from "./WorkingRuleService";
 import CarryService from "./CarryService";
 import GermanKwService from "/src/services/GermanKwService";
 import MessageService from "/src/services/MessageService";
+import PrintService from "/src/services/PrintService";
 
 export {
   ApiService,
@@ -17,5 +18,6 @@ export {
   WorkingRuleService,
   CarryService,
   GermanKwService,
-  MessageService
+  MessageService,
+  PrintService,
 };
