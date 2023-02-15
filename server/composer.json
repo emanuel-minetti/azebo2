@@ -37,7 +37,8 @@
             "Carry\\": "module/Carry/src",
             "Message\\": "module/Message/src",
             "AzeboLib\\": "lib",
-            "Validation\\": "validation/"
+            "Validation\\": "validation/",
+            "Print\\": "module/Print/src"
         }
     },
     "scripts": {

@@ -25,4 +25,5 @@ return [
     'WorkingRule',
     'Carry',
     'Message',
+    'Print',
 ];
