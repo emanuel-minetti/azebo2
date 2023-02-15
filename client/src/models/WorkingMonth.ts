@@ -124,4 +124,8 @@ export default class WorkingMonth {
   set cappedSaldo(value: boolean) {
     this._cappedSaldo = value;
   }
+
+  set finalized(value: boolean) {
+    this._finalized = value;
+  }
 }

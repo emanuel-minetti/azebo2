@@ -26,9 +26,9 @@
 import { defineComponent } from "vue";
 import { WorkingMonth } from "/src/models";
 import { PrintService } from "/src/services";
+
 export default defineComponent({
   name: "MonthForm",
-  emits: ['submitted'],
   data() {
     return {
       missing: new Array<string>(),
@@ -74,7 +74,11 @@ export default defineComponent({
     onPrint() {
       PrintService.printMonth(this.month.monthDate)
           .then(data => {
-              console.log(data);
+            this.$store.dispatch('workingTime/getMonth', this.month.monthDate)
+                .then(() => {
+                  window.location.href = window.location.protocol + "//" + window.location.hostname
+                      + "/files/" + data.result.file;
+                });
           });
     },
   },

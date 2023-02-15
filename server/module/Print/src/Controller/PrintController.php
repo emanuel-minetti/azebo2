@@ -3,19 +3,40 @@
 namespace Print\Controller;
 
 use AzeboLib\ApiController;
+use Carry\Model\WorkingMonthTable;
+use DateTime;
+use Laminas\Http\Response;
 use Laminas\View\Model\JsonModel;
+use Service\AuthorizationService;
 use Service\log\AzeboLog;
+use WorkingTime\Model\WorkingDay;
 
 class PrintController extends ApiController {
-    public function __construct(AzeboLog $logger) {
+    private WorkingMonthTable $monthTable;
+    public function __construct(AzeboLog $logger, WorkingMonthTable $monthTable) {
+        $this->monthTable = $monthTable;
         parent::__construct($logger);
     }
-    public function printAction(): JsonModel {
+    public function printAction(): JsonModel|Response{
         $this->prepare();
-        $result = [
-            'text' => "Hallo from Print",
-        ];
-        return $this->processResult($result, 0);
+        $yearParam = $this->params('year');
+        $monthParam = $this->params('month');
+        $month = DateTime::createFromFormat(WorkingDay::DATE_FORMAT, "$yearParam-$monthParam-01");
+        if (AuthorizationService::authorize($this->httpRequest, $this->httpResponse, ["POST"])) {
+            $userId = $this->httpRequest->getQuery()->user_id;
+            $workingMonth = $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0];
+            if (!$workingMonth->finalized) {
+                $workingMonth->finalized = true;
+                $this->monthTable->update($workingMonth);
+            }
+            $result = [
+                'file' => "kurz.pdf",
+            ];
+            return $this->processResult($result, 0);
+        } else {
+            // `httpResponse` was set in the call to `AuthorizationService::authorize`
+            return $this->httpResponse;
+        }
     }
 
 }

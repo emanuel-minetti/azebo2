@@ -80,5 +80,10 @@ class WorkingMonthTable
         $this->tableGateway->delete(['id' => $month->id]);
     }
 
+    public function update(WorkingMonth $workingMonth): void {
+        $this->tableGateway->update($workingMonth->getArrayCopy(), ['id' => $workingMonth->id]);
+    }
+
+
 
 }
