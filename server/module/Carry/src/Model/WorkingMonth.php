@@ -68,7 +68,7 @@ class WorkingMonth extends ArrayObject
         $this->saldo = !(empty($array['saldo_hours']) && empty($array['saldo_minutes']) && empty($array['saldo_positive']))
             ? Saldo::createFromHoursAndMinutes($array['saldo_hours'], $array['saldo_minutes'], $array['saldo_positive']) :
             Saldo::createFromHoursAndMinutes();
-        $this->saldoCapped = (int) $array['finalized'] ?? 0;
+        $this->saldoCapped = (int) $array['saldo_capped'] ?? 0;
         $this->finalized = (int) $array['finalized'] ?? 0;
         $this->archived = (int) $array['archived'] ?? 0;
         $this->carried = (int) $array['carried'] ?? 0;
