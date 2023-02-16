@@ -25,6 +25,7 @@ const WorkingTimeModule: Module<any, any> = {
     carryResult: Carry,
     dayToEdit: WorkingDay,
     carry: Carry,
+    pdfUrl: "",
   },
   getters: {
     timeTotal(state) {
