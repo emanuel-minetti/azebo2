@@ -17,18 +17,22 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class UserTable
 {
-    private $tableGateway;
+    private TableGateway $tableGateway;
 
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
     }
 
+    public function find(int $id): User | null {
+        $rowSet = $this->tableGateway->select(['id' => $id]);
+        return $rowSet->current();
+    }
     /**
      * @param String $username
      * @return User
      */
-    public function getUserByUsername($username)
+    public function getUserByUsername(string $username): User
     {
         $rowset = $this->tableGateway->select(['username' => $username]);
         $row = $rowset->current();
@@ -41,7 +45,7 @@ class UserTable
         return $row;
     }
 
-    public function insert(User $user)
+    public function insert(User $user): void
     {
         $this->tableGateway->insert($user->getArrayCopy());
     }

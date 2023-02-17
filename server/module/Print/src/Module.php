@@ -4,6 +4,7 @@ namespace Print;
 
 use Carry\Model\WorkingMonthTable;
 use Laminas\ServiceManager\ServiceManager;
+use Login\Model\UserTable;
 use Print\Controller\PrintController;
 use Service\log\AzeboLog;
 
@@ -20,7 +21,8 @@ class Module {
                 PrintController::class => function (ServiceManager $sm) {
                     $logger = $sm->get(AzeboLog::class);
                     $monthTable = $sm->get(WorkingMonthTable::class);
-                    return new PrintController($logger, $monthTable);
+                    $userTable = $sm->get(UserTable::class);
+                    return new PrintController($logger, $monthTable, $userTable);
                 }
             ],
         ];
