@@ -7,6 +7,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Login\Model\UserTable;
 use Print\Controller\PrintController;
 use Service\log\AzeboLog;
+use WorkingRule\Model\WorkingRuleTable;
 
 class Module {
 
@@ -22,7 +23,8 @@ class Module {
                     $logger = $sm->get(AzeboLog::class);
                     $monthTable = $sm->get(WorkingMonthTable::class);
                     $userTable = $sm->get(UserTable::class);
-                    return new PrintController($logger, $monthTable, $userTable);
+                    $ruleTable = $sm->get(WorkingRuleTable::class);
+                    return new PrintController($logger, $monthTable, $userTable, $ruleTable);
                 }
             ],
         ];

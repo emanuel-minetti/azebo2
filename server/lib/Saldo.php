@@ -125,7 +125,8 @@ class Saldo implements Stringable
     }
 
     public function __toString(): string {
-        return ($this->positive ? '' : '-') . $this->hours . ':' . $this->minutes;
+        $minutes = ($this->minutes < 10) ? '0' . $this->minutes : $this->minutes;
+        return ($this->positive ? '' : '-') . $this->hours . ':' . $minutes;
     }
 
 }
