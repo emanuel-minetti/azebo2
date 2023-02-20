@@ -7,6 +7,8 @@ namespace Print\Controller;
 use AzeboLib\ApiController;
 use AzeboLib\Saldo;
 use Carry\Model\WorkingMonthTable;
+use DateInterval;
+use DatePeriod;
 use DateTime;
 use Exception;
 use Fpdf\Fpdf;
@@ -177,6 +179,39 @@ class PrintController extends ApiController {
                     $pdf->Cell(65, 10, $status, 1, 1, 'R');
                 }
             }
+
+            // Here starts the month table
+            // gather data
+            $firstOfMonth = new DateTime();
+            $firstOfNextMonth = new DateTime();
+            $firstOfMonth->setDate($month->format('Y'), $month->format('n'), 1);
+            $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
+            $firstOfNextMonth->add(new DateInterval('P1M'));
+            $oneDay = new DateInterval('P1D');
+            $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
+            // the table head
+            $pdf->SetXY(15, 90);
+            $pdf->SetFont('Calibri', 'B');
+            $pdf->Cell(50, 30, 'Tag', 1, 0, 'C');
+            $pdf->Cell(50, 30, 'Beginn', 1, 0, 'C');
+            $pdf->Cell(50, 30, 'Ende', 1, 0, 'C');
+            $pdf->MultiCell(65, 10, 'tägl. Abweichung\n von der Sollzeit', 1, 'C');
+            $pdf->SetXY(230, 90);
+            $pdf->Cell(65, 30, 'Monatssumme', 1, 0, 'C');
+            $pdf->Cell(40, 30, '> 10h', 1, 0, 'C');
+            $pdf->Cell(120, 30, 'Bemerkung', 1, 0, 'C');
+            $pdf->Cell(250, 30, 'Anmerkung', 1, 0, 'C');
+            // the table body
+            $rowIndex = 0;
+            foreach ($allMonthDays as $monthDay) {
+                if (trim($monthDay->format('j')) != '') {
+                    $tag = $monthDay->format('j');
+                    $pdf->SetXY(15, 120 + $rowIndex * 10);
+                    $pdf->Cell(50, 10, $tag, 1, 0, 'C');
+                    $rowIndex++;
+                }
+            }
+
 
             $pdf->Output('F', 'public/files/' . $filename);
 
