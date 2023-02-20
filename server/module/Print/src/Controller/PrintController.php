@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnused */
+<?php /** @noinspection DuplicatedCode */
+
+/** @noinspection PhpUnused */
 
 namespace Print\Controller;
 
@@ -128,6 +130,52 @@ class PrintController extends ApiController {
                 $pdf->SetFont('Calibri', '');
                 $pdf->Cell(65, 10, $status, 1, 1, 'R');
             } else {
+                for ($i = 0; $i < sizeof($rules); $i++) {
+                    /** @var WorkingRule $rule */
+                    $rule = $rules[$i];
+                    $begin = $rule->validFrom->format('d.m');
+                    $end = $rule->validTo ? $rule->validTo->format('d.m') : 'a. W.';
+                    $gueltigCaption = $this->handleUmlaut('Gültig');
+                    $gueltig = $begin . ' - ' . $end;
+                    $percentage = $rule->percentage;
+                    $workingTime = $rule->isOfficer
+                        ? $config->get('workingMinutesPerWeekOfficer')
+                        : $config->get('workingMinutesPerWeek');
+                    $realWorkingTime = $workingTime * $percentage / 100;
+                    $arbeitszeit = '' . Saldo::createFromHoursAndMinutes(0, $realWorkingTime);
+                    $arbeitstage = $rule->hasWeekdays ? sizeof($rule->weekdays) : 5;
+                    $dailyWorkingTime = $realWorkingTime / $arbeitstage;
+                    $soll = Saldo::createFromHoursAndMinutes(0, $dailyWorkingTime);
+                    $status = $rule->isOfficer ? 'Beamte/r' : 'Beschäftigte/r';
+                    $status = $this->handleUmlaut($status);
+
+                    $pdf->SetXY(205 + $i * 130, 30);
+                    $pdf->SetFont('Calibri', 'B');
+                    $pdf->Cell(65, 10, $gueltigCaption, 1, 0, 'C');
+                    $pdf->SetFont('Calibri', '');
+                    $pdf->Cell(65, 10, $gueltig, 1, 0, 'R');
+
+                    $pdf->SetXY(205 + $i * 130, 40);
+                    $pdf->SetFont('Calibri', 'B');
+                    $pdf->Cell(65, 10, 'WoAz', 1, 0, 'C');
+                    $pdf->SetFont('Calibri', '');
+                    $pdf->Cell(65, 10, $arbeitszeit, 1, 0, 'R');
+                    $pdf->SetXY(205 + $i * 130, 50);
+                    $pdf->SetFont('Calibri', 'B');
+                    $pdf->Cell(65, 10, 'AT/Wo.', 1, 0, 'C');
+                    $pdf->SetFont('Calibri', '');
+                    $pdf->Cell(65, 10, $arbeitstage, 1, 1, 'R');
+                    $pdf->SetXY(205 + $i * 130, 60);
+                    $pdf->SetFont('Calibri', 'B');
+                    $pdf->Cell(65, 10, 'Soll', 1, 0, 'C');
+                    $pdf->SetFont('Calibri', '');
+                    $pdf->Cell(65, 10, $soll, 1, 1, 'R');
+                    $pdf->SetXY(205 + $i * 130, 70);
+                    $pdf->SetFont('Calibri', 'B');
+                    $pdf->Cell(65, 10, 'Status', 1, 0, 'C');
+                    $pdf->SetFont('Calibri', '');
+                    $pdf->Cell(65, 10, $status, 1, 1, 'R');
+                }
             }
 
             $pdf->Output('F', 'public/files/' . $filename);
