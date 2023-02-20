@@ -7,7 +7,7 @@ return [
     'breakRequiredFromMinutes' => 0, // minutes to be added to `breakRequiredFromHours`
     'longBreakRequiredFromHours' => 9, // in hours
     'longBreakRequiredFromMinutes' => 30, // in hours
-    'workingMinutesPerWeek' => 2360, // "Vollzeit" working minutes per week
+    'workingMinutesPerWeek' => 2364, // "Vollzeit" working minutes per week
     'workingMinutesPerWeekOfficer' => 2400, // "Vollzeit" working minutes per week
-    'cappingLimit' => 1200, // "Kappungsgrenze" in minutes
+    'cappingLimit' => 2400, // "Kappungsgrenze" in minutes
 ];

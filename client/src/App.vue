@@ -77,7 +77,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 1, year: lastYearString },
+                  params: { month: 1, year: lastYearString }
                 }"
               >
                 Januar {{ lastYearString }}
@@ -86,7 +86,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 2, year: lastYearString },
+                  params: { month: 2, year: lastYearString }
                 }"
               >
                 Februar {{ lastYearString }}
@@ -95,7 +95,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 3, year: lastYearString },
+                  params: { month: 3, year: lastYearString }
                 }"
               >
                 März {{ lastYearString }}
@@ -104,7 +104,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 4, year: lastYearString },
+                  params: { month: 4, year: lastYearString }
                 }"
               >
                 April {{ lastYearString }}
@@ -113,7 +113,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 5, year: lastYearString },
+                  params: { month: 5, year: lastYearString }
                 }"
               >
                 Mai {{ lastYearString }}
@@ -122,7 +122,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 6, year: lastYearString },
+                  params: { month: 6, year: lastYearString }
                 }"
               >
                 Juni {{ lastYearString }}
@@ -131,7 +131,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 7, year: lastYearString },
+                  params: { month: 7, year: lastYearString }
                 }"
               >
                 Juli {{ lastYearString }}
@@ -140,7 +140,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 8, year: lastYearString },
+                  params: { month: 8, year: lastYearString }
                 }"
               >
                 August {{ lastYearString }}
@@ -149,7 +149,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 9, year: lastYearString },
+                  params: { month: 9, year: lastYearString }
                 }"
               >
                 September {{ lastYearString }}
@@ -158,7 +158,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 10, year: lastYearString },
+                  params: { month: 10, year: lastYearString }
                 }"
               >
                 Oktober {{ lastYearString }}
@@ -167,7 +167,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 11, year: lastYearString },
+                  params: { month: 11, year: lastYearString }
                 }"
               >
                 November {{ lastYearString }}
@@ -176,7 +176,7 @@
                 v-if="lastYearShown"
                 :to="{
                   name: 'month',
-                  params: { month: 12, year: lastYearString },
+                  params: { month: 12, year: lastYearString }
                 }"
               >
                 Dezember {{ lastYearString }}
@@ -203,7 +203,7 @@
       </b-alert>
     <router-view />
     <footer>
-      &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.3.0
+      &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.3.2
     </footer>
   </div>
 </template>
