@@ -12,12 +12,11 @@
 namespace WorkingTime\Controller;
 
 use AzeboLib\ApiController;
+use AzeboLib\DaysOfMonth;
 use AzeboLib\Saldo;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonth;
 use Carry\Model\WorkingMonthTable;
-use DateInterval;
-use DatePeriod;
 use DateTime;
 use Exception;
 use Laminas\Config\Factory;
@@ -224,13 +223,7 @@ class WorkingTimeController extends ApiController
 
             // validate month
             $missing = [];
-            $firstOfMonth = new DateTime();
-            $firstOfNextMonth = new DateTime();
-            $firstOfMonth->setDate($month->format('Y'), $month->format('n'), 1);
-            $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
-            $firstOfNextMonth->add(new DateInterval('P1M'));
-            $oneDay = new DateInterval('P1D');
-            $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
+            $allMonthDays = DaysOfMonth::get($month);
             foreach ($allMonthDays as $monthDay) {
                 // test for weekend and holiday
                 $weekday = $monthDay->format('N');

@@ -1,16 +1,14 @@
-<?php /** @noinspection DuplicatedCode */
-
-/** @noinspection PhpUnused */
+<?php
+/** @noinspection DuplicatedCode */
+/** @noinspection  PhpUnused*/
 
 namespace Print\Controller;
 
 use AzeboLib\ApiController;
+use AzeboLib\DaysOfMonth;
 use AzeboLib\FPDF_Auto;
 use AzeboLib\Saldo;
-use Carry\Model\WorkingMonth;
 use Carry\Model\WorkingMonthTable;
-use DateInterval;
-use DatePeriod;
 use DateTime;
 use Exception;
 use Fpdf\Fpdf;
@@ -44,6 +42,7 @@ class PrintController extends ApiController {
         $this->dayTable = $dayTable;
         parent::__construct($logger);
     }
+    /** @noinspection PhpUnusedInspection */
     public function printAction(): JsonModel|Response{
         $this->prepare();
         $yearParam = $this->params('year');
@@ -91,22 +90,22 @@ class PrintController extends ApiController {
                 $pdf->Cell(40, 10, "Zeiterfassungsbogen - Stand $todayString");
                 $pdf->SetXY(15, 30);
                 $pdf->Cell(40, 10, 'Name', 1);
-                $pdf->SetFont('Calibri', '');
+                $pdf->SetFont('Calibri');
                 $pdf->Cell(150, 10, $name, 1);
                 $pdf->SetXY(15, 40);
                 $pdf->SetFont('Calibri', 'B');
                 $pdf->Cell(40, 10, 'Zeichen', 1);
-                $pdf->SetFont('Calibri', '');
+                $pdf->SetFont('Calibri');
                 $pdf->Cell(150, 10, $zeichen, 1);
                 $pdf->SetXY(15, 50);
                 $pdf->SetFont('Calibri', 'B');
                 $pdf->Cell(40, 10, 'Monat', 1);
-                $pdf->SetFont('Calibri', '');
+                $pdf->SetFont('Calibri');
                 $pdf->Cell(150, 10, $monat, 1);
                 $pdf->SetXY(15, 60);
                 $pdf->SetFont('Calibri', 'B');
                 $pdf->Cell(40, 10, 'Kapp.-Gr.', 1);
-                $pdf->SetFont('Calibri', '');
+                $pdf->SetFont('Calibri');
                 $pdf->Cell(150, 10, $kappungsgrenze, 1);
                 if (sizeof($rules) === 1) {
                     /** @var WorkingRule $rule */
@@ -126,22 +125,22 @@ class PrintController extends ApiController {
                     $pdf->SetXY(205, 30);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'WoAz', 1, 0, 'C');
-                    $pdf->SetFont('Calibri', '');
+                    $pdf->SetFont('Calibri');
                     $pdf->Cell(65, 10, $arbeitszeit, 1, 0, 'R');
                     $pdf->SetXY(205, 40);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'AT/Wo.', 1, 0, 'C');
-                    $pdf->SetFont('Calibri', '');
+                    $pdf->SetFont('Calibri');
                     $pdf->Cell(65, 10, $arbeitstage, 1, 1, 'R');
                     $pdf->SetXY(205, 50);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'Soll', 1, 0, 'C');
-                    $pdf->SetFont('Calibri', '');
+                    $pdf->SetFont('Calibri');
                     $pdf->Cell(65, 10, $soll, 1, 1, 'R');
                     $pdf->SetXY(205, 60);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'Status', 1, 0, 'C');
-                    $pdf->SetFont('Calibri', '');
+                    $pdf->SetFont('Calibri');
                     $pdf->Cell(65, 10, $status, 1, 1, 'R');
                 } else {
                     for ($i = 0; $i < sizeof($rules); $i++) {
@@ -166,39 +165,34 @@ class PrintController extends ApiController {
                         $pdf->SetXY(205 + $i * 130, 30);
                         $pdf->SetFont('Calibri', 'B');
                         $pdf->Cell(65, 10, $gueltigCaption, 1, 0, 'C');
-                        $pdf->SetFont('Calibri', '');
+                        $pdf->SetFont('Calibri');
                         $pdf->Cell(65, 10, $gueltig, 1, 0, 'R');
 
                         $pdf->SetXY(205 + $i * 130, 40);
                         $pdf->SetFont('Calibri', 'B');
                         $pdf->Cell(65, 10, 'WoAz', 1, 0, 'C');
-                        $pdf->SetFont('Calibri', '');
+                        $pdf->SetFont('Calibri');
                         $pdf->Cell(65, 10, $arbeitszeit, 1, 0, 'R');
                         $pdf->SetXY(205 + $i * 130, 50);
                         $pdf->SetFont('Calibri', 'B');
                         $pdf->Cell(65, 10, 'AT/Wo.', 1, 0, 'C');
-                        $pdf->SetFont('Calibri', '');
+                        $pdf->SetFont('Calibri');
                         $pdf->Cell(65, 10, $arbeitstage, 1, 1, 'R');
                         $pdf->SetXY(205 + $i * 130, 60);
                         $pdf->SetFont('Calibri', 'B');
                         $pdf->Cell(65, 10, 'Soll', 1, 0, 'C');
-                        $pdf->SetFont('Calibri', '');
+                        $pdf->SetFont('Calibri');
                         $pdf->Cell(65, 10, $soll, 1, 1, 'R');
                         $pdf->SetXY(205 + $i * 130, 70);
                         $pdf->SetFont('Calibri', 'B');
                         $pdf->Cell(65, 10, 'Status', 1, 0, 'C');
-                        $pdf->SetFont('Calibri', '');
+                        $pdf->SetFont('Calibri');
                         $pdf->Cell(65, 10, $status, 1, 1, 'R');
                     }
                 }// Here starts the month table
                 // gather data
-                $firstOfMonth = new DateTime();
-                $firstOfNextMonth = new DateTime();
-                $firstOfMonth->setDate($month->format('Y'), $month->format('n'), 1);
-                $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
-                $firstOfNextMonth->add(new DateInterval('P1M'));
-                $oneDay = new DateInterval('P1D');
-                $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
+                $allMonthDays = DaysOfMonth::get($month);
+                //$allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
                 $saldoHeader = $this->handleUmlaut('tägl. Abweichung von der Sollzeit');
 
                 // the table head
@@ -233,7 +227,6 @@ class PrintController extends ApiController {
                         $pdf->Cell(40, 10, '', 1, 0, 'C');
                         $pdf->Cell(120, 10, '', 1, 0, 'C');
                         $pdf->Cell(250, 10, '', 1, 0, 'C');
-                        $rowIndex++;
                     } elseif (sizeof($day->dayParts) <= 1) {
                         /** @var WorkingDayPart | null $dayPart */
                         $dayPart = sizeof($day->dayParts) === 1 ? $day->dayParts[0] : null;
@@ -253,10 +246,8 @@ class PrintController extends ApiController {
                         $pdf->Cell(40, 10, $mobil, 1, 0, 'C');
                         $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C');
                         $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C');
-                        $rowIndex++;
-                    } else {
-                        $rowIndex++;
                     }
+                    $rowIndex++;
                 }
 
                 // add auto-print for firefox
@@ -278,14 +269,17 @@ class PrintController extends ApiController {
         }
     }
 
+    /** @noinspection PhpUnusedLocalVariableInspection */
     private function getFilename(): string {
         $chars = 'abcdefghijklmnopqrstuvwxyz';
         $charsLength = strlen($chars);
         $filename = '';
         for ($i=0; $i < 10; $i++) {
+
             try {
                 $filename .= $chars[random_int(0, $charsLength - 1)];
-            } catch (Exception $ignored) {}
+            } catch (Exception $ignored) {
+            }
         }
         $filename .= '.pdf';
         return $filename;
