@@ -76,8 +76,16 @@ export default defineComponent({
           .then(data => {
             this.$store.dispatch('workingTime/getMonth', this.month.monthDate)
                 .then(() => {
-                  window.location.href = window.location.protocol + "//" + window.location.hostname
-                      + "/files/" + data.result.file;
+                  const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+                  console.log(isFirefox);
+                  if (!isFirefox) {
+                    const pdfWindow = window.open("/files/other/" + data.result.file);
+                    if (pdfWindow) {
+                      pdfWindow.onload = pdfWindow.print;
+                    }
+                  } else {
+                    window.open("/files/firefox/" + data.result.file);
+                  }
                 });
           });
     },

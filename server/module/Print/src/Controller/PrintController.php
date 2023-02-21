@@ -5,6 +5,7 @@
 namespace Print\Controller;
 
 use AzeboLib\ApiController;
+use AzeboLib\FPDF_Auto;
 use AzeboLib\Saldo;
 use Carry\Model\WorkingMonthTable;
 use DateInterval;
@@ -67,78 +68,43 @@ class PrintController extends ApiController {
             }
 
             // write PDF
-            $pdf = new FPDF('L', 'pt');
-            $pdf->AddFont('Calibri', '', 'calibri.php');
-            $pdf->AddFont('Calibri', 'B', 'calibrib.php');
-            $pdf->SetLineWidth(1);
-            $pdf->SetFont('Calibri','B',8.5);
-            $pdf->AddPage();
-            $pdf->SetXY(680, 0);
-            $pdf->Cell(40,10,"Zeiterfassungsbogen - Stand $todayString");
-            $pdf->SetXY(15, 30);
-            $pdf->Cell(40, 10, 'Name', 1);
-            $pdf->SetFont('Calibri', '');
-            $pdf->Cell(150, 10, $name, 1);
-            $pdf->SetXY(15, 40);
-            $pdf->SetFont('Calibri', 'B');
-            $pdf->Cell(40, 10, 'Zeichen', 1);
-            $pdf->SetFont('Calibri', '');
-            $pdf->Cell(150, 10, $zeichen, 1);
-            $pdf->SetXY(15, 50);
-            $pdf->SetFont('Calibri', 'B');
-            $pdf->Cell(40, 10, 'Monat', 1);
-            $pdf->SetFont('Calibri', '');
-            $pdf->Cell(150, 10, $monat, 1);
-            $pdf->SetXY(15, 60);
-            $pdf->SetFont('Calibri', 'B');
-            $pdf->Cell(40, 10, 'Kapp.-Gr.', 1);
-            $pdf->SetFont('Calibri', '');
-            $pdf->Cell(150, 10, $kappungsgrenze, 1);
+            // browser gate for firefox
+            $browsers = ['other', 'firefox'];
 
 
-            if (sizeof($rules) === 1) {
-                /** @var WorkingRule $rule */
-                $rule = $rules[0];
-                $percentage = $rule->percentage;
-                $workingTime = $rule->isOfficer
-                    ? $config->get('workingMinutesPerWeekOfficer')
-                    : $config->get('workingMinutesPerWeek');
-                $realWorkingTime = $workingTime * $percentage / 100;
-                $arbeitszeit = '' . Saldo::createFromHoursAndMinutes(0, $realWorkingTime);
-                $arbeitstage = $rule->hasWeekdays ? sizeof($rule->weekdays) : 5;
-                $dailyWorkingTime = $realWorkingTime / $arbeitstage;
-                $soll = Saldo::createFromHoursAndMinutes(0, $dailyWorkingTime);
-                $status = $rule->isOfficer ? 'Beamte/r' : 'Beschäftigte/r';
-                $status = $this->handleUmlaut($status);
-
-                $pdf->SetXY(205, 30);
-                $pdf->SetFont('Calibri', 'B');
-                $pdf->Cell(65, 10, 'WoAz', 1, 0, 'C');
+            foreach ($browsers as $browser) {
+                $pdf = $browser === 'other' ? new Fpdf('L', 'pt')
+                    : new FPDF_Auto('L', 'pt');
+                $pdf->SetTitle('Arbeitszeitbogen');
+                $pdf->AddFont('Calibri', '', 'calibri.php');
+                $pdf->AddFont('Calibri', 'B', 'calibrib.php');
+                $pdf->SetLineWidth(1);
+                $pdf->SetFont('Calibri', 'B', 8.5);
+                $pdf->AddPage();
+                $pdf->SetXY(680, 0);
+                $pdf->Cell(40, 10, "Zeiterfassungsbogen - Stand $todayString");
+                $pdf->SetXY(15, 30);
+                $pdf->Cell(40, 10, 'Name', 1);
                 $pdf->SetFont('Calibri', '');
-                $pdf->Cell(65, 10, $arbeitszeit, 1, 0, 'R');
-                $pdf->SetXY(205, 40);
+                $pdf->Cell(150, 10, $name, 1);
+                $pdf->SetXY(15, 40);
                 $pdf->SetFont('Calibri', 'B');
-                $pdf->Cell(65, 10, 'AT/Wo.', 1, 0, 'C');
+                $pdf->Cell(40, 10, 'Zeichen', 1);
                 $pdf->SetFont('Calibri', '');
-                $pdf->Cell(65, 10, $arbeitstage, 1, 1, 'R');
-                $pdf->SetXY(205, 50);
+                $pdf->Cell(150, 10, $zeichen, 1);
+                $pdf->SetXY(15, 50);
                 $pdf->SetFont('Calibri', 'B');
-                $pdf->Cell(65, 10, 'Soll', 1, 0, 'C');
+                $pdf->Cell(40, 10, 'Monat', 1);
                 $pdf->SetFont('Calibri', '');
-                $pdf->Cell(65, 10, $soll, 1, 1, 'R');
-                $pdf->SetXY(205, 60);
+                $pdf->Cell(150, 10, $monat, 1);
+                $pdf->SetXY(15, 60);
                 $pdf->SetFont('Calibri', 'B');
-                $pdf->Cell(65, 10, 'Status', 1, 0, 'C');
+                $pdf->Cell(40, 10, 'Kapp.-Gr.', 1);
                 $pdf->SetFont('Calibri', '');
-                $pdf->Cell(65, 10, $status, 1, 1, 'R');
-            } else {
-                for ($i = 0; $i < sizeof($rules); $i++) {
+                $pdf->Cell(150, 10, $kappungsgrenze, 1);
+                if (sizeof($rules) === 1) {
                     /** @var WorkingRule $rule */
-                    $rule = $rules[$i];
-                    $begin = $rule->validFrom->format('d.m');
-                    $end = $rule->validTo ? $rule->validTo->format('d.m') : 'a. W.';
-                    $gueltigCaption = $this->handleUmlaut('Gültig');
-                    $gueltig = $begin . ' - ' . $end;
+                    $rule = $rules[0];
                     $percentage = $rule->percentage;
                     $workingTime = $rule->isOfficer
                         ? $config->get('workingMinutesPerWeekOfficer')
@@ -151,69 +117,107 @@ class PrintController extends ApiController {
                     $status = $rule->isOfficer ? 'Beamte/r' : 'Beschäftigte/r';
                     $status = $this->handleUmlaut($status);
 
-                    $pdf->SetXY(205 + $i * 130, 30);
-                    $pdf->SetFont('Calibri', 'B');
-                    $pdf->Cell(65, 10, $gueltigCaption, 1, 0, 'C');
-                    $pdf->SetFont('Calibri', '');
-                    $pdf->Cell(65, 10, $gueltig, 1, 0, 'R');
-
-                    $pdf->SetXY(205 + $i * 130, 40);
+                    $pdf->SetXY(205, 30);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'WoAz', 1, 0, 'C');
                     $pdf->SetFont('Calibri', '');
                     $pdf->Cell(65, 10, $arbeitszeit, 1, 0, 'R');
-                    $pdf->SetXY(205 + $i * 130, 50);
+                    $pdf->SetXY(205, 40);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'AT/Wo.', 1, 0, 'C');
                     $pdf->SetFont('Calibri', '');
                     $pdf->Cell(65, 10, $arbeitstage, 1, 1, 'R');
-                    $pdf->SetXY(205 + $i * 130, 60);
+                    $pdf->SetXY(205, 50);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'Soll', 1, 0, 'C');
                     $pdf->SetFont('Calibri', '');
                     $pdf->Cell(65, 10, $soll, 1, 1, 'R');
-                    $pdf->SetXY(205 + $i * 130, 70);
+                    $pdf->SetXY(205, 60);
                     $pdf->SetFont('Calibri', 'B');
                     $pdf->Cell(65, 10, 'Status', 1, 0, 'C');
                     $pdf->SetFont('Calibri', '');
                     $pdf->Cell(65, 10, $status, 1, 1, 'R');
+                } else {
+                    for ($i = 0; $i < sizeof($rules); $i++) {
+                        /** @var WorkingRule $rule */
+                        $rule = $rules[$i];
+                        $begin = $rule->validFrom->format('d.m');
+                        $end = $rule->validTo ? $rule->validTo->format('d.m') : 'a. W.';
+                        $gueltigCaption = $this->handleUmlaut('Gültig');
+                        $gueltig = $begin . ' - ' . $end;
+                        $percentage = $rule->percentage;
+                        $workingTime = $rule->isOfficer
+                            ? $config->get('workingMinutesPerWeekOfficer')
+                            : $config->get('workingMinutesPerWeek');
+                        $realWorkingTime = $workingTime * $percentage / 100;
+                        $arbeitszeit = '' . Saldo::createFromHoursAndMinutes(0, $realWorkingTime);
+                        $arbeitstage = $rule->hasWeekdays ? sizeof($rule->weekdays) : 5;
+                        $dailyWorkingTime = $realWorkingTime / $arbeitstage;
+                        $soll = Saldo::createFromHoursAndMinutes(0, $dailyWorkingTime);
+                        $status = $rule->isOfficer ? 'Beamte/r' : 'Beschäftigte/r';
+                        $status = $this->handleUmlaut($status);
+
+                        $pdf->SetXY(205 + $i * 130, 30);
+                        $pdf->SetFont('Calibri', 'B');
+                        $pdf->Cell(65, 10, $gueltigCaption, 1, 0, 'C');
+                        $pdf->SetFont('Calibri', '');
+                        $pdf->Cell(65, 10, $gueltig, 1, 0, 'R');
+
+                        $pdf->SetXY(205 + $i * 130, 40);
+                        $pdf->SetFont('Calibri', 'B');
+                        $pdf->Cell(65, 10, 'WoAz', 1, 0, 'C');
+                        $pdf->SetFont('Calibri', '');
+                        $pdf->Cell(65, 10, $arbeitszeit, 1, 0, 'R');
+                        $pdf->SetXY(205 + $i * 130, 50);
+                        $pdf->SetFont('Calibri', 'B');
+                        $pdf->Cell(65, 10, 'AT/Wo.', 1, 0, 'C');
+                        $pdf->SetFont('Calibri', '');
+                        $pdf->Cell(65, 10, $arbeitstage, 1, 1, 'R');
+                        $pdf->SetXY(205 + $i * 130, 60);
+                        $pdf->SetFont('Calibri', 'B');
+                        $pdf->Cell(65, 10, 'Soll', 1, 0, 'C');
+                        $pdf->SetFont('Calibri', '');
+                        $pdf->Cell(65, 10, $soll, 1, 1, 'R');
+                        $pdf->SetXY(205 + $i * 130, 70);
+                        $pdf->SetFont('Calibri', 'B');
+                        $pdf->Cell(65, 10, 'Status', 1, 0, 'C');
+                        $pdf->SetFont('Calibri', '');
+                        $pdf->Cell(65, 10, $status, 1, 1, 'R');
+                    }
+                }// Here starts the month table
+                // gather data
+                $firstOfMonth = new DateTime();
+                $firstOfNextMonth = new DateTime();
+                $firstOfMonth->setDate($month->format('Y'), $month->format('n'), 1);
+                $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
+                $firstOfNextMonth->add(new DateInterval('P1M'));
+                $oneDay = new DateInterval('P1D');
+                $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);// the table head
+                $pdf->SetXY(15, 90);
+                $pdf->SetFont('Calibri', 'B');
+                $pdf->Cell(50, 30, 'Tag', 1, 0, 'C');
+                $pdf->Cell(50, 30, 'Beginn', 1, 0, 'C');
+                $pdf->Cell(50, 30, 'Ende', 1, 0, 'C');
+                $pdf->MultiCell(65, 10, 'tägl. Abweichung\n von der Sollzeit', 1, 'C');
+                $pdf->SetXY(230, 90);
+                $pdf->Cell(65, 30, 'Monatssumme', 1, 0, 'C');
+                $pdf->Cell(40, 30, '> 10h', 1, 0, 'C');
+                $pdf->Cell(120, 30, 'Bemerkung', 1, 0, 'C');
+                $pdf->Cell(250, 30, 'Anmerkung', 1, 0, 'C');// the table body
+                $rowIndex = 0;
+                foreach ($allMonthDays as $monthDay) {
+                    if (trim($monthDay->format('j')) != '') {
+                        $tag = $monthDay->format('j');
+                        $pdf->SetXY(15, 120 + $rowIndex * 10);
+                        $pdf->Cell(50, 10, $tag, 1, 0, 'C');
+                        $rowIndex++;
+                    }
                 }
-            }
-
-            // Here starts the month table
-            // gather data
-            $firstOfMonth = new DateTime();
-            $firstOfNextMonth = new DateTime();
-            $firstOfMonth->setDate($month->format('Y'), $month->format('n'), 1);
-            $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
-            $firstOfNextMonth->add(new DateInterval('P1M'));
-            $oneDay = new DateInterval('P1D');
-            $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
-            // the table head
-            $pdf->SetXY(15, 90);
-            $pdf->SetFont('Calibri', 'B');
-            $pdf->Cell(50, 30, 'Tag', 1, 0, 'C');
-            $pdf->Cell(50, 30, 'Beginn', 1, 0, 'C');
-            $pdf->Cell(50, 30, 'Ende', 1, 0, 'C');
-            $pdf->MultiCell(65, 10, 'tägl. Abweichung\n von der Sollzeit', 1, 'C');
-            $pdf->SetXY(230, 90);
-            $pdf->Cell(65, 30, 'Monatssumme', 1, 0, 'C');
-            $pdf->Cell(40, 30, '> 10h', 1, 0, 'C');
-            $pdf->Cell(120, 30, 'Bemerkung', 1, 0, 'C');
-            $pdf->Cell(250, 30, 'Anmerkung', 1, 0, 'C');
-            // the table body
-            $rowIndex = 0;
-            foreach ($allMonthDays as $monthDay) {
-                if (trim($monthDay->format('j')) != '') {
-                    $tag = $monthDay->format('j');
-                    $pdf->SetXY(15, 120 + $rowIndex * 10);
-                    $pdf->Cell(50, 10, $tag, 1, 0, 'C');
-                    $rowIndex++;
+                if ($browser === 'firefox') {
+                    $pdf->AutoPrint();
                 }
+                $pdf->Output('F', "public/files/$browser/$filename");
             }
-
-
-            $pdf->Output('F', 'public/files/' . $filename);
 
             // send filename
             $result = [
