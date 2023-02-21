@@ -251,6 +251,7 @@ class WorkingTimeController extends ApiController
                         }
                     }
                     if ($dayRule) {
+                        /** @var WorkingDay | null $dayWorkingDay */
                         $dayWorkingDay = null;
                         foreach ($workingDays as $workingDay) {
                             if ($workingDay->date->format('j') === $monthDay->format('j')) {

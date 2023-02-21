@@ -100,4 +100,18 @@ class WorkingDayTable
             }
         }
     }
+
+    public function getByUserIdAndDay($userId, DateTime $date): WorkingDay | null {
+        $rowSet = $this->tableGateway->select([
+            'User_id' => $userId,
+            'date' => $date->format(WorkingDay::DATE_FORMAT)
+        ]);
+        if ($rowSet->count() === 0) {
+            return null;
+        }
+        $day = $rowSet->current();
+        $day->dayParts = $this->dayPartTable->getBayDayId($day->id);
+        return $day;
+    }
+
 }

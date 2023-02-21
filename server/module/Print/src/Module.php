@@ -8,6 +8,7 @@ use Login\Model\UserTable;
 use Print\Controller\PrintController;
 use Service\log\AzeboLog;
 use WorkingRule\Model\WorkingRuleTable;
+use WorkingTime\Model\WorkingDayTable;
 
 class Module {
 
@@ -24,7 +25,8 @@ class Module {
                     $monthTable = $sm->get(WorkingMonthTable::class);
                     $userTable = $sm->get(UserTable::class);
                     $ruleTable = $sm->get(WorkingRuleTable::class);
-                    return new PrintController($logger, $monthTable, $userTable, $ruleTable);
+                    $dayTable = $sm->get(WorkingDayTable::class);
+                    return new PrintController($logger, $monthTable, $userTable, $ruleTable, $dayTable);
                 }
             ],
         ];

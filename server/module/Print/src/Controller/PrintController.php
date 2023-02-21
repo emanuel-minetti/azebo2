@@ -7,6 +7,7 @@ namespace Print\Controller;
 use AzeboLib\ApiController;
 use AzeboLib\FPDF_Auto;
 use AzeboLib\Saldo;
+use Carry\Model\WorkingMonth;
 use Carry\Model\WorkingMonthTable;
 use DateInterval;
 use DatePeriod;
@@ -22,20 +23,25 @@ use Service\log\AzeboLog;
 use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
 use WorkingTime\Model\WorkingDay;
+use WorkingTime\Model\WorkingDayPart;
+use WorkingTime\Model\WorkingDayTable;
 
 class PrintController extends ApiController {
     private WorkingMonthTable $monthTable;
     private UserTable $userTable;
     private WorkingRuleTable $ruleTable;
+    private WorkingDayTable $dayTable;
     public function __construct(
         AzeboLog $logger,
         WorkingMonthTable $monthTable,
         UserTable $userTable,
-        WorkingRuleTable $ruleTable
+        WorkingRuleTable $ruleTable,
+        WorkingDayTable $dayTable
     ) {
         $this->monthTable = $monthTable;
         $this->userTable = $userTable;
         $this->ruleTable = $ruleTable;
+        $this->dayTable = $dayTable;
         parent::__construct($logger);
     }
     public function printAction(): JsonModel|Response{
@@ -192,30 +198,72 @@ class PrintController extends ApiController {
                 $firstOfNextMonth->setDate($month->format('Y'), $month->format('n'), 1);
                 $firstOfNextMonth->add(new DateInterval('P1M'));
                 $oneDay = new DateInterval('P1D');
-                $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);// the table head
+                $allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
+                $saldoHeader = $this->handleUmlaut('tägl. Abweichung von der Sollzeit');
+
+                // the table head
                 $pdf->SetXY(15, 90);
                 $pdf->SetFont('Calibri', 'B');
                 $pdf->Cell(50, 30, 'Tag', 1, 0, 'C');
                 $pdf->Cell(50, 30, 'Beginn', 1, 0, 'C');
                 $pdf->Cell(50, 30, 'Ende', 1, 0, 'C');
-                $pdf->MultiCell(65, 10, 'tägl. Abweichung\n von der Sollzeit', 1, 'C');
+                $pdf->MultiCell(65, 10, $saldoHeader, 1, 'C');
                 $pdf->SetXY(230, 90);
                 $pdf->Cell(65, 30, 'Monatssumme', 1, 0, 'C');
-                $pdf->Cell(40, 30, '> 10h', 1, 0, 'C');
+                $pdf->MultiCell(40, 10, "\nMobiles Arbeiten", 1, 'C');
+                $pdf->SetXY(335, 90);
                 $pdf->Cell(120, 30, 'Bemerkung', 1, 0, 'C');
-                $pdf->Cell(250, 30, 'Anmerkung', 1, 0, 'C');// the table body
+                $pdf->Cell(250, 30, 'Anmerkung', 1, 0, 'C');
+
+                // the table body
                 $rowIndex = 0;
                 foreach ($allMonthDays as $monthDay) {
-                    if (trim($monthDay->format('j')) != '') {
-                        $tag = $monthDay->format('j');
-                        $pdf->SetXY(15, 120 + $rowIndex * 10);
-                        $pdf->Cell(50, 10, $tag, 1, 0, 'C');
+                    // gather data
+                    $day = $this->dayTable->getByUserIdAndDay($userId, $monthDay);
+                    $tag = $monthDay->format('j');
+
+                    // print day row
+                    $pdf->SetXY(15, 120 + $rowIndex * 10);
+                    $pdf->Cell(50, 10, $tag, 1, 0, 'C');
+                    if ($day === null) {
+                        $pdf->Cell(50, 10, '', 1, 0, 'C');
+                        $pdf->Cell(50, 10, '', 1, 0, 'C');
+                        $pdf->Cell(65, 10, '', 1, 0, 'C');
+                        $pdf->Cell(65, 10, '', 1, 0, 'C');
+                        $pdf->Cell(40, 10, '', 1, 0, 'C');
+                        $pdf->Cell(120, 10, '', 1, 0, 'C');
+                        $pdf->Cell(250, 10, '', 1, 0, 'C');
+                        $rowIndex++;
+                    } elseif (sizeof($day->dayParts) <= 1) {
+                        /** @var WorkingDayPart | null $dayPart */
+                        $dayPart = sizeof($day->dayParts) === 1 ? $day->dayParts[0] : null;
+                        $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
+                        $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
+                        $saldo = isset($day->saldo) ? '' . $day->saldo : '';
+                        $mobil = $dayPart ? ( $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '') : '';
+                        $timeOffsConfigArray =
+                            array_flip(Factory::fromFile('./../server/config/timeOffs.config.php', true)
+                                ->toArray());
+                        $bemerkung = $timeOffsConfigArray[$day->timeOff];
+                        $anmerkung = $day->comment;
+                        $pdf->Cell(50, 10, $beginn, 1, 0, 'C');
+                        $pdf->Cell(50, 10, $ende, 1, 0, 'C');
+                        $pdf->Cell(65, 10, $saldo, 1, 0, 'C');
+                        $pdf->Cell(65, 10, '', 1, 0, 'C');
+                        $pdf->Cell(40, 10, $mobil, 1, 0, 'C');
+                        $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C');
+                        $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C');
+                        $rowIndex++;
+                    } else {
                         $rowIndex++;
                     }
                 }
+
+                // add auto-print for firefox
                 if ($browser === 'firefox') {
                     $pdf->AutoPrint();
                 }
+                // write output
                 $pdf->Output('F', "public/files/$browser/$filename");
             }
 
