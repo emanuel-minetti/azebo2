@@ -30,7 +30,9 @@ class WorkingDay extends ArrayObject
     /** @var string a free text field */
     public string $comment;
     public array $dayParts;
+    // TODO make private! (Should be set by table and read by controllers!)
     public WorkingRule | null $rule;
+    // TODO make private! (Should be set by table and read by controllers!)
     public Saldo | null $saldo;
 
 
