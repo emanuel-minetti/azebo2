@@ -77,7 +77,6 @@ export default defineComponent({
             this.$store.dispatch('workingTime/getMonth', this.month.monthDate)
                 .then(() => {
                   const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-                  console.log(isFirefox);
                   if (!isFirefox) {
                     const pdfWindow = window.open("/files/other/" + data.result.file);
                     if (pdfWindow) {
