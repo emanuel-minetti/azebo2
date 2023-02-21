@@ -19,7 +19,6 @@
     >
       Monat ausdrucken
     </b-button>
-    <iframe v-if='iFramePdfNeeded' id='iFramePdf' :src='pdfUrl' style='display: none;'></iframe>
   </div>
 </template>
 
@@ -56,24 +55,6 @@ export default defineComponent({
           + " erfolgreich abgeschlossen."
           ;
     },
-    iFramePdfNeeded() {
-      return this.$store.state.workingTime.pdfUrl !== '';
-    },
-    pdfUrl() {
-      return this.$store.state.workingTime.pdfUrl;
-    }
-  },
-  watch: {
-    pdfUrl(to: string) {
-      if (to !== '') {
-        this.$nextTick(() => {
-          const pdf = document.getElementById('iFramePdf') as HTMLIFrameElement | null;
-          if (pdf) {
-            pdf.onload = () => pdf.contentWindow!.print();
-          }
-        });
-      }
-    }
   },
   methods: {
     onSubmit() {
@@ -95,12 +76,8 @@ export default defineComponent({
           .then(data => {
             this.$store.dispatch('workingTime/getMonth', this.month.monthDate)
                 .then(() => {
-                  this.$store.state.workingTime.pdfUrl = "/files/" + data.result.file;
-                  // this.pdfUrl = "/files/" + data.result.file;
-                  // console.log(this.pdfUrl);
-                  // this.iFramePdfNeeded = true;
-                  // window.location.href = window.location.protocol + "//" + window.location.hostname
-                  //     + "/files/" + data.result.file;
+                  window.location.href = window.location.protocol + "//" + window.location.hostname
+                      + "/files/" + data.result.file;
                 });
           });
     },
