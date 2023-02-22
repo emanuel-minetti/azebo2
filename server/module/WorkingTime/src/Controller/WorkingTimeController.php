@@ -247,15 +247,8 @@ class WorkingTimeController extends ApiController
                                 case "ausgleich":
                                 case 'lang':
                                 case 'zusatz':
-                                    $dayParts = $dayWorkingDay->getDayParts();
-                                    $dayWorkingDay->saldo = array_reduce(
-                                        $dayParts,
-                                        function (Saldo $prev, WorkingDayPart $curr) {
-                                            return Saldo::getSum($prev, $curr->getActualSaldo());
-                                        },
-                                        Saldo::createFromHoursAndMinutes());
-                                    if ($dayWorkingDay->saldo->getHours() === 0 &&
-                                        $dayWorkingDay->saldo->getMinutes() === 0) {
+                                    if ($dayWorkingDay->getSaldo()->getHours() === 0 &&
+                                        $dayWorkingDay->getSaldo()->getMinutes() === 0) {
                                         $missing[] = $monthDay->format('j');
                                     }
                             }
@@ -269,25 +262,8 @@ class WorkingTimeController extends ApiController
             if (sizeof($missing) === 0) {
                 // compute month saldo
                 $saldo = array_reduce($workingDays, function (Saldo $prev, WorkingDay $curr) use ($userId, $month) {
-                    switch ($curr->timeOff) {
-                        case '':
-                        case "ausgleich":
-                        case 'lang':
-                            $target = $curr->getRule() ? $curr->getRule()->getTarget() / 1000 / 60 : 0;
-                            $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                            $currentSaldo = Saldo::getSum($curr->saldo, $targetSaldo);
-                            break;
-                        case 'gleitzeit':
-                            $target = $curr->getRule() ? $curr->getRule()->getTarget() / 1000 / 60 : 0;
-                            $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                            break;
-                        case 'zusatz':
-                            $currentSaldo = $curr->saldo;
-                            break;
-                        default:
-                            $currentSaldo = Saldo::createFromHoursAndMinutes();
-                    }
-                    return Saldo::getSum($prev, $currentSaldo);
+                    $saldo = $curr->getSaldo() ?? Saldo::createFromHoursAndMinutes();
+                    return Saldo::getSum($prev, $saldo);
                 }, Saldo::createFromHoursAndMinutes());
 
                 // use capping limit

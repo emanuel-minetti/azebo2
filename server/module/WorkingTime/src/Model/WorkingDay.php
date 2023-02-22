@@ -31,8 +31,6 @@ class WorkingDay extends ArrayObject
     public string $comment;
     private array | null $dayParts = null;
     private WorkingRule | null $rule;
-    // TODO make private! (Should be set by table and read by controllers!)
-    public Saldo | null $saldo;
 
     public function exchangeArray($array): array {
         $this->id = (int)$array['id'] ?? 0;
@@ -89,6 +87,56 @@ class WorkingDay extends ArrayObject
      */
     public function setRule(?WorkingRule $rule): void {
         $this->rule = $rule;
+    }
+
+//    public function getTotalTime(): ?Saldo {
+//        if ($this->dayParts) {
+//            switch ($this->timeOff) {
+//                case '':
+//                case "ausgleich":
+//                case 'lang':
+//                case 'zusatz':
+//                    return array_reduce($this->dayParts, function (Saldo $saldo, WorkingDayPart $part) {
+//                        return Saldo::getSum($saldo, $part->getSaldo());
+//                    }, Saldo::createFromHoursAndMinutes());
+//                default:
+//                    return null;
+//            }
+//        }
+//        return null;
+//    }
+
+    public function getActualTime(): ?Saldo {
+        if ($this->dayParts) {
+            return match ($this->timeOff) {
+                '', "ausgleich", 'lang', 'zusatz' => array_reduce($this->dayParts, function (Saldo $saldo, WorkingDayPart $part) {
+                    return Saldo::getSum($saldo, $part->getActualSaldo());
+                }, Saldo::createFromHoursAndMinutes()),
+                default => null,
+            };
+        }
+        return null;
+    }
+
+    public function getSaldo(): ?Saldo {
+        if ($this->dayParts) {
+            switch ($this->timeOff) {
+                case '':
+                case "ausgleich":
+                case 'lang':
+                    $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
+                    $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                    return Saldo::getSum($this->getActualTime(), $targetSaldo);
+                case 'gleitzeit':
+                    $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
+                    return Saldo::createFromHoursAndMinutes(0, $target, false);
+                case 'zusatz':
+                    return $this->getActualTime();
+                default:
+                    return null;
+            }
+        }
+        return null;
     }
 
 
