@@ -210,17 +210,6 @@ class WorkingTimeController extends ApiController
                 return $this->httpResponse;
             }
 
-            // set working day rules
-            /** @var WorkingDay $day */
-            foreach ($workingDays as $day) {
-                foreach ($rules as $rule) {
-                    if ($rule->isValid($day->date)) {
-                        $day->rule = $rule;
-                        break;
-                    }
-                }
-            }
-
             // validate month
             $missing = [];
             $allMonthDays = DaysOfMonth::get($month);
@@ -284,12 +273,12 @@ class WorkingTimeController extends ApiController
                         case '':
                         case "ausgleich":
                         case 'lang':
-                            $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
+                            $target = $curr->getRule() ? $curr->getRule()->getTarget() / 1000 / 60 : 0;
                             $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
                             $currentSaldo = Saldo::getSum($curr->saldo, $targetSaldo);
                             break;
                         case 'gleitzeit':
-                            $target = $curr->rule ? $curr->rule->getTarget() / 1000 / 60 : 0;
+                            $target = $curr->getRule() ? $curr->getRule()->getTarget() / 1000 / 60 : 0;
                             $currentSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
                             break;
                         case 'zusatz':

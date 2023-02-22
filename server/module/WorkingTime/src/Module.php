@@ -44,7 +44,8 @@ class Module {
                     $resultSetPrototype->setArrayObjectPrototype(new Model\WorkingDay([]));
                     $tableGateway = new TableGateway('working_day', $dbAdapter, null, $resultSetPrototype);
                     $dayPartTable = $sm->get(WorkingDayPartTable::class);
-                    return new Model\WorkingDayTable($tableGateway, $dayPartTable);
+                    $rulesTable = $sm->get(WorkingRuleTable::class);
+                    return new Model\WorkingDayTable($tableGateway, $dayPartTable, $rulesTable);
                 },
                 AzeboLog::class => InvokableFactory::class,
             ],

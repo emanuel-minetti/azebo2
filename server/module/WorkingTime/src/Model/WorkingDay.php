@@ -30,11 +30,9 @@ class WorkingDay extends ArrayObject
     /** @var string a free text field */
     public string $comment;
     private array | null $dayParts = null;
-    // TODO make private! (Should be set by table and read by controllers!)
-    public WorkingRule | null $rule;
+    private WorkingRule | null $rule;
     // TODO make private! (Should be set by table and read by controllers!)
     public Saldo | null $saldo;
-
 
     public function exchangeArray($array): array {
         $this->id = (int)$array['id'] ?? 0;
@@ -59,7 +57,7 @@ class WorkingDay extends ArrayObject
     }
 
     /**
-     * @return array
+     * @return array | null
      */
     public function getDayParts(): array | null {
         return $this->dayParts;
@@ -78,6 +76,21 @@ class WorkingDay extends ArrayObject
         }
         $this->dayParts[] = $part;
     }
+
+    /**
+     * @return WorkingRule|null
+     */
+    public function getRule(): ?WorkingRule {
+        return $this->rule;
+    }
+
+    /**
+     * @param WorkingRule|null $rule
+     */
+    public function setRule(?WorkingRule $rule): void {
+        $this->rule = $rule;
+    }
+
 
     public function __toString()
     {

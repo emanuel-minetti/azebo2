@@ -14,22 +14,25 @@ use DateTime;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
+use WorkingRule\Model\WorkingRuleTable;
 
 class WorkingDayTable
 {
     private TableGateway $tableGateway;
     private WorkingDayPartTable $dayPartTable;
+    private WorkingRuleTable $rulesTable;
 
-    public function __construct(TableGateway $tableGateway, WorkingDayPartTable $dayPartTable)
+    public function __construct(TableGateway $tableGateway, WorkingDayPartTable $dayPartTable, WorkingRuleTable $rulesTable)
     {
         $this->tableGateway = $tableGateway;
         $this->dayPartTable = $dayPartTable;
+        $this->rulesTable = $rulesTable;
     }
 
     public function find($id): ?WorkingDay {
         $rowSet = $this->tableGateway->select(['id' => $id]);
         $day = $rowSet->current();
-        $day->dayParts = $this->dayPartTable->getBayDayId($id);
+        $this->prepareDay($day);
         return $day;
     }
 
@@ -48,7 +51,7 @@ class WorkingDayTable
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
-            $row->setDayParts($this->dayPartTable->getBayDayId($row->id));
+            $this->prepareDay($row);
             $result[] = $row;
         }
         return $result;
@@ -110,8 +113,19 @@ class WorkingDayTable
             return null;
         }
         $day = $rowSet->current();
-        $day->setDayParts($this->dayPartTable->getBayDayId($day->id));
+        $this->prepareDay($day);
         return $day;
+    }
+
+    private function prepareDay(WorkingDay $day): void {
+        $day->setDayParts($this->dayPartTable->getBayDayId($day->id));
+        $rules = $this->rulesTable->getByUserIdAndMonth($day->userId, $day->date);
+        foreach ($rules as $rule) {
+            if ($rule->isValid($day->date)) {
+                $day->setRule($rule);
+                break;
+            }
+        }
     }
 
 }
