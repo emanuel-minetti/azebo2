@@ -48,7 +48,7 @@ class WorkingDayTable
         $resultSet = $this->tableGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
-            $row->dayParts = $this->dayPartTable->getBayDayId($row->id);
+            $row->setDayParts($this->dayPartTable->getBayDayId($row->id));
             $result[] = $row;
         }
         return $result;
@@ -64,7 +64,7 @@ class WorkingDayTable
             $dayId = $this->tableGateway->getLastInsertValue();
             $day->id = $dayId;
             /** @var WorkingDayPart $part */
-            foreach ($day->dayParts as $part) {
+            foreach ($day->getDayParts() as $part) {
                 $part->workingDayId = $dayId;
                 $this->dayPartTable->upsert($part);
             }
@@ -73,27 +73,27 @@ class WorkingDayTable
             $copy = $day->getArrayCopy();
             unset($copy['day_parts']);
             $this->tableGateway->update($copy, ['id' => $day->id]);
-            if (isset($day->dayParts)) {
-                if (isset($formerDay->dayParts)) {
+            if ($day->getDayParts()) {
+                if ($formerDay->getDayParts()) {
                     // upsert the new one and keep track
-                    foreach ($day->dayParts as $part) {
+                    foreach ($day->getDayParts() as $part) {
                         $this->dayPartTable->upsert($part);
-                        $formerDay->dayParts = array_filter($formerDay->dayParts, function ($partBefore) use ($part){
+                        $formerDay->setDayParts(array_filter($formerDay->getDayParts(), function ($partBefore) use ($part){
                             return $partBefore->id !== $part->id;
-                        });
+                        }));
                     }
                     // delete remaining old ones
-                    foreach ($formerDay->dayParts as $part) {
+                    foreach ($formerDay->getDayParts() as $part) {
                         $this->dayPartTable->delete($part);
                     }
                 } else {
-                    foreach ($day->dayParts as $part) {
+                    foreach ($day->getDayParts() as $part) {
                         $this->dayPartTable->upsert($part);
                     }
                 }
             } else {
-                if (isset($formerDay->dayParts)) {
-                    foreach ($formerDay->dayParts as $part) {
+                if ($formerDay->getDayParts()) {
+                    foreach ($formerDay->getDayParts() as $part) {
                         $this->dayPartTable->delete($part);
                     }
                 }
@@ -110,7 +110,7 @@ class WorkingDayTable
             return null;
         }
         $day = $rowSet->current();
-        $day->dayParts = $this->dayPartTable->getBayDayId($day->id);
+        $day->setDayParts($this->dayPartTable->getBayDayId($day->id));
         return $day;
     }
 

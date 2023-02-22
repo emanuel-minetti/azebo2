@@ -94,7 +94,6 @@ class WorkingTimeController extends ApiController
 
             if ($id != 0) {
                 $day = $this->dayTable->find($id);
-                $day->dayParts = [];
                 if (!$day) return $this->invalidRequest;
             } else {
                 if (!isset($post->_date)) return $this->invalidRequest;
@@ -168,7 +167,8 @@ class WorkingTimeController extends ApiController
                     $dayPart->end = isset($part->_end) ?
                         DateTime::createFromFormat(self::TIME_FORMAT, $part->_end) : null;
                     $dayPart->mobileWorking = $part->_mobileWorking;
-                    $day->dayParts[] = $dayPart;
+                    $day->addDayPart($dayPart);
+                    //$day->dayParts[] = $dayPart;
                 }
             }
             $this->dayTable->upsert($day);
@@ -258,7 +258,7 @@ class WorkingTimeController extends ApiController
                                 case "ausgleich":
                                 case 'lang':
                                 case 'zusatz':
-                                    $dayParts = $dayWorkingDay->dayParts;
+                                    $dayParts = $dayWorkingDay->getDayParts();
                                     $dayWorkingDay->saldo = array_reduce(
                                         $dayParts,
                                         function (Saldo $prev, WorkingDayPart $curr) {

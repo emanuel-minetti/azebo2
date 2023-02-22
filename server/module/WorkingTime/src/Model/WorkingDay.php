@@ -29,7 +29,7 @@ class WorkingDay extends ArrayObject
     public string $timeOff;
     /** @var string a free text field */
     public string $comment;
-    public array $dayParts;
+    private array | null $dayParts = null;
     // TODO make private! (Should be set by table and read by controllers!)
     public WorkingRule | null $rule;
     // TODO make private! (Should be set by table and read by controllers!)
@@ -56,6 +56,27 @@ class WorkingDay extends ArrayObject
             'comment' => $this->comment == "" ? null: $this->comment,
             'day_parts' => $this->dayParts,
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDayParts(): array | null {
+        return $this->dayParts;
+    }
+
+    /**
+     * @param array $dayParts
+     */
+    public function setDayParts(array $dayParts): void {
+        $this->dayParts = $dayParts;
+    }
+
+    public function addDayPart(WorkingDayPart $part): void {
+        if ($this->dayParts === null) {
+            $this->dayParts = [];
+        }
+        $this->dayParts[] = $part;
     }
 
     public function __toString()

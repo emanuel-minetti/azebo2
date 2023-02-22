@@ -227,9 +227,9 @@ class PrintController extends ApiController {
                         $pdf->Cell(40, 10, '', 1, 0, 'C');
                         $pdf->Cell(120, 10, '', 1, 0, 'C');
                         $pdf->Cell(250, 10, '', 1, 0, 'C');
-                    } elseif (sizeof($day->dayParts) <= 1) {
+                    } elseif ($day->getDayParts() && sizeof($day->getDayParts()) <= 1) {
                         /** @var WorkingDayPart | null $dayPart */
-                        $dayPart = sizeof($day->dayParts) === 1 ? $day->dayParts[0] : null;
+                        $dayPart = sizeof($day->getDayParts()) === 1 ? $day->getDayParts()[0] : null;
                         $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
                         $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
                         $saldo = isset($day->saldo) ? '' . $day->saldo : '';
