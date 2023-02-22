@@ -211,6 +211,7 @@ class PrintController extends ApiController {
 
                 // the table body
                 $rowIndex = 0;
+                $monatssumme = Saldo::createFromHoursAndMinutes();
                 foreach ($allMonthDays as $monthDay) {
                     // gather data
                     $day = $this->dayTable->getByUserIdAndDay($userId, $monthDay);
@@ -232,22 +233,33 @@ class PrintController extends ApiController {
                         $dayPart = sizeof($day->getDayParts()) === 1 ? $day->getDayParts()[0] : null;
                         $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
                         $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
-                        $saldo = isset($day->saldo) ? '' . $day->saldo : '';
+                        if ($day->getSaldo()
+                            && !($day->getSaldo()->getHours() === 0 && $day->getSaldo()->getMinutes() === 0)) {
+                            $saldo = $day->getSaldo();
+                            $monatssumme = Saldo::getSum($monatssumme, $saldo);
+                            $monatssummeString = $monatssumme;
+                        } else {
+                            $saldo = '';
+                            $monatssummeString = '';
+                        }
                         $mobil = $dayPart ? ( $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '') : '';
-                        $timeOffsConfigArray =
-                            array_flip(Factory::fromFile('./../server/config/timeOffs.config.php', true)
-                                ->toArray());
+                        $timeOffsConfigArray = array_flip(
+                            Factory::fromFile('./../server/config/timeOffs.config.php', true)
+                                ->toArray()
+                        );
                         $bemerkung = $timeOffsConfigArray[$day->timeOff];
                         $anmerkung = $day->comment;
                         $pdf->Cell(50, 10, $beginn, 1, 0, 'C');
                         $pdf->Cell(50, 10, $ende, 1, 0, 'C');
                         $pdf->Cell(65, 10, $saldo, 1, 0, 'C');
-                        $pdf->Cell(65, 10, '', 1, 0, 'C');
+                        $pdf->Cell(65, 10, $monatssummeString, 1, 0, 'C');
                         $pdf->Cell(40, 10, $mobil, 1, 0, 'C');
                         $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C');
                         $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C');
+                        $rowIndex++;
+                    } else {
+                        $rowIndex++;
                     }
-                    $rowIndex++;
                 }
 
                 // add auto-print for firefox
