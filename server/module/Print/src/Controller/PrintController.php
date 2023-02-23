@@ -86,6 +86,7 @@ class PrintController extends ApiController {
                 $pdf = $browser === 'other' ? new Fpdf('L', 'pt')
                     : new FPDF_Auto('L', 'pt');
                 $pdf->SetTitle('Arbeitszeitbogen');
+                $pdf->SetAutoPageBreak(true, 30);
                 $pdf->AddFont('Calibri', '', 'calibri.php');
                 $pdf->AddFont('Calibri', 'B', 'calibrib.php');
                 $pdf->SetLineWidth(1);
@@ -194,10 +195,11 @@ class PrintController extends ApiController {
                         $pdf->SetFont('Calibri');
                         $pdf->Cell(65, 10, $status, 1, 1, 'R');
                     }
-                }// Here starts the month table
+                }
+
+                // Here starts the month table
                 // gather data
                 $allMonthDays = DaysOfMonth::get($month);
-                //$allMonthDays = new DatePeriod($firstOfMonth, $oneDay, $firstOfNextMonth);
                 $saldoHeader = $this->handleUmlaut('tägl. Abweichung von der Sollzeit');
 
                 // the table head
@@ -217,6 +219,7 @@ class PrintController extends ApiController {
 
                 // the table body
                 $rowIndex = 0;
+                $currentPageNumber = 1;
                 $monatssumme = Saldo::createFromHoursAndMinutes();
                 $timeOffsConfigArray = array_flip(
                     Factory::fromFile('./../server/config/timeOffs.config.php', true)
@@ -237,7 +240,15 @@ class PrintController extends ApiController {
                     }
                     // print day row
                     $pdf->SetFont('Calibri', 'B');
-                    $pdf->SetXY(15, 115 + $rowIndex * 10);
+                    if ($pdf->PageNo() === 1) {
+                        $pdf->SetXY(15, 115 + $rowIndex * 10);
+                    } else {
+                        if ($currentPageNumber !== $pdf->PageNo()) {
+                            $currentPageNumber = $pdf->PageNo();
+                            $rowIndex = 0;
+                        }
+                        $pdf->SetXY(15, 38 + $rowIndex * 10);
+                    }
                     $pdf->Cell(50, 10, $tag, 1, 0, 'C', $fill);
                     $pdf->SetFont('Calibri');
                     if ($day === null) {
