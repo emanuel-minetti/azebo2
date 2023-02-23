@@ -2,6 +2,7 @@
 
 namespace Print;
 
+use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use Laminas\ServiceManager\ServiceManager;
 use Login\Model\UserTable;
@@ -26,7 +27,8 @@ class Module {
                     $userTable = $sm->get(UserTable::class);
                     $ruleTable = $sm->get(WorkingRuleTable::class);
                     $dayTable = $sm->get(WorkingDayTable::class);
-                    return new PrintController($logger, $monthTable, $userTable, $ruleTable, $dayTable);
+                    $carryTable = $sm->get(CarryTable::class);
+                    return new PrintController($logger, $monthTable, $userTable, $ruleTable, $dayTable, $carryTable);
                 }
             ],
         ];

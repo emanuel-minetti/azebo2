@@ -8,6 +8,7 @@ use AzeboLib\ApiController;
 use AzeboLib\DaysOfMonth;
 use AzeboLib\FPDF_Auto;
 use AzeboLib\Saldo;
+use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
 use Exception;
@@ -30,17 +31,20 @@ class PrintController extends ApiController {
     private UserTable $userTable;
     private WorkingRuleTable $ruleTable;
     private WorkingDayTable $dayTable;
+    private CarryTable $carryTable;
     public function __construct(
         AzeboLog $logger,
         WorkingMonthTable $monthTable,
         UserTable $userTable,
         WorkingRuleTable $ruleTable,
-        WorkingDayTable $dayTable
+        WorkingDayTable $dayTable,
+        CarryTable $carryTable
     ) {
         $this->monthTable = $monthTable;
         $this->userTable = $userTable;
         $this->ruleTable = $ruleTable;
         $this->dayTable = $dayTable;
+        $this->carryTable = $carryTable;
         parent::__construct($logger);
     }
     /** @noinspection PhpUnusedInspection */
@@ -64,7 +68,7 @@ class PrintController extends ApiController {
             $zeichen = $this->handleUmlaut($zeichen);
             $monat = $this->getMonthString($month);
             $cappingLimitMinutes = $config->get('cappingLimit');
-            $kappungsgrenze = '' . Saldo::createFromHoursAndMinutes(0, $cappingLimitMinutes);
+            $kappungsgrenze = Saldo::createFromHoursAndMinutes(0, $cappingLimitMinutes);
             $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
 
             // finalize month
@@ -197,19 +201,19 @@ class PrintController extends ApiController {
                 $saldoHeader = $this->handleUmlaut('tägl. Abweichung von der Sollzeit');
 
                 // the table head
-                $pdf->SetXY(15, 90);
+                $pdf->SetXY(15, 85);
                 $pdf->SetFont('Calibri', 'B');
                 $pdf->Cell(50, 30, 'Tag', 1, 0, 'C');
                 $pdf->Cell(50, 30, 'Beginn', 1, 0, 'C');
                 $pdf->Cell(50, 30, 'Ende', 1, 0, 'C');
                 $pdf->Cell(50, 30, 'Pause', 1, 0, 'C');
                 $pdf->MultiCell(40, 10, "\nMobiles Arbeiten", 1, 'C');
-                $pdf->SetXY(255, 90);
+                $pdf->SetXY(255, 85);
                 $pdf->MultiCell(65, 10, $saldoHeader, 1, 'C');
-                $pdf->SetXY(320, 90);
+                $pdf->SetXY(320, 85);
                 $pdf->Cell(65, 30, 'Monatssumme', 1, 0, 'C');
                 $pdf->Cell(120, 30, 'Bemerkung', 1, 0, 'C');
-                $pdf->Cell(250, 30, 'Anmerkung', 1, 0, 'C');
+                $pdf->Cell(300, 30, 'Anmerkung', 1, 0, 'C');
 
                 // the table body
                 $rowIndex = 0;
@@ -233,7 +237,7 @@ class PrintController extends ApiController {
                     }
                     // print day row
                     $pdf->SetFont('Calibri', 'B');
-                    $pdf->SetXY(15, 120 + $rowIndex * 10);
+                    $pdf->SetXY(15, 115 + $rowIndex * 10);
                     $pdf->Cell(50, 10, $tag, 1, 0, 'C', $fill);
                     $pdf->SetFont('Calibri');
                     if ($day === null) {
@@ -244,7 +248,7 @@ class PrintController extends ApiController {
                         $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
                         $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
                         $pdf->Cell(120, 10, '', 1, 0, 'C', $fill);
-                        $pdf->Cell(250, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(300, 10, '', 1, 0, 'C', $fill);
                         $rowIndex++;
                     } elseif ($day->getDayParts() && sizeof($day->getDayParts()) <= 1) {
                         /** @var WorkingDayPart | null $dayPart */
@@ -254,11 +258,11 @@ class PrintController extends ApiController {
                         $pause = $dayPart->getBreak()->getAbsoluteMinuteString();
                         if ($day->getSaldo()
                             && !($day->getSaldo()->getHours() === 0 && $day->getSaldo()->getMinutes() === 0)) {
-                            $saldo = $day->getSaldo();
-                            $monatssumme = Saldo::getSum($monatssumme, $saldo);
+                            $uebertrag = $day->getSaldo();
+                            $monatssumme = Saldo::getSum($monatssumme, $uebertrag);
                             $monatssummeString = $monatssumme;
                         } else {
-                            $saldo = '';
+                            $uebertrag = '';
                             $monatssummeString = '';
                         }
                         $mobil = $dayPart ? ( $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '') : '';
@@ -268,18 +272,21 @@ class PrintController extends ApiController {
                         $pdf->Cell(50, 10, $ende, 1, 0, 'C', $fill);
                         $pdf->Cell(50, 10, $pause, 1, 0, 'C', $fill);
                         $pdf->Cell(40, 10, $mobil, 1, 0, 'C', $fill);
-                        $pdf->Cell(65, 10, $saldo, 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, $uebertrag, 1, 0, 'C', $fill);
                         $pdf->Cell(65, 10, $monatssummeString, 1, 0, 'C', $fill);
                         $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C', $fill);
-                        $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C', $fill);
-                        $rowIndex++;
+                        $oldY = $pdf->GetY();
+                        $pdf->MultiCell(300, 10, $anmerkung, 1, 'L', $fill);
+                        $y = $pdf->GetY();
+                        $lines = ($y - $oldY) / 10;
+                        $rowIndex += $lines;
                     } else {
                         if ($day->getSaldo()) {
-                            $saldo = $day->getSaldo();
-                            $monatssumme = Saldo::getSum($saldo, $monatssumme);
+                            $uebertrag = $day->getSaldo();
+                            $monatssumme = Saldo::getSum($uebertrag, $monatssumme);
                             $monatssummeString = $monatssumme;
                         } else {
-                            $saldo = '';
+                            $uebertrag = '';
                             $monatssummeString = '';
                         }
                         $bemerkung = $this->handleUmlaut($timeOffsConfigArray[$day->timeOff]);
@@ -288,18 +295,21 @@ class PrintController extends ApiController {
                         $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
                         $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
                         $pdf->Cell(40, 10, '', 1, 0, 'C', $fill);
-                        $pdf->Cell(65, 10, $saldo, 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, $uebertrag, 1, 0, 'C', $fill);
                         $pdf->Cell(65, 10, $monatssummeString, 1, 0, 'C', $fill);
                         $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C', $fill);
-                        $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C', $fill);
-                        $rowIndex++;
+                        $oldY = $pdf->GetY();
+                        $pdf->MultiCell(300, 10, $anmerkung, 1, 'L', $fill);
+                        $y = $pdf->GetY();
+                        $lines = ($y - $oldY) / 10;
+                        $rowIndex += $lines;
                         /** @var WorkingDayPart $dayPart */
                         foreach ($day->getDayParts() as $dayPart) {
                             $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
                             $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
                             $pause = $dayPart->getBreak()->getAbsoluteMinuteString();
                             $mobil = $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '';
-                            $pdf->SetXY(15, 120 + $rowIndex * 10);
+                            $pdf->SetXY(15, 115 + $rowIndex * 10);
                             $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
                             $pdf->Cell(50, 10, $beginn, 1, 0, 'C', $fill);
                             $pdf->Cell(50, 10, $ende, 1, 0, 'C', $fill);
@@ -308,11 +318,56 @@ class PrintController extends ApiController {
                             $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
                             $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
                             $pdf->Cell(120, 10, '', 1, 0, 'C', $fill);
-                            $pdf->Cell(250, 10, '', 1, 0, 'C', $fill);
+                            $pdf->MultiCell(300, 10, '', 1, 'L', $fill);
                             $rowIndex++;
                         }
                     }
                 }
+
+                // footer
+                $uebertragCaption = $this->handleUmlaut('Übertrag vom Vormonat');
+                $carry = $this->carryTable->getByUserIdAndYear($userId, $month);
+                $months = $this->monthTable->getByUserIdAndMonth($userId, $month);
+                $uebertrag = $carry->saldo;
+                foreach ($months as $monthToAdd) {
+                    if ($monthToAdd->month->format('n') !== $month->format('n')) {
+                        $uebertrag = Saldo::getSum($uebertrag, $monthToAdd->saldo);
+                    }
+                }
+                $gesamt = Saldo::getSum($uebertrag, $monatssumme);
+                $kappungsgrenzeInvert = Saldo::createFromHoursAndMinutes(
+                    $kappungsgrenze->getHours(), $kappungsgrenze->getMinutes(), false);
+                $diff = Saldo::getSum($gesamt, $kappungsgrenzeInvert);
+                $gekappt = $diff->isPositive() ? $kappungsgrenze : $gesamt;
+                $pdf->SetFont('Calibri', 'B');
+                $pdf->Cell(100, 10, 'Monatssumme', 1, 0, 'C');
+                $pdf->SetFont('Calibri');
+                $pdf->Cell(65, 10, $monatssumme, 1, 1, 'C');
+                $pdf->SetFont('Calibri', 'B');
+                $pdf->Cell(100, 10, $uebertragCaption, 1, 0, 'C');
+                $pdf->SetFont('Calibri');
+                $pdf->Cell(65, 10, $uebertrag, 1, 1, 'C');
+                $pdf->SetFont('Calibri', 'B');
+                $pdf->Cell(100, 10, 'Gesamtsaldo', 1, 0, 'C');
+                $pdf->SetFont('Calibri');
+                $pdf->Cell(65, 10, $gesamt, 1, 1, 'C');
+                $pdf->SetFont('Calibri', 'B');
+                $pdf->Cell(100, 10, 'Saldo incl. Kappung', 1, 0, 'C');
+                $pdf->SetFont('Calibri');
+                $pdf->Cell(65, 10, $gekappt, 1, 0, 'C');
+
+                $x = $pdf->GetX();
+                $y = $pdf->GetY() - 30;
+                $pdf->SetXY($x,  $y);
+                $pdf->SetFont('Calibri', 'B');
+                $pdf->MultiCell(90, 10, "aufgestellt:\n(Mitarbeiter/in)", 0, 'R');
+                $pdf->SetXY($x + 90, $y + 10);
+                $pdf->Cell(150, 10, "", 'B');
+                $pdf->SetXY($x,  $y + 30);
+                $pdf->MultiCell(90, 10, "Kenntnis genommen:\n(Vorgesetzte/r)", 0, 'R');
+                $y = $pdf->GetY();
+                $pdf->SetXY($x + 90,  $y - 10);
+                $pdf->Cell(150, 10, "", 'B');
 
                 // add auto-print for firefox
                 if ($browser === 'firefox') {
