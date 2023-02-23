@@ -339,6 +339,9 @@ class PrintController extends ApiController {
                     $kappungsgrenze->getHours(), $kappungsgrenze->getMinutes(), false);
                 $diff = Saldo::getSum($gesamt, $kappungsgrenzeInvert);
                 $gekappt = $diff->isPositive() ? $kappungsgrenze : $gesamt;
+                $x = $pdf->GetX();
+                $y = $pdf->GetY();
+                $pdf->SetXY($x,  $y + 5);
                 $pdf->SetFont('Calibri', 'B');
                 $pdf->Cell(100, 10, 'Monatssumme', 1, 0, 'C');
                 $pdf->SetFont('Calibri');
@@ -360,14 +363,14 @@ class PrintController extends ApiController {
                 $y = $pdf->GetY() - 30;
                 $pdf->SetXY($x,  $y);
                 $pdf->SetFont('Calibri', 'B');
-                $pdf->MultiCell(90, 10, "aufgestellt:\n(Mitarbeiter/in)", 0, 'R');
-                $pdf->SetXY($x + 90, $y + 10);
-                $pdf->Cell(150, 10, "", 'B');
+                $pdf->MultiCell(110, 10, "aufgestellt:\n(Mitarbeiter/in)", 0, 'R');
+                $pdf->SetXY($x + 110, $y + 10);
+                $pdf->Cell(160, 10, "", 'B');
                 $pdf->SetXY($x,  $y + 30);
-                $pdf->MultiCell(90, 10, "Kenntnis genommen:\n(Vorgesetzte/r)", 0, 'R');
+                $pdf->MultiCell(110, 10, "Kenntnis genommen:\n(Vorgesetzte/r)", 0, 'R');
                 $y = $pdf->GetY();
-                $pdf->SetXY($x + 90,  $y - 10);
-                $pdf->Cell(150, 10, "", 'B');
+                $pdf->SetXY($x + 110,  $y - 10);
+                $pdf->Cell(160, 10, "", 'B');
 
                 // add auto-print for firefox
                 if ($browser === 'firefox') {
