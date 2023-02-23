@@ -17,6 +17,7 @@ use Laminas\Http\Response;
 use Laminas\View\Model\JsonModel;
 use Login\Model\UserTable;
 use Service\AuthorizationService;
+use Service\HolidayService;
 use Service\log\AzeboLog;
 use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
@@ -201,38 +202,56 @@ class PrintController extends ApiController {
                 $pdf->Cell(50, 30, 'Tag', 1, 0, 'C');
                 $pdf->Cell(50, 30, 'Beginn', 1, 0, 'C');
                 $pdf->Cell(50, 30, 'Ende', 1, 0, 'C');
-                $pdf->MultiCell(65, 10, $saldoHeader, 1, 'C');
-                $pdf->SetXY(230, 90);
-                $pdf->Cell(65, 30, 'Monatssumme', 1, 0, 'C');
+                $pdf->Cell(50, 30, 'Pause', 1, 0, 'C');
                 $pdf->MultiCell(40, 10, "\nMobiles Arbeiten", 1, 'C');
-                $pdf->SetXY(335, 90);
+                $pdf->SetXY(255, 90);
+                $pdf->MultiCell(65, 10, $saldoHeader, 1, 'C');
+                $pdf->SetXY(320, 90);
+                $pdf->Cell(65, 30, 'Monatssumme', 1, 0, 'C');
                 $pdf->Cell(120, 30, 'Bemerkung', 1, 0, 'C');
                 $pdf->Cell(250, 30, 'Anmerkung', 1, 0, 'C');
 
                 // the table body
                 $rowIndex = 0;
                 $monatssumme = Saldo::createFromHoursAndMinutes();
+                $timeOffsConfigArray = array_flip(
+                    Factory::fromFile('./../server/config/timeOffs.config.php', true)
+                        ->toArray()
+                );
+                $holidays = HolidayService::getHolidays($month->format('Y'));
+                $pdf->SetFillColor(200, 200 ,200);
+                /** @var DateTime $monthDay */
                 foreach ($allMonthDays as $monthDay) {
                     // gather data
                     $day = $this->dayTable->getByUserIdAndDay($userId, $monthDay);
                     $tag = $monthDay->format('j');
-
+                    $fill =  ($monthDay->format('N') == 6 || $monthDay->format('N') == 7);
+                    foreach ($holidays as $holiday) {
+                        if ($holiday['date'] === $monthDay->format(WorkingDay::DATE_FORMAT)) {
+                            $fill = true;
+                        }
+                    }
                     // print day row
+                    $pdf->SetFont('Calibri', 'B');
                     $pdf->SetXY(15, 120 + $rowIndex * 10);
-                    $pdf->Cell(50, 10, $tag, 1, 0, 'C');
+                    $pdf->Cell(50, 10, $tag, 1, 0, 'C', $fill);
+                    $pdf->SetFont('Calibri');
                     if ($day === null) {
-                        $pdf->Cell(50, 10, '', 1, 0, 'C');
-                        $pdf->Cell(50, 10, '', 1, 0, 'C');
-                        $pdf->Cell(65, 10, '', 1, 0, 'C');
-                        $pdf->Cell(65, 10, '', 1, 0, 'C');
-                        $pdf->Cell(40, 10, '', 1, 0, 'C');
-                        $pdf->Cell(120, 10, '', 1, 0, 'C');
-                        $pdf->Cell(250, 10, '', 1, 0, 'C');
+                        $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(40, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(120, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(250, 10, '', 1, 0, 'C', $fill);
+                        $rowIndex++;
                     } elseif ($day->getDayParts() && sizeof($day->getDayParts()) <= 1) {
                         /** @var WorkingDayPart | null $dayPart */
                         $dayPart = sizeof($day->getDayParts()) === 1 ? $day->getDayParts()[0] : null;
                         $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
                         $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
+                        $pause = $dayPart->getBreak()->getAbsoluteMinuteString();
                         if ($day->getSaldo()
                             && !($day->getSaldo()->getHours() === 0 && $day->getSaldo()->getMinutes() === 0)) {
                             $saldo = $day->getSaldo();
@@ -243,22 +262,55 @@ class PrintController extends ApiController {
                             $monatssummeString = '';
                         }
                         $mobil = $dayPart ? ( $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '') : '';
-                        $timeOffsConfigArray = array_flip(
-                            Factory::fromFile('./../server/config/timeOffs.config.php', true)
-                                ->toArray()
-                        );
-                        $bemerkung = $timeOffsConfigArray[$day->timeOff];
-                        $anmerkung = $day->comment;
-                        $pdf->Cell(50, 10, $beginn, 1, 0, 'C');
-                        $pdf->Cell(50, 10, $ende, 1, 0, 'C');
-                        $pdf->Cell(65, 10, $saldo, 1, 0, 'C');
-                        $pdf->Cell(65, 10, $monatssummeString, 1, 0, 'C');
-                        $pdf->Cell(40, 10, $mobil, 1, 0, 'C');
-                        $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C');
-                        $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C');
+                        $bemerkung = $this->handleUmlaut($timeOffsConfigArray[$day->timeOff]);
+                        $anmerkung = $this->handleUmlaut($day->comment);
+                        $pdf->Cell(50, 10, $beginn, 1, 0, 'C', $fill);
+                        $pdf->Cell(50, 10, $ende, 1, 0, 'C', $fill);
+                        $pdf->Cell(50, 10, $pause, 1, 0, 'C', $fill);
+                        $pdf->Cell(40, 10, $mobil, 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, $saldo, 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, $monatssummeString, 1, 0, 'C', $fill);
+                        $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C', $fill);
+                        $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C', $fill);
                         $rowIndex++;
                     } else {
+                        if ($day->getSaldo()) {
+                            $saldo = $day->getSaldo();
+                            $monatssumme = Saldo::getSum($saldo, $monatssumme);
+                            $monatssummeString = $monatssumme;
+                        } else {
+                            $saldo = '';
+                            $monatssummeString = '';
+                        }
+                        $bemerkung = $this->handleUmlaut($timeOffsConfigArray[$day->timeOff]);
+                        $anmerkung = $this->handleUmlaut($day->comment);
+                        $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(40, 10, '', 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, $saldo, 1, 0, 'C', $fill);
+                        $pdf->Cell(65, 10, $monatssummeString, 1, 0, 'C', $fill);
+                        $pdf->Cell(120, 10, $bemerkung, 1, 0, 'C', $fill);
+                        $pdf->Cell(250, 10, $anmerkung, 1, 0, 'C', $fill);
                         $rowIndex++;
+                        /** @var WorkingDayPart $dayPart */
+                        foreach ($day->getDayParts() as $dayPart) {
+                            $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
+                            $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
+                            $pause = $dayPart->getBreak()->getAbsoluteMinuteString();
+                            $mobil = $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '';
+                            $pdf->SetXY(15, 120 + $rowIndex * 10);
+                            $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
+                            $pdf->Cell(50, 10, $beginn, 1, 0, 'C', $fill);
+                            $pdf->Cell(50, 10, $ende, 1, 0, 'C', $fill);
+                            $pdf->Cell(50, 10, $pause, 1, 0, 'C', $fill);
+                            $pdf->Cell(40, 10, $mobil, 1, 0, 'C', $fill);
+                            $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
+                            $pdf->Cell(65, 10, '', 1, 0, 'C', $fill);
+                            $pdf->Cell(120, 10, '', 1, 0, 'C', $fill);
+                            $pdf->Cell(250, 10, '', 1, 0, 'C', $fill);
+                            $rowIndex++;
+                        }
                     }
                 }
 
@@ -341,9 +393,7 @@ class PrintController extends ApiController {
         return $result;
     }
 
-    private function handleUmlaut(string $str): string {
-        return iconv('UTF-8', 'windows-1252', $str);
-}
-
-
+    private function handleUmlaut(?string $str): string {
+        return $str ? iconv('UTF-8', 'windows-1252', $str) : '';
+    }
 }

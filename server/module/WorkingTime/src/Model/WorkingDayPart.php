@@ -53,28 +53,30 @@ class WorkingDayPart extends ArrayObject {
         }
     }
 
-    public function getActualSaldo(): Saldo {
+    public function getBreak(): Saldo {
         $config = Factory::fromFile('./../server/config/times.config.php', true);
         $saldo = $this->getSaldo();
         if ($saldo->getHours() < $config->get('breakRequiredFromHours')) {
-            return $saldo;
+            return Saldo::createFromHoursAndMinutes();
         } elseif ($saldo->getHours() == $config->get('breakRequiredFromHours')) {
             if ($saldo->getMinutes() <= $config->get('breakRequiredFromMinutes')) {
-                return $saldo;
+                return Saldo::createFromHoursAndMinutes();
             }
         }
         // break required
         $break = Saldo::createFromHoursAndMinutes(0, $config->get('breakDuration'), false);
-        $newSaldo = Saldo::getSum($saldo, $break);
         if ($saldo->getHours() < $config->get('longBreakRequiredFromHours')) {
-            return $newSaldo;
+            return $break;
         } elseif ($saldo->getHours() == $config->get('longBreakRequiredFromHours')) {
             if ($saldo->getMinutes() <= $config->get('longBreakRequiredFromMinutes')) {
-                return $newSaldo;
+                return $break;
             }
         }
         // long break required
-        $longBreak = Saldo::createFromHoursAndMinutes(0, $config->get('longBreakDuration'), false);
-        return Saldo::getSum($saldo, $longBreak);
+        return Saldo::createFromHoursAndMinutes(0, $config->get('longBreakDuration'), false);
+    }
+
+    public function getActualSaldo(): Saldo {
+        return Saldo::getSum($this->getSaldo(), $this->getBreak());
     }
 }

@@ -124,6 +124,10 @@ class Saldo implements Stringable
         return $result->add($second);
     }
 
+    public function getAbsoluteMinuteString(): string {
+        return $this->minutes;
+    }
+
     public function __toString(): string {
         $minutes = ($this->minutes < 10) ? '0' . $this->minutes : $this->minutes;
         return ($this->positive ? '' : '-') . $this->hours . ':' . $minutes;
