@@ -2,6 +2,7 @@
 // See: http://www.fpdf.org/?go=script&id=36
 namespace AzeboLib;
 
+use DateTime;
 use Fpdf\Fpdf;
 
 class PDF_JavaScript extends FPDF {
@@ -62,9 +63,20 @@ class FPDF_Auto extends PDF_JavaScript {
 }
 
 class AzeboPDF extends FPDF_Auto {
+    public string $name;
+    public string $monat;
     function Header() {
-        $this->SetXY(650, 10);
+        $now = new DateTime();
+        $nowString = $now->format('d.m.Y');
+        $this->SetXY(600, 10);
         $this->Cell(100, 10, "Zeiterfassungsbogen");
+        $this->SetXY(600, 20);
+        $this->Cell(100, 10, $this->name);
+        $this->SetXY(600, 30);
+        $this->Cell(100, 10, $this->monat, 0, 0);
+        $this->Cell(100, 10, " Stand: $nowString", 0, 0, 'R');
+        $this->SetXY(600, 40);
+        $this->Cell(0,10,'Seite ' . $this->PageNo() . ' von {nb}',0,0,'C');
     }
 }
 

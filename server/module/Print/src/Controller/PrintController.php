@@ -81,6 +81,9 @@ class PrintController extends ApiController {
 
             foreach ($browsers as $browser) {
                 $pdf = new AzeboPDF('L', 'pt');
+                $pdf->AliasNbPages();
+                $pdf->name = $name;
+                $pdf->monat = $monat;
                 $pdf->SetTitle('Arbeitszeitbogen');
                 $pdf->SetAutoPageBreak(false);
                 $pdf->AddFont('Calibri', '', 'calibri.php');
@@ -247,15 +250,15 @@ class PrintController extends ApiController {
                                 $currentPageNumber++;
                                 $rowIndex = 0;
                                 $pdf->AddPage();
-                                $pdf->SetXY(15, 40 + $rowIndex * 10);
+                                $pdf->SetXY(15, 60 + $rowIndex * 10);
                             }
                         } else {
-                            if ($rowIndex >= 44) {
+                            if ($rowIndex >= 42) {
                                 $currentPageNumber++;
                                 $rowIndex = 0;
                                 $pdf->AddPage();
                             }
-                            $pdf->SetXY(15, 40 + $rowIndex * 10);
+                            $pdf->SetXY(15, 60 + $rowIndex * 10);
                         }
                         $pdf->Cell(50, 10, $tag, 1, 0, 'C', $fill);
                         $pdf->SetFont('Calibri');
@@ -274,7 +277,7 @@ class PrintController extends ApiController {
                             $dayPart = sizeof($day->getDayParts()) === 1 ? $day->getDayParts()[0] : null;
                             $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
                             $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
-                            $pause = $dayPart->getBreak()->getAbsoluteMinuteString();
+                            $pause = $dayPart && $dayPart->begin ? $dayPart->getBreak()->getAbsoluteMinuteString() : '';
                             if ($day->getSaldo()
                                 && !($day->getSaldo()->getHours() === 0 && $day->getSaldo()->getMinutes() === 0)) {
                                 $uebertrag = $day->getSaldo();
@@ -286,7 +289,6 @@ class PrintController extends ApiController {
                             }
                             $mobil = $dayPart ? ($dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '') : '';
                             $bemerkung = $this->handleUmlaut($timeOffsConfigArray[$day->timeOff]);
-                            $bemerkung .= $rowIndex;
                             $anmerkung = $this->handleUmlaut($day->comment);
                             $pdf->Cell(50, 10, $beginn, 1, 0, 'C', $fill);
                             $pdf->Cell(50, 10, $ende, 1, 0, 'C', $fill);
@@ -310,7 +312,6 @@ class PrintController extends ApiController {
                                 $monatssummeString = '';
                             }
                             $bemerkung = $this->handleUmlaut($timeOffsConfigArray[$day->timeOff]);
-                            $bemerkung .= $rowIndex;
                             $anmerkung = $this->handleUmlaut($day->comment);
                             $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
                             $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
@@ -333,7 +334,7 @@ class PrintController extends ApiController {
                                 if ($currentPageNumber === 1) {
                                     $pdf->SetXY(15, 115 + $rowIndex * 10);
                                 } else {
-                                    $pdf->SetXY(15, 40 + $rowIndex * 10);
+                                    $pdf->SetXY(15, 60 + $rowIndex * 10);
                                 }
                                 $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
                                 $pdf->Cell(50, 10, $beginn, 1, 0, 'C', $fill);
