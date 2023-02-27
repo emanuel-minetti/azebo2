@@ -3,7 +3,7 @@ import { Saldo } from "/src/models/index";
 
 export default class WorkingRule {
   private readonly _id: number;
-  private _validFrom: Date;
+  private _validFrom?: Date;
   private _validTo?: Date;
   private _percentage: number;
   private _isOfficer: boolean
@@ -25,7 +25,6 @@ export default class WorkingRule {
       this._isNew = false;
     } else {
       this._id = 0;
-      this._validFrom = new Date();
       this._percentage = 100;
       this._isOfficer = false
       this._weekdays = [1, 2, 3, 4, 5,];
@@ -76,12 +75,18 @@ export default class WorkingRule {
     this._weekdays = value;
   }
 
-  get validFrom(): Date {
+  get validFrom(): Date | null {
+    if (typeof this._validFrom === "undefined")
+      return null;
     return this._validFrom;
   }
 
-  set validFrom(value: Date) {
-    this._validFrom = value;
+  set validFrom(value: Date | null) {
+    if (value) {
+      this._validFrom = value;
+    } else {
+      this._validFrom = undefined;
+    }
     this._isNew = false;
   }
 
