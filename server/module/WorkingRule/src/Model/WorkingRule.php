@@ -47,9 +47,9 @@ class WorkingRule extends ArrayObject
     public bool $hasWeekdays;
 
     /**
-     * @var int if "Teilzeit" the percentage, else 100.
+     * @var float if "Teilzeit" the percentage, else 100.
      */
-    public int $percentage;
+    public float $percentage;
 
     public bool $isOfficer;
 

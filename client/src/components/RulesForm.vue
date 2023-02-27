@@ -8,7 +8,7 @@
         <label for='validFrom'>Regelungsende (Für "Bis auf Weiteres" bitte leer lassen):</label>
         <b-form-input id='validFrom' v-model='validTo' type='date'></b-form-input>
         <label for='validFrom'>Prozentsatz der vollen Arbeitszeit:</label>
-        <b-form-input id='validFrom' v-model='rule.percentage' type='number'></b-form-input>
+        <b-form-input id='validFrom' v-model='rule.percentage' type='number' step='0.01'></b-form-input>
         <b-form-group label='Vertrag'>
           <b-form-radio v-model='isOfficer' value='false' name='is_officer'>Angestellte*r</b-form-radio>
           <b-form-radio v-model='isOfficer' value='true' name='is_officer'>Beamte*r</b-form-radio>
@@ -49,6 +49,7 @@ export default defineComponent({
       },
       set(newValue: string) {
         this.rule.validFrom = FormatterService.convertToDate(newValue);
+        //console.log(newValue);
       }
     },
     validTo: {
