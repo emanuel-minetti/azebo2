@@ -61,4 +61,11 @@ class FPDF_Auto extends PDF_JavaScript {
     }
 }
 
+class AzeboPDF extends FPDF_Auto {
+    function Header() {
+        $this->SetXY(650, 10);
+        $this->Cell(100, 10, "Zeiterfassungsbogen");
+    }
+}
+
 

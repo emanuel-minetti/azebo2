@@ -5,14 +5,13 @@
 namespace Print\Controller;
 
 use AzeboLib\ApiController;
+use AzeboLib\AzeboPDF;
 use AzeboLib\DaysOfMonth;
-use AzeboLib\FPDF_Auto;
 use AzeboLib\Saldo;
 use Carry\Model\CarryTable;
 use Carry\Model\WorkingMonthTable;
 use DateTime;
 use Exception;
-use Fpdf\Fpdf;
 use Laminas\Config\Factory;
 use Laminas\Http\Response;
 use Laminas\View\Model\JsonModel;
@@ -60,7 +59,6 @@ class PrintController extends ApiController {
             $userId = $this->httpRequest->getQuery()->user_id;
             $workingMonth = $this->monthTable->getByUserIdAndMonth($userId, $month, false)[0];
             $filename = $this->getFilename();
-            $todayString = (new DateTime())->format('d/m/Y');
             $user = $this->userTable->find($userId);
             $name = $user->getFullName();
             $name = $this->handleUmlaut($name);
@@ -81,19 +79,17 @@ class PrintController extends ApiController {
             // browser gate for firefox
             $browsers = ['other', 'firefox'];
 
-
             foreach ($browsers as $browser) {
-                $pdf = $browser === 'other' ? new Fpdf('L', 'pt')
-                    : new FPDF_Auto('L', 'pt');
+                $pdf = new AzeboPDF('L', 'pt');
                 $pdf->SetTitle('Arbeitszeitbogen');
-                $pdf->SetAutoPageBreak(true, 30);
+                $pdf->SetAutoPageBreak(false);
                 $pdf->AddFont('Calibri', '', 'calibri.php');
                 $pdf->AddFont('Calibri', 'B', 'calibrib.php');
                 $pdf->SetLineWidth(1);
                 $pdf->SetFont('Calibri', 'B', 8.5);
                 $pdf->AddPage();
-                $pdf->SetXY(680, 0);
-                $pdf->Cell(40, 10, "Zeiterfassungsbogen - Stand $todayString");
+//                $pdf->SetXY(680, 0);
+//                $pdf->Cell(40, 10, "Zeiterfassungsbogen - Stand $todayString");
                 $pdf->SetXY(15, 30);
                 $pdf->Cell(40, 10, 'Name', 1);
                 $pdf->SetFont('Calibri');
@@ -240,14 +236,22 @@ class PrintController extends ApiController {
                     }
                     // print day row
                     $pdf->SetFont('Calibri', 'B');
-                    if ($pdf->PageNo() === 1) {
-                        $pdf->SetXY(15, 115 + $rowIndex * 10);
-                    } else {
-                        if ($currentPageNumber !== $pdf->PageNo()) {
-                            $currentPageNumber = $pdf->PageNo();
+                    if ($currentPageNumber === 1) {
+                        if ($rowIndex < 40) {
+                            $pdf->SetXY(15, 115 + $rowIndex * 10);
+                        } else {
+                            $currentPageNumber++;
                             $rowIndex = 0;
+                            $pdf->AddPage();
+                            $pdf->SetXY(15, 40 + $rowIndex * 10);
                         }
-                        $pdf->SetXY(15, 38 + $rowIndex * 10);
+                    } else {
+                        if ($rowIndex >= 50) {
+                            $currentPageNumber++;
+                            $rowIndex = 0;
+                            $pdf->AddPage();
+                        }
+                        $pdf->SetXY(15, 40 + $rowIndex * 10);
                     }
                     $pdf->Cell(50, 10, $tag, 1, 0, 'C', $fill);
                     $pdf->SetFont('Calibri');
@@ -278,6 +282,7 @@ class PrintController extends ApiController {
                         }
                         $mobil = $dayPart ? ( $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '') : '';
                         $bemerkung = $this->handleUmlaut($timeOffsConfigArray[$day->timeOff]);
+                        $bemerkung .= $rowIndex;
                         $anmerkung = $this->handleUmlaut($day->comment);
                         $pdf->Cell(50, 10, $beginn, 1, 0, 'C', $fill);
                         $pdf->Cell(50, 10, $ende, 1, 0, 'C', $fill);
@@ -301,6 +306,7 @@ class PrintController extends ApiController {
                             $monatssummeString = '';
                         }
                         $bemerkung = $this->handleUmlaut($timeOffsConfigArray[$day->timeOff]);
+                        $bemerkung .= $rowIndex;
                         $anmerkung = $this->handleUmlaut($day->comment);
                         $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
                         $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
@@ -320,7 +326,11 @@ class PrintController extends ApiController {
                             $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
                             $pause = $dayPart->getBreak()->getAbsoluteMinuteString();
                             $mobil = $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '';
-                            $pdf->SetXY(15, 115 + $rowIndex * 10);
+                            if ($currentPageNumber === 1) {
+                                $pdf->SetXY(15, 115 + $rowIndex * 10);
+                            } else {
+                                $pdf->SetXY(15, 40 + $rowIndex * 10);
+                            }
                             $pdf->Cell(50, 10, '', 1, 0, 'C', $fill);
                             $pdf->Cell(50, 10, $beginn, 1, 0, 'C', $fill);
                             $pdf->Cell(50, 10, $ende, 1, 0, 'C', $fill);
