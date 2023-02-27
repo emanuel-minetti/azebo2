@@ -13,6 +13,7 @@
       <w>dienstabbruch</w>
       <w>dienstbefr</w>
       <w>enddatum</w>
+      <w>endobj</w>
       <w>gruen</w>
       <w>gruenhalb</w>
       <w>gueltig</w>
@@ -22,11 +23,15 @@
       <w>kernarbeitszeit</w>
       <w>monatsabschluss</w>
       <w>monatssumme</w>
+      <w>putcatalog</w>
+      <w>putjavascript</w>
+      <w>putresources</w>
       <w>regelungsbegin</w>
       <w>regelungsbeginn</w>
       <w>regelungsende</w>
       <w>testserver</w>
       <w>tägl</w>
+      <w>uebertrag</w>
       <w>urlaubstage</w>
       <w>zeitausgleich</w>
       <w>zeiterfassungsbogen</w>

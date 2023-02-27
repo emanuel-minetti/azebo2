@@ -47,6 +47,9 @@ class PrintController extends ApiController {
         parent::__construct($logger);
     }
     /** @noinspection PhpUnusedInspection */
+    /**
+     * @throws Exception
+     */
     public function printAction(): JsonModel|Response{
         $this->prepare();
         $yearParam = $this->params('year');

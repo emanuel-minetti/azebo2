@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
+
 // See: http://www.fpdf.org/?go=script&id=36
 namespace AzeboLib;
 
@@ -7,8 +8,8 @@ use Fpdf\Fpdf;
 
 class PDF_JavaScript extends FPDF {
 
-    protected $javascript;
-    protected $n_js;
+    protected string $javascript;
+    protected string $n_js;
 
     function IncludeJS($script) {
         $this->javascript = $script;
@@ -73,7 +74,7 @@ class AzeboPDF extends FPDF_Auto {
         $this->SetXY(600, 20);
         $this->Cell(100, 10, $this->name);
         $this->SetXY(600, 30);
-        $this->Cell(100, 10, $this->monat, 0, 0);
+        $this->Cell(100, 10, $this->monat);
         $this->Cell(100, 10, " Stand: $nowString", 0, 0, 'R');
         $this->SetXY(600, 40);
         $this->Cell(0,10,'Seite ' . $this->PageNo() . ' von {nb}',0,0,'C');
