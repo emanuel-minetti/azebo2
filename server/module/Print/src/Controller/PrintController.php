@@ -278,8 +278,8 @@ class PrintController extends ApiController {
                         } elseif ($day->getDayParts() && sizeof($day->getDayParts()) <= 1) {
                             /** @var WorkingDayPart | null $dayPart */
                             $dayPart = sizeof($day->getDayParts()) === 1 ? $day->getDayParts()[0] : null;
-                            $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
-                            $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
+                            $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:i') : '';
+                            $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:i') : '';
                             $pause = $dayPart && $dayPart->begin ? $dayPart->getBreak()->getAbsoluteMinuteString() : '';
                             if ($day->getSaldo()
                                 && !($day->getSaldo()->getHours() === 0 && $day->getSaldo()->getMinutes() === 0)) {
@@ -330,8 +330,8 @@ class PrintController extends ApiController {
                             $rowIndex += $lines;
                             /** @var WorkingDayPart $dayPart */
                             foreach ($day->getDayParts() as $dayPart) {
-                                $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:m') : '';
-                                $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:m') : '';
+                                $beginn = $dayPart && $dayPart->begin ? $dayPart->begin->format('H:i') : '';
+                                $ende = $dayPart && $dayPart->end ? $dayPart->end->format('H:i') : '';
                                 $pause = $dayPart->getBreak()->getAbsoluteMinuteString();
                                 $mobil = $dayPart->begin ? ($dayPart->mobileWorking ? 'Ja' : 'Nein') : '';
                                 if ($currentPageNumber === 1) {
