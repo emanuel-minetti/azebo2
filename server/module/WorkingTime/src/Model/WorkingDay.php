@@ -119,24 +119,21 @@ class WorkingDay extends ArrayObject
     }
 
     public function getSaldo(): ?Saldo {
-        if ($this->dayParts) {
-            switch ($this->timeOff) {
-                case '':
-                case "ausgleich":
-                case 'lang':
-                    $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
-                    $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                    return Saldo::getSum($this->getActualTime(), $targetSaldo);
-                case 'gleitzeit':
-                    $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
-                    return Saldo::createFromHoursAndMinutes(0, $target, false);
-                case 'zusatz':
-                    return $this->getActualTime();
-                default:
-                    return null;
-            }
+        switch ($this->timeOff) {
+            case '':
+            case "ausgleich":
+            case 'lang':
+                $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
+                $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
+                return Saldo::getSum($this->getActualTime(), $targetSaldo);
+            case 'gleitzeit':
+                $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
+                return Saldo::createFromHoursAndMinutes(0, $target, false);
+            case 'zusatz':
+                return $this->getActualTime();
+            default:
+                return null;
         }
-        return null;
     }
 
 
