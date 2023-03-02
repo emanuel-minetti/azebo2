@@ -247,8 +247,8 @@ class WorkingTimeController extends ApiController
                                 case "ausgleich":
                                 case 'lang':
                                 case 'zusatz':
-                                    if ($dayWorkingDay->getSaldo()->getHours() === 0 &&
-                                        $dayWorkingDay->getSaldo()->getMinutes() === 0) {
+                                    if ($dayWorkingDay->getActualTime()->getHours() === 0 &&
+                                        $dayWorkingDay->getActualTime()->getMinutes() === 0) {
                                         $missing[] = $monthDay->format('j');
                                     }
                             }
