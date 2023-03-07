@@ -123,9 +123,9 @@ class WorkingDay extends ArrayObject
             case '':
             case "ausgleich":
             case 'lang':
-                $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
+                $target = isset($this->rule) ? $this->getRule()->getTarget() / 1000 / 60 : 0;
                 $targetSaldo = Saldo::createFromHoursAndMinutes(0, $target, false);
-                return Saldo::getSum($this->getActualTime(), $targetSaldo);
+                return $this->getActualTime() ? Saldo::getSum($this->getActualTime(), $targetSaldo) : null;
             case 'gleitzeit':
                 $target = $this->rule ? $this->getRule()->getTarget() / 1000 / 60 : 0;
                 return Saldo::createFromHoursAndMinutes(0, $target, false);
