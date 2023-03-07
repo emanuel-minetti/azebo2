@@ -203,7 +203,7 @@
       </b-alert>
     <router-view />
     <footer>
-      &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.4.5
+      &copy;2019 - 2023 Emanuel Minetti, UdK Berlin Version: 2.4.6
     </footer>
   </div>
 </template>
