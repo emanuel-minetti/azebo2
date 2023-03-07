@@ -9,7 +9,7 @@ export default class WorkingDay {
   private readonly _rule?: WorkingRule;
   private _timeOff?: string;
   private _comment?: string;
-  private readonly _dayParts: Array<WorkingDayPart> = [];
+  private _dayParts: Array<WorkingDayPart> = [];
   private _holiday?: Holiday;
   private _edited: boolean;
 
@@ -297,5 +297,9 @@ export default class WorkingDay {
 
   get dayParts(): Array<WorkingDayPart> {
     return this._dayParts;
+  }
+
+  set dayParts(value: Array<WorkingDayPart>) {
+    this._dayParts = value;
   }
 }

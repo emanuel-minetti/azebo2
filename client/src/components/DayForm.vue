@@ -142,6 +142,7 @@ export default defineComponent({
       timeOffOptions: timeOffsConfig,
       errors: Array<String>(),
       day: new WorkingDay(),
+      dayOrig: '',
       partToEdit: -1,
     }
   },
@@ -271,6 +272,8 @@ export default defineComponent({
     if (this.day.dayParts.length === 1) {
       this.partToEdit = 0;
     }
+    // remember original day
+    this.dayOrig = JSON.stringify(this.day);
     // scroll form to top
     let target = document.getElementById("form") as HTMLElement;
     // `{ behaviour: "smooth" }` is not working!
@@ -336,6 +339,18 @@ export default defineComponent({
     },
 
     onCancel() {
+      const day = this.$store.state.workingTime.month.getDayByDate(this.day.date);
+      const origDay = JSON.parse(this.dayOrig);
+      day.dayParts = origDay._day_parts.map((part: any) => {
+        const data = {
+          'id': part._id,
+          'working_day_id': this.day.id,
+          'begin': part._begin,
+          'end': part._end,
+          'mobile_working': part._mobileWorking
+        };
+        return new WorkingDayPart(data);
+      });
       this.$emit("submitted");
     },
 
