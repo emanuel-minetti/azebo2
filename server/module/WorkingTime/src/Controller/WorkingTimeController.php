@@ -156,6 +156,7 @@ class WorkingTimeController extends ApiController
             if (isset($post->_day_parts)) {
                 if (!is_array($post->_day_parts))
                     return $this->invalidRequest;
+                $day->setDayParts([]);
                 foreach ($post->_day_parts as $part) {
                     if (!isset($part->_id) || !is_numeric($part->_id))
                         return $this->invalidRequest;
@@ -168,7 +169,6 @@ class WorkingTimeController extends ApiController
                         DateTime::createFromFormat(self::TIME_FORMAT, $part->_end) : null;
                     $dayPart->mobileWorking = $part->_mobileWorking;
                     $day->addDayPart($dayPart);
-                    //$day->dayParts[] = $dayPart;
                 }
             }
             $this->dayTable->upsert($day);
