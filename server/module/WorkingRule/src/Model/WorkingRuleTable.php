@@ -23,7 +23,6 @@ use Login\Model\User;
 
 class WorkingRuleTable
 {
-    public const TIME_FORMAT = 'H:i:s';
     public const DATE_FORMAT = 'Y-m-d';
     private TableGateway $ruleGateway;
     private TableGateway $weekdayGateway;
@@ -74,6 +73,7 @@ class WorkingRuleTable
             ->and
             ->lessThanOrEqualTo('valid_from', $last->format(WorkingRule::DATE_FORMAT));
         $select->where($where);
+        $select->order('valid_from ASC');
         $resultSet = $this->ruleGateway->selectWith($select);
         $result = [];
         foreach ($resultSet as $row) {
@@ -85,8 +85,8 @@ class WorkingRuleTable
     }
 
     /**
-     * @param User $user
-     * @return void
+     * @param WorkingRule $rule
+     * @return WorkingRule|false
      */
     public function insert(WorkingRule $rule): WorkingRule|false {
         $selectRunning = $this->sql->select();
@@ -173,7 +173,7 @@ class WorkingRuleTable
         if ($rule->hasWeekdays) {
             $weekdaySelect = new Select('working_rule_weekday');
             $weekdaySelect->columns(['weekday']);
-            $weekdaySelect->where("working_rule_id = {$rule->id}");
+            $weekdaySelect->where("working_rule_id = $rule->id");
             $result = [];
             $weekdayResultSet = $this->weekdayGateway->selectWith($weekdaySelect);
             foreach ($weekdayResultSet as $weekdayRow) {

@@ -266,10 +266,15 @@ class WorkingTimeController extends ApiController
                     return Saldo::getSum($prev, $saldo);
                 }, Saldo::createFromHoursAndMinutes());
 
-                // use capping limit
+                // get capping limit
+                $lastRule = end($rules);
+                $percentage = $lastRule->percentage;
                 $config = Factory::fromFile('./../server/config/times.config.php', true);
                 $cappingLimitMinutes = $config->get('cappingLimit');
+                $cappingLimitMinutes = ceil($cappingLimitMinutes * $percentage / 100);
                 $cappingLimit = Saldo::createFromHoursAndMinutes(0, $cappingLimitMinutes, false);
+
+                // use capping limit
                 $workingMonths = $this->monthTable->getByUserIdAndMonth($userId, $month);
                 $carry = $this->carryTable->getByUserIdAndYear($userId, $month);
                 $oldSaldo = array_reduce($workingMonths, function (Saldo $prev,WorkingMonth $curr) {
