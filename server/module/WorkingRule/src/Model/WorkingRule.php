@@ -15,6 +15,7 @@ use DateTime;
 use Laminas\Config\Config;
 use Laminas\Config\Factory;
 use ReturnTypeWillChange;
+use WorkingTime\Model\WorkingDay;
 
 class WorkingRule extends ArrayObject
 {
@@ -113,19 +114,20 @@ class WorkingRule extends ArrayObject
 
     public function isValid(DateTime $date): bool {
         if ($this->validFrom <= $date) {
+            $isActualWorkingDay = WorkingDay::isActualWorkingDay($date);
             if ($this->validTo) {
                 if ($date <= $this->validTo) {
                     if (!$this->hasWeekdays) {
-                        return true;
+                        return $isActualWorkingDay;
                     } else {
-                        return in_array($date->format('w'), $this->weekdays);
+                        return in_array($date->format('w'), $this->weekdays) && $isActualWorkingDay;
                     }
                 }
             } else {
                 if (!$this->hasWeekdays) {
-                    return true;
+                    return $isActualWorkingDay;
                 } else {
-                    return in_array($date->format('w'), $this->weekdays);
+                    return in_array($date->format('w'), $this->weekdays) && $isActualWorkingDay;
                 }
             }
         }

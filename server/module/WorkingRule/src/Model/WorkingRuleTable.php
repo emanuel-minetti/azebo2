@@ -42,18 +42,9 @@ class WorkingRuleTable
     }
 
     public function getByUserId($userId): array {
-        $select = $this->sql->select();
         $where = new Where();
         $where->equalTo('user_id', $userId);
-        $select->where($where);
-        $resultSet = $this->ruleGateway->selectWith($select);
-        $result = [];
-        foreach ($resultSet as $row) {
-            $rule = new WorkingRule($row->getArrayCopy());
-            $rule->weekdays = $this->getWeekdays($rule);
-            $result[] = $rule;
-        }
-        return $result;
+        return $this->getResult($where);
     }
 
     public function getByUserIdAndMonth($userId, DateTime $month): array {
@@ -61,7 +52,6 @@ class WorkingRuleTable
         $first = $cloneOfMonth->modify('first day of this month');
         $cloneOfMonth = clone $month;
         $last = $cloneOfMonth->modify('last day of this month');
-        $select = $this->sql->select();
         $where = new Where();
         $where->equalTo('user_id', $userId)
             ->and
@@ -72,16 +62,7 @@ class WorkingRuleTable
             ->unnest()
             ->and
             ->lessThanOrEqualTo('valid_from', $last->format(WorkingRule::DATE_FORMAT));
-        $select->where($where);
-        $select->order('valid_from ASC');
-        $resultSet = $this->ruleGateway->selectWith($select);
-        $result = [];
-        foreach ($resultSet as $row) {
-            $rule = new WorkingRule($row->getArrayCopy());
-            $rule->weekdays = $this->getWeekdays($rule);
-            $result[] = $rule;
-        }
-        return $result;
+        return $this->getResult($where);
     }
 
     /**
@@ -183,6 +164,24 @@ class WorkingRuleTable
         } else {
             return [1, 2, 3, 4, 5,];
         }
+    }
+
+    /**
+     * @param Where $where
+     * @return array
+     */
+    private function getResult(Where $where): array {
+        $select = $this->sql->select();
+        $select->where($where);
+        $select->order('valid_from ASC');
+        $resultSet = $this->ruleGateway->selectWith($select);
+        $result = [];
+        foreach ($resultSet as $row) {
+            $rule = new WorkingRule($row->getArrayCopy());
+            $rule->weekdays = $this->getWeekdays($rule);
+            $result[] = $rule;
+        }
+        return $result;
     }
 
 }

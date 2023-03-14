@@ -13,6 +13,8 @@ namespace WorkingTime\Model;
 use ArrayObject;
 use AzeboLib\Saldo;
 use DateTime;
+use Exception;
+use Service\HolidayService;
 use WorkingRule\Model\WorkingRule;
 
 class WorkingDay extends ArrayObject
@@ -134,6 +136,23 @@ class WorkingDay extends ArrayObject
             default:
                 return null;
         }
+    }
+
+    public static function isActualWorkingDay(DateTime $date): bool {
+        $weekday = $date->format('N');
+        if ($weekday == 6 || $weekday == 7) {
+            return  false;
+        }
+        try {
+            $holidays = HolidayService::getHolidays($date->format('Y'));
+            foreach ($holidays as $holiday) {
+                if ($holiday->date === $date->format(self::DATE_FORMAT)) {
+                    return false;
+                }
+            }
+        } /** @noinspection PhpUnusedLocalVariableInspection */
+        catch (Exception $ignored) { }
+        return true;
     }
 
 

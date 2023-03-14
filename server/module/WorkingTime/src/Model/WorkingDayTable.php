@@ -14,6 +14,7 @@ use DateTime;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
+use WorkingRule\Model\WorkingRule;
 use WorkingRule\Model\WorkingRuleTable;
 
 class WorkingDayTable
@@ -120,6 +121,7 @@ class WorkingDayTable
     private function prepareDay(WorkingDay $day): void {
         $day->setDayParts($this->dayPartTable->getBayDayId($day->id));
         $rules = $this->rulesTable->getByUserIdAndMonth($day->userId, $day->date);
+        /** @var WorkingRule $rule */
         foreach ($rules as $rule) {
             if ($rule->isValid($day->date)) {
                 $day->setRule($rule);

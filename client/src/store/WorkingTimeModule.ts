@@ -61,7 +61,9 @@ const WorkingTimeModule: Module<any, any> = {
             Saldo.createFromMillis(0)
           );
         if (state.carryResult.saldo) {
-          const cappingLimit = Saldo.createFromMillis(timesConfig.cappingLimit * 60 * 1000);
+          const percentage = state.rules[state.rules.length - 1].percentage;
+          const cappingLimitMinutes = timesConfig.cappingLimit * percentage / 100;
+          const cappingLimit = Saldo.createFromMillis(cappingLimitMinutes * 60 * 1000);
           cappingLimit.invert();
           const totalSaldo = Saldo.getSum(saldo, state.carryResult.saldo);
           const difference = Saldo.getSum(totalSaldo, cappingLimit);

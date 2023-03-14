@@ -69,8 +69,11 @@ class PrintController extends ApiController {
             $zeichen = $this->handleUmlaut($zeichen);
             $monat = $this->getMonthString($month);
             $cappingLimitMinutes = $config->get('cappingLimit');
-            $kappungsgrenze = Saldo::createFromHoursAndMinutes(0, $cappingLimitMinutes);
             $rules = $this->ruleTable->getByUserIdAndMonth($userId, $month);
+            $lastRule = end($rules);
+            $percentage = $lastRule->percentage;
+            $cappingLimitMinutes = $cappingLimitMinutes * $percentage / 100;
+            $kappungsgrenze = Saldo::createFromHoursAndMinutes(0, $cappingLimitMinutes);
 
             // finalize month
             if (!$workingMonth->finalized) {
