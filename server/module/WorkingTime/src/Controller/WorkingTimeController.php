@@ -168,6 +168,7 @@ class WorkingTimeController extends ApiController
                     $dayPart->end = isset($part->_end) ?
                         DateTime::createFromFormat(self::TIME_FORMAT, $part->_end) : null;
                     $dayPart->mobileWorking = $part->_mobileWorking;
+                    $dayPart->timeAddition = $part->_timeAddition;
                     $day->addDayPart($dayPart);
                 }
             }

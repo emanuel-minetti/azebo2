@@ -15,6 +15,7 @@ class WorkingDayPart extends ArrayObject {
     public DateTime | null $begin;
     public DateTime | null $end;
     public bool $mobileWorking;
+    public bool $timeAddition;
 
     public function exchangeArray(object|array $array): array {
         if (!is_array($array)) {
@@ -27,6 +28,7 @@ class WorkingDayPart extends ArrayObject {
         $this->end = !empty($array['end']) ?
             DateTime::createFromFormat(self::TIME_FORMAT, $array['end']) : null;
         $this->mobileWorking = $array['mobile_working'] == 1;
+        $this->timeAddition = $array['time_addition'];
         return array($this);
     }
 
@@ -38,6 +40,7 @@ class WorkingDayPart extends ArrayObject {
             'begin' => isset($this->begin) ? $this->begin->format(self::TIME_FORMAT) : null,
             'end' => isset($this->end) ? $this->end->format(self::TIME_FORMAT) : null,
             'mobile_working' => $this->mobileWorking ? 1 : 0,
+            'time_addition' => $this->timeAddition ? 1 : 0,
         ];
     }
 
