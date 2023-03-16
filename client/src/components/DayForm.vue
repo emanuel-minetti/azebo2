@@ -31,6 +31,12 @@
             ></b-icon-circle-fill>
             <b-icon-circle v-else></b-icon-circle>
           </template>
+          <template #cell(timeAddition)="data">
+            <b-icon-circle-fill
+                v-if="data.item.timeAddition"
+            ></b-icon-circle-fill>
+            <b-icon-circle v-else></b-icon-circle>
+          </template>
           <template #cell(action)="data">
             <b-button variant='primary' @click='editPart(data.item.index)'>Bearbeiten</b-button>
             <b-button variant='primary' class='ml-2' @click='deletePart(data.item.index)'>Löschen</b-button>
@@ -131,6 +137,7 @@ interface TableRowData {
   end: string | null;
   break: Saldo | undefined;
   mobileWorking: boolean;
+  timeAddition: boolean;
 }
 
 export default defineComponent({
@@ -191,7 +198,6 @@ export default defineComponent({
         result.splice(5,0, {
           label: "Mit Zeitausgleich",
           key: 'timeAddition',
-          formatter: this.formatTimeAddition,
         });
       }
       return result;
@@ -205,6 +211,7 @@ export default defineComponent({
           end: part.end,
           break: part.break as Saldo,
           mobileWorking: part.mobileWorking,
+          timeAddition: part.timeAddition,
         });
       });
       result.sort(WorkingDayPart.dayPartsSorter);
@@ -316,9 +323,6 @@ export default defineComponent({
     },
     formatBreak(value: Saldo | null) {
       return value ? value.toString(false) : '';
-    },
-    formatTimeAddition() {
-      // TODO implement!
     },
     onSubmit(evt: Event) {
       evt.preventDefault();

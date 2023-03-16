@@ -7,6 +7,7 @@ export default class WorkingDayPart {
   private _begin: string | null;
   private _end: string | null;
   private _mobileWorking: boolean;
+  private _timeAddition: boolean;
 
   constructor(data: any) {
     if (data) {
@@ -15,12 +16,14 @@ export default class WorkingDayPart {
         this._begin = data.begin ? data.begin  : null;
         this._end = data.end ? data.end  : null;
         this._mobileWorking = data.mobile_working === 1;
+        this._timeAddition = data.time_addition === 1;
     } else {
       this._id = 0;
       this._workingDayId = 0;
       this._begin = null;
       this._end = null;
       this._mobileWorking = false;
+      this._timeAddition = false;
     }
   }
 
@@ -69,6 +72,14 @@ export default class WorkingDayPart {
 
   set mobileWorking(value: boolean) {
     this._mobileWorking = value;
+  }
+
+  get timeAddition(): boolean {
+    return this._timeAddition;
+  }
+
+  set timeAddition(value: boolean) {
+    this._timeAddition = value;
   }
 
   get totalTime(): Saldo | undefined {
@@ -158,7 +169,8 @@ export default class WorkingDayPart {
       _id: this._id,
       _begin: this.begin ? this.begin.substring(0,5) : null,
       _end: this.end ? this.end.substring(0, 5) : null,
-      _mobileWorking: this.mobileWorking
+      _mobileWorking: this.mobileWorking,
+      _timeAddition: this.timeAddition,
     }
   }
 
