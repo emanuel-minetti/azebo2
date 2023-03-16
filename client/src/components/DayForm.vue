@@ -157,7 +157,7 @@ export default defineComponent({
         return title;
     },
     tableFields() {
-      return [
+      const result = [
         {
           label: '#',
           key: 'rowIndex',
@@ -187,6 +187,14 @@ export default defineComponent({
           key: 'action',
         }
       ];
+      if (!this.day.isCommonWorkingDay) {
+        result.splice(5,0, {
+          label: "Mit Zeitausgleich",
+          key: 'timeAddition',
+          formatter: this.formatTimeAddition,
+        });
+      }
+      return result;
     },
     tableItems() {
       let result: Array<TableRowData> = [];
@@ -308,6 +316,9 @@ export default defineComponent({
     },
     formatBreak(value: Saldo | null) {
       return value ? value.toString(false) : '';
+    },
+    formatTimeAddition() {
+      // TODO implement!
     },
     onSubmit(evt: Event) {
       evt.preventDefault();
