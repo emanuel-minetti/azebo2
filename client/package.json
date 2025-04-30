@@ -19,7 +19,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
-    "@vitejs/plugin-vue": "^1.6.1",
+    "@vitejs/plugin-vue": "^1.10.2",
     "@vue/eslint-config-typescript": "^9.1.0",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.28.0",
@@ -29,7 +29,7 @@
     "prettier": "^2.5.1",
     "sass": "^1.49.7",
     "typescript": "^4.5.5",
-    "vite": "^2.5.4",
+    "vite": "^6.3.4",
     "@vitejs/plugin-vue2": "^1.1.2",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"
